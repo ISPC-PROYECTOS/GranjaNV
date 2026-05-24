@@ -10,11 +10,11 @@ Este proyecto se desarrolla bajo metodologías ágiles (**Scrum**) abarcando los
 
 A continuación se detallan los integrantes del equipo de desarrollo. *(Haz clic en el enlace para visitar el perfil de GitHub)*:
 
-* **Barrera Lautaro** — [@username](https://github.com/LautyR2D2)
-* **Marchisone Jorge** — [@username](https://github.com/jmarchisone)
-* **Pereyra Hebe** — [@username](https://github.com/PereyraHebe)
-* **Picco Victoria** — [@username](https://github.com/vickpicco)
-* **Suarez Mariela** — [@username](https://github.com/MarielarosaSZ)
+* **Barrera Lautaro** — [@LautyR2D2](https://github.com/LautyR2D2)
+* **Marchisone Jorge** — [@jmarchisone](https://github.com/jmarchisone)
+* **Pereyra Hebe** — [@PereyraHebe](https://github.com/PereyraHebe)
+* **Picco Victoria** — [@vickpicco](https://github.com/vickpicco)
+* **Suarez Mariela** — [@MarielarosaSZ](https://github.com/MarielarosaSZ)
 
 ---
 
