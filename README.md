@@ -6,7 +6,13 @@ Este proyecto se desarrolla bajo metodologías ágiles (**Scrum**) abarcando los
 
 ---
 
-## 👥 Equipo: SharkCode
+## 👥 Equipo: 
+
+<p align="center">
+  <img width="220" alt="SharkCode Logo" src="https://github.com/user-attachments/assets/61b67249-eeaa-4b17-9f7f-95d1899df5f7" />
+</p>
+
+
 
 A continuación se detallan los integrantes del equipo de desarrollo. *(Haz clic en el enlace para visitar el perfil de GitHub)*:
 
