@@ -1,1 +1,85 @@
-<p>navbar works!</p>
+<header class="navbar-wrapper my-2 mx-3">
+  <nav class="navbar-card p-2 px-3 shadow-sm d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+      
+    <!-- Fila Superior Mobile / Lado Izquierdo Desktop -->
+    <div class="d-flex align-items-center justify-content-between w-100 w-md-auto gap-3">
+        
+      <!-- Logo -->
+      <a class="navbar-brand m-0" href="#">
+        <img src="assets/logo-granja.png" alt="Logo Granja NV" class="brand-logo" onerror="this.src='https://via.placeholder.com/42?text=NV'" />
+      </a>
+
+      <!-- Clima + Fecha Desktop -->
+      <div class="d-none d-md-flex align-items-center gap-2">
+        <div class="info-pill px-3 py-1 d-flex align-items-center gap-2">
+          <i class="hgi-stroke hgi-cloud-sun"></i>
+          <span>{{ climaInfo }}</span>
+        </div>
+        <div class="info-pill px-3 py-1 d-flex align-items-center gap-2">
+          <i class="hgi-stroke hgi-calendar-01"></i>
+          <span>{{ fechaActual }}</span>
+        </div>
+      </div>
+
+      <!-- Acciones Mobile -->
+      <div class="d-flex align-items-center gap-2 d-md-none">
+        <button class="btn btn-icon p-1 position-relative" type="button" aria-label="Notificaciones">
+          <i class="hgi-stroke hgi-notification-01 fs-5"></i>
+        </button>
+
+        <div class="dropdown">
+          <button 
+            class="btn profile-pill d-flex align-items-center gap-2 py-1 px-2 dropdown-toggle border-0" 
+            type="button" 
+            data-bs-toggle="dropdown" 
+            aria-expanded="false">
+            <span class="avatar-circle">{{ usuarioInicial }}</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+            <li><a class="dropdown-item" href="#"><i class="hgi-stroke hgi-settings-02 me-2"></i>Configuración</a></li>
+            <li><a class="dropdown-item" href="#"><i class="hgi-stroke hgi-moon-02 me-2"></i>Modo oscuro</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><button class="dropdown-item text-danger" (click)="cerrarSesion()"><i class="hgi-stroke hgi-logout-01 me-2"></i>Cerrar sesión</button></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+   <!-- Fila Inferior SOLO en Mobile (Clima + Fecha) -->
+    <div class="d-flex d-md-none w-100 justify-content-center align-items-center flex-wrap gap-2 mt-1">
+      <div class="info-pill px-2 py-1 flex-fill text-center d-flex align-items-center justify-content-center gap-1">
+        <i class="hgi-stroke hgi-cloud-sun"></i>
+        <small class="weather-text">{{ climaInfo }}</small>
+      </div>
+      <div class="info-pill px-2 py-1 flex-fill text-center d-flex align-items-center justify-content-center gap-1">
+        <i class="hgi-stroke hgi-calendar-01"></i>
+        <small class="weather-text">{{ fechaActual }}</small>
+      </div>
+    </div>
+    
+    <!-- Acciones Desktop -->
+    <div class="d-none d-md-flex align-items-center gap-3">
+      <button class="btn btn-icon p-1 position-relative" type="button" aria-label="Notificaciones">
+        <i class="hgi-stroke hgi-notification-01 fs-5"></i>
+      </button>
+
+      <div class="dropdown">
+        <button 
+          class="btn profile-pill d-flex align-items-center gap-2 py-1 px-2 border-0 dropdown-toggle" 
+          type="button" 
+          data-bs-toggle="dropdown" 
+          aria-expanded="false">
+          <span class="avatar-circle">{{ usuarioInicial }}</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+          <li><a class="dropdown-item" href="#"><i class="hgi-stroke hgi-settings-02 me-2"></i>Configuración</a></li>
+          <li><a class="dropdown-item" href="#"><i class="hgi-stroke hgi-moon-02 me-2"></i>Modo oscuro</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><button class="dropdown-item text-danger" (click)="cerrarSesion()"><i class="hgi-stroke hgi-logout-01 me-2"></i>Cerrar sesión</button></li>
+        </ul>
+      </div>
+    </div>
+
+  </nav>
+</header>
