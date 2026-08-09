@@ -8,13 +8,13 @@ export const routes: Routes = [// Ruta pública por defecto
   },
   /*{
     path: 'public',
-    loadComponent: () => import('./feactures/public/public').then(m => m.PublicComponent)
+    loadComponent: () => import('./features/public/public').then(m => m.PublicComponent)
   }, */
 
   // Vista de Login
   {
     path: 'auth/auth',
-    loadComponent: () => import('./feactures/auth/auth').then(m => m.LoginComponent)
+    loadComponent: () => import('./features/auth/auth').then(m => m.LoginComponent)
   },
 {
     path: '**',
