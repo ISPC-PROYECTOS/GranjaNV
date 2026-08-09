@@ -1,0 +1,13 @@
+html, body, app-root {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  width: 100%;
+  overflow-x: hidden;
+  background-color: #b8734e;
+}
+
+body {
+  min-height: 100vh;
+  font-family: 'Open Sans', Arial, sans-serif;
+}

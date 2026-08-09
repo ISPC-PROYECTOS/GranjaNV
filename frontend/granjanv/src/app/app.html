@@ -9,6 +9,10 @@
 
 <style>
   :host {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f5f5f5;
     --bright-blue: oklch(51.01% 0.274 263.83);
     --electric-violet: oklch(53.18% 0.28 296.97);
     --french-violet: oklch(47.66% 0.246 305.88);
@@ -65,13 +69,15 @@
 
   main {
     width: 100%;
+    flex: 1;
     min-height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 1rem;
-    box-sizing: inherit;
+    padding: 0;
+    box-sizing: border-box;
     position: relative;
+    background-color: transparent;
   }
 
   .angular-logo {
@@ -331,6 +337,8 @@
     </div>
   </div>
 </main>
+
+<app-footer></app-footer>
 
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
