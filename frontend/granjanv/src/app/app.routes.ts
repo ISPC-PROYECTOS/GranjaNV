@@ -1,23 +1,15 @@
 import { Routes } from '@angular/router';
+import { AuthComponent } from './features/auth/auth';
+import { RegistroUsuarioComponent } from './features/dashboard/panel-administrador/registro-usuario/registro-usuario';
+import { adminGuard } from './core/guards/admin-guard';
 
-export const routes: Routes = [// Ruta pública por defecto
+export const routes: Routes = [
+  { path: 'auth/login', component: AuthComponent },
   {
-    path: '',
-    redirectTo: 'auth/auth',
-    pathMatch: 'full'
+    path: 'dashboard/admin/registro-usuario',
+    component: RegistroUsuarioComponent,
+    canActivate: [adminGuard]
   },
-  /*{
-    path: 'public',
-    loadComponent: () => import('./features/public/public').then(m => m.PublicComponent)
-  }, */
-
-  // Vista de Login
-  {
-    path: 'auth/auth',
-    loadComponent: () => import('./features/auth/auth').then(m => m.LoginComponent)
-  },
-{
-    path: '**',
-    redirectTo: 'auth/login'
-  }
+  { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
+  { path: '**', redirectTo: 'auth/login' }
 ];

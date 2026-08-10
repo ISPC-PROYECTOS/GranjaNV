@@ -1,109 +1,55 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, catchError, throwError } from 'rxjs';
-
-export interface Usuario {
-  id_usuario?: number;
-  apellido: string;
-  nombre: string;
-  email: string;
-  rol: string;
-}
-
-export interface AuthResponse {
-  access: string;
-  refresh?: string;
-  user: Usuario;
-}
+import { Router } from '@angular/router';
+import { Observable, tap } from 'rxjs';
+import { Usuario, LoginResponse, RegistroRequest } from '../models/user.model';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8000/api/auth/';
+  private router = inject(Router);
+  private apiUrl = 'http://localhost:8000/api/auth';
 
-  private currentUserSignal = signal<Usuario | null>(null);
-  readonly currentUser = this.currentUserSignal.asReadonly();
+  currentUser = signal<Usuario | null>(this.getUserFromStorage());
+  accessToken = signal<string | null>(localStorage.getItem('access_token'));
 
-  constructor() {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      try {
-        this.currentUserSignal.set(JSON.parse(storedUser));
-      } catch {
-        this.logout();
-      }
-    }
-  }
+  isAuthenticated = computed(() => !!this.accessToken());
+  isAdmin = computed(() => this.currentUser()?.rol === 'Administrador');
 
-  login(credentials: { email: string; password: string }): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login/`, credentials).pipe(
+  login(credentials: { email: string; password: string }): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login/`, credentials).pipe(
       tap((res) => {
-        if (res.access) {
-          localStorage.setItem('access_token', res.access);
-          if (res.refresh) {
-            localStorage.setItem('refresh_token', res.refresh);
-          }
-          localStorage.setItem('user', JSON.stringify(res.user));
-          this.currentUserSignal.set(res.user);
+        localStorage.setItem('access_token', res.access);
+        localStorage.setItem('refresh_token', res.refresh);
+        localStorage.setItem('user', JSON.stringify(res.user));
+
+        this.accessToken.set(res.access);
+        this.currentUser.set(res.user);
+
+        if (res.user.rol === 'Administrador') {
+          this.router.navigate(['/dashboard/admin']);
+        } else {
+          this.router.navigate(['/dashboard/produccion']);
         }
       })
     );
   }
 
-  register(userData: Partial<Usuario> & { password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register/`, userData);
-  }
-
-  requestPasswordReset(email: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/password-reset-request/`, { email });
-  }
-
-  verifyPasswordReset(data: { email: string; otp: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/password-reset-verify/`, data);
-  }
-
-  refreshToken(): Observable<{ access: string; refresh?: string }> {
-    const refresh = localStorage.getItem('refresh_token');
-    
-    if (!refresh) {
-      this.logout();
-      return throwError(() => new Error('No hay refresh token disponible'));
-    }
-
-    return this.http.post<{ access: string; refresh?: string }>(
-      `${this.apiUrl}/token/refresh/`, 
-      { refresh }
-    ).pipe(
-      tap((res) => {
-        if (res.access) {
-          localStorage.setItem('access_token', res.access);
-          if (res.refresh) {
-            localStorage.setItem('refresh_token', res.refresh);
-          }
-        }
-      }),
-      catchError((error) => {
-        this.logout();
-        return throwError(() => error);
-      })
-    );
+  registrarUsuario(userData: RegistroRequest): Observable<Usuario> {
+    return this.http.post<Usuario>(`${this.apiUrl}/registro/`, userData);
   }
 
   logout(): void {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('user');
-    localStorage.removeItem('remember_me');
-    localStorage.removeItem('refresh_token');
-    this.currentUserSignal.set(null);
+    localStorage.clear();
+    this.accessToken.set(null);
+    this.currentUser.set(null);
+    this.router.navigate(['/auth/login']);
   }
 
-  getUserData(): Observable<Usuario> {
-    return this.http.get<Usuario>(`${this.apiUrl}/profile/`);
-  }
-
-  changePassword(data: { old_password?: string; new_password: string; token?: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/change-password/`, data);
+  private getUserFromStorage(): Usuario | null {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
   }
 }
