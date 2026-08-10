@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './shared/navbar/navbar';
-import { PanelDeControl } from "./feactures/dashboard/panel-administrador/panel-de-control/panel-de-control";
+import { PanelDeControl } from "./features/dashboard/panel-administrador/panel-de-control/panel-de-control";
 
 @Component({
   selector: 'app-root',
