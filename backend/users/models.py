@@ -1,5 +1,8 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+import random
+from datetime import timedelta
+from django.utils import timezone
 
 
 class UsuarioManager(BaseUserManager):
@@ -36,11 +39,29 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     nombre = models.CharField(max_length=100, null=False, blank=False)
     apellido = models.CharField(max_length=100, null=False, blank=False)
     rol = models.CharField(max_length=20, choices=ROLES, default='Empleado')
+    otp_code = models.CharField(max_length=6, blank=True, null=True)
+    otp_expires_at = models.DateTimeField(blank=True, null=True)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
     objects = UsuarioManager()
+
+    def generate_otp(self):
+        otp = f"{random.randint(100000, 999999)}"
+        self.otp_code = otp
+        self.otp_expires_at = timezone.now() + timedelta(minutes=10)
+        self.save(update_fields=["otp_code", "otp_expires_at"])
+        return otp
+
+    def verify_otp(self, otp):
+        if (
+            self.otp_code == otp
+            and self.otp_expires_at
+            and timezone.now() <= self.otp_expires_at
+        ):
+            return True
+        return False
 
     # Configuración para autenticar ÚNICAMENTE por email
     USERNAME_FIELD = 'email'

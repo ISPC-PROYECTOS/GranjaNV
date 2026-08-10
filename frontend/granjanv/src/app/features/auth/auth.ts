@@ -18,11 +18,21 @@ export class LoginComponent {
 
   isLoading = signal<boolean>(false);
   errorMessage = signal<string | null>(null);
+  successMessage = signal<string | null>(null);
+
+  // Estado del flujo: 'login' | 'otp_reset'
+  step = signal<'login' | 'otp_reset'>('login');
 
   // Formulario de login
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]]
+  });
+
+  // Formulario para ingreso de OTP y nueva contraseña
+  resetOtpForm = this.fb.group({
+    otp: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
+    newPassword: ['', [Validators.required, Validators.minLength(8)]]
   });
 
   onSubmit(): void {
@@ -33,6 +43,7 @@ export class LoginComponent {
 
     this.isLoading.set(true);
     this.errorMessage.set(null);
+    this.successMessage.set(null);
 
     const { email, password } = this.loginForm.value;
 
@@ -41,7 +52,6 @@ export class LoginComponent {
         this.isLoading.set(false);
         const userRole = res.user?.rol?.toLowerCase();
 
-        // Redirección según rol
         if (userRole === 'admin' || userRole === 'administrador' || userRole === 'nahuel') {
           this.router.navigate(['/dashboard/admin/panel-de-control']);
         } else {
@@ -60,23 +70,71 @@ export class LoginComponent {
   }
 
   onForgotPassword(): void {
-    const email = this.loginForm.get('email')?.value;
-    
-    if (!email) {
-      this.errorMessage.set('Ingresá tu correo electrónico para solicitar la recuperación.');
+    const emailControl = this.loginForm.get('email');
+    if (!emailControl || emailControl.invalid || !emailControl.value) {
+      this.errorMessage.set('Ingresá un correo electrónico válido para solicitar el código OTP.');
       return;
     }
 
     this.isLoading.set(true);
-    this.authService.requestPasswordReset(email).subscribe({
-      next: () => {
+    this.errorMessage.set(null);
+    this.successMessage.set(null);
+
+    this.authService.requestOtp(emailControl.value).subscribe({
+      next: (res) => {
         this.isLoading.set(false);
-        alert('Se ha enviado un correo para recuperar tu contraseña.');
+        this.successMessage.set(res.message || 'Se ha enviado un código OTP a tu correo.');
+        this.step.set('otp_reset');
       },
-      error: () => {
+      error: (err) => {
         this.isLoading.set(false);
-        this.errorMessage.set('No se pudo procesar la solicitud de recuperación.');
+        this.errorMessage.set(err.error?.detail || 'No se pudo procesar la solicitud de recuperación.');
       }
     });
+  }
+
+  onConfirmResetPassword(): void {
+    if (this.resetOtpForm.invalid) {
+      this.resetOtpForm.markAllAsTouched();
+      return;
+    }
+
+    const email = this.loginForm.get('email')?.value;
+    const { otp, newPassword } = this.resetOtpForm.value;
+
+    if (!email) {
+      this.errorMessage.set('Debes ingresar un correo electrónico.');
+      return;
+    }
+
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
+    this.successMessage.set(null);
+
+    const payload = {
+      email: email,
+      otp: otp!,
+      new_password: newPassword!
+    };
+
+    this.authService.resetPasswordWithOtp(payload).subscribe({
+      next: (res) => {
+        this.isLoading.set(false);
+        this.successMessage.set(res.message || 'Contraseña restablecida con éxito.');
+        this.step.set('login');
+        this.resetOtpForm.reset();
+        this.loginForm.patchValue({ password: '' });
+      },
+      error: (err) => {
+        this.isLoading.set(false);
+        this.errorMessage.set(err.error?.error || 'El código OTP es inválido o expiró.');
+      }
+    });
+  }
+
+  cancelReset(): void {
+    this.step.set('login');
+    this.errorMessage.set(null);
+    this.successMessage.set(null);
   }
 }

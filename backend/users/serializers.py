@@ -44,3 +44,12 @@ class RegistroUsuarioSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return Usuario.objects.create_user(**validated_data)
+
+class RequestOTPSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class ResetPasswordOTPSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    otp = serializers.CharField(max_length=6)
+    new_password = serializers.CharField(min_length=8)

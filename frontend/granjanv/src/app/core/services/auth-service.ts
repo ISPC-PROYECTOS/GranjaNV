@@ -48,6 +48,14 @@ export class AuthService {
     this.router.navigate(['/auth/login']);
   }
 
+  requestOtp(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/request-otp/`, { email });
+  }
+
+  resetPasswordWithOtp(payload: { email: string; otp: string; new_password: string }): Observable<any> {
+   return this.http.post(`${this.apiUrl}/reset-password-otp/`, payload);
+  }
+
   private getUserFromStorage(): Usuario | null {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;

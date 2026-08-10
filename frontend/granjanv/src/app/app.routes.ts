@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { AuthComponent } from './features/auth/auth';
+import { LoginComponent } from './features/auth/auth';
 import { RegistroUsuarioComponent } from './features/dashboard/panel-administrador/registro-usuario/registro-usuario';
 import { adminGuard } from './core/guards/admin-guard';
 
 export const routes: Routes = [
-  { path: 'auth/login', component: AuthComponent },
+  { path: 'auth/login', component: LoginComponent },
   {
     path: 'dashboard/admin/registro-usuario',
     component: RegistroUsuarioComponent,
