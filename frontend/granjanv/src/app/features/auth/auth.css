@@ -1,0 +1,196 @@
+:host {
+  --bg-main: #E8F0E5;           /* Fondo de la pantalla */
+  --card-bg: #4E6647;           /* Fondo de las cards (Verde Oliva) */
+  --btn-border: #C97E57;        /* Borde de los botones (Naranja) */
+  
+  --btn-login-bg: #C97E57;      /* Fondo del botón principal (Naranja) para hacer juego */
+  --btn-login-hover: #b56b46;
+  --btn-recovery-bg: transparent; /* Botón secundario transparente para que resalte el borde */
+  --btn-recovery-hover: rgba(201, 126, 87, 0.15); 
+  
+  --border-radius: 33px;        /* Radio de bordes Figma */
+  
+  /* Ajustes de contraste para que el texto se lea sobre el fondo verde */
+  --text-main: #FFFFFF;         /* Texto principal en blanco */
+  --text-muted: #DCE3D9;        /* Texto secundario más clarito */
+  --error-color: #ff8a80;       /* Rojo de error adaptado a fondo oscuro */
+
+  display: block;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+/* Pantalla principal */
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--bg-main); /* Nuevo fondo claro */
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+/* Contenedor de las dos cards */
+.login-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  max-width: 900px;
+  gap: 2rem;
+}
+
+/* Base para cada Card */
+.card {
+  flex: 1;
+  background: var(--card-bg); /* Nuevo fondo verde oscuro */
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Card 1: Imagen */
+.card-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+}
+
+.bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Card 2: Formulario */
+.card-form {
+  padding: 3rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  margin: 0;
+  color: var(--text-main); /* Título en blanco */
+  font-size: 1.8rem;
+}
+
+.header p {
+  margin-top: 0.5rem;
+  color: var(--text-muted); /* Subtítulo claro */
+  font-size: 0.95rem;
+}
+
+/* Alertas */
+.alert-error {
+  background-color: rgba(255, 138, 128, 0.15);
+  color: var(--error-color);
+  border: 1px solid var(--error-color);
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Formulario */
+.form-group {
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: var(--text-main); /* Labels en blanco */
+  margin-bottom: 0.5rem;
+}
+
+input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid #cccccc;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s;
+  background-color: #FFFFFF; /* Input con fondo blanco para escribir */
+  color: #333333; /* Letra oscura al escribir */
+}
+
+input:focus {
+  border-color: var(--btn-border); /* Borde naranja al hacer foco */
+}
+
+input.is-invalid {
+  border-color: var(--error-color);
+}
+
+.error-msg {
+  color: var(--error-color);
+  font-size: 0.75rem;
+  margin-top: 0.35rem;
+}
+
+/* Botones */
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.btn {
+  width: 100%;
+  padding: 0.85rem;
+  border: 2px solid var(--btn-border); /* Borde naranja aplicado */
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-login {
+  background-color: var(--btn-login-bg);
+  color: #ffffff;
+}
+
+.btn-login:hover:not(:disabled) {
+  background-color: var(--btn-login-hover);
+}
+
+.btn-recovery {
+  background-color: var(--btn-recovery-bg);
+  color: #ffffff;
+}
+
+.btn-recovery:hover:not(:disabled) {
+  background-color: var(--btn-recovery-hover);
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+  }
+
+  .card-image {
+    height: 180px;
+  }
+}
