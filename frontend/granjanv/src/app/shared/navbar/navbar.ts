@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from "@angular/router";
+import { AuthService } from '../../core/services/auth-service'; 
 
 @Component({
   selector: 'app-navbar',
@@ -12,6 +13,7 @@ import { Router, RouterModule } from "@angular/router";
 export class NavbarComponent implements OnInit {
 
   private router = inject(Router);
+  private authService = inject(AuthService);
 
   usuarioInicial: string = 'N';
   climaInfo: string = '18° Parcialmente nublado';
@@ -31,12 +33,12 @@ export class NavbarComponent implements OnInit {
     this.fechaActual = hoy.charAt(0).toUpperCase() + hoy.slice(1);
   }
 
-  // Método limpio para verificar la URL actual
+  // Método  verificar la URL actual
   esVistaLogin(): boolean {
     return this.router.url.includes('/auth/login');
   }
 
   cerrarSesion(): void {
-    console.log('Cerrando sesión...');
+    this.authService.logout();
   }
 }
