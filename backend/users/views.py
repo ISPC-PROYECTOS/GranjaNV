@@ -1,5 +1,5 @@
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import Usuario
@@ -32,6 +32,7 @@ class RequestOTPView(APIView):
         serializer = RequestOTPSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data["email"]
+        permission_classes = [AllowAny]
 
         try:
             user = Usuario.objects.get(email=email)
@@ -57,6 +58,7 @@ class ResetPasswordOTPView(APIView):
     def post(self, request):
         serializer = ResetPasswordOTPSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        permission_classes = [AllowAny]
 
         email = serializer.validated_data["email"]
         otp = serializer.validated_data["otp"]
