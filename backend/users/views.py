@@ -27,12 +27,12 @@ class RegistroUsuarioView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated, IsAdminRole]
 
 class RequestOTPView(APIView):
+    permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = RequestOTPSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data["email"]
-        permission_classes = [AllowAny]
 
         try:
             user = Usuario.objects.get(email=email)
@@ -54,11 +54,11 @@ class RequestOTPView(APIView):
 
 
 class ResetPasswordOTPView(APIView):
+    permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = ResetPasswordOTPSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        permission_classes = [AllowAny]
 
         email = serializer.validated_data["email"]
         otp = serializer.validated_data["otp"]
