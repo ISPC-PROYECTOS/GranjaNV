@@ -29,6 +29,7 @@ export class WeatherService {
           humidity: Math.round(res.current.relative_humidity_2m),
           windSpeed: Math.round(res.current.wind_speed_10m),
           windDirection: windDeg,
+          windFlowRotation: (windDeg + 180) % 360, // Apunta hacia el destino del viento
           windDirectionText: this.getWindCardinalDirection(windDeg),
           precipitationProbability: rainProb,
           description: condition.description,
