@@ -60,4 +60,21 @@ export class AuthService {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
   }
+
+  refreshToken(): Observable<{ access: string; refresh?: string }> {
+  const refresh = localStorage.getItem('refresh_token');
+  if (!refresh) {
+    throw new Error('No hay refresh token disponible.');
+  }
+
+    return this.http.post<{ access: string; refresh?: string }>(`${this.apiUrl}/token/refresh/`, { refresh }).pipe(
+      tap((res) => {
+        localStorage.setItem('access_token', res.access);
+        this.accessToken.set(res.access);
+        if (res.refresh) {
+          localStorage.setItem('refresh_token', res.refresh);
+        }
+      })
+    );
+  }
 }
