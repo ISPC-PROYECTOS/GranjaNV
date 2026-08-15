@@ -1,0 +1,205 @@
+/* PÁGINA */
+
+.finanzas {
+    background-color: var(--color-secundario-claro);
+    min-height: calc(100vh - 70px);
+    padding: 20px 32px;
+}
+
+.btn-volver-panel {
+    background-color: var(--color-secundario);
+    color: var(--color-blanco);
+    font-family: var(--font-titulos);
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 14px;
+}
+
+/* CONTENEDOR PRINCIPAL */
+
+.seccion-finanzas {
+    background-color: var(--color-primario-claro);
+    border-radius: 37px;
+    box-shadow: 0 4px 4px var(--color-primario);
+    padding: 24px;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* GASTOS */
+
+.seccion-gastos {
+    background-color: var(--color-blanco);
+    border: 1px solid var(--color-gris-oscuro);
+    border-radius: 27px;
+    min-height: 100%;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+}
+
+.gastos-encabezado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.gastos-titulo {
+    font-family: var(--font-titulos);
+    font-size: 30px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.gastos-buscador {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--color-negro);
+    border-radius: 10px;
+    padding: 3px 12px;
+}
+
+.gastos-buscador i {
+    font-size: 27px;
+}
+
+.gastos-buscador-input {
+    width: 110px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-family: var(--font-titulos);
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.gastos-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.gasto-item {
+    background-color: var(--color-gris-claro);
+    border-radius: 18px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.gasto-info {
+    flex: 1;
+}
+
+.gasto-concepto {
+    font-family: var(--font-textos);
+    font-size: 18px;
+    margin: 0;
+}
+
+.gasto-monto {
+    font-family: var(--font-titulos);
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.gasto-acciones {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-gasto-editar,
+.btn-gasto-eliminar {
+    padding: 4px;
+    border: none;
+    color: var(--color-negro);
+    font-size: 22px;
+}
+
+.gastos-total {
+    background-color: var(--color-primario-claro);
+    border-radius: 10px;
+    margin-top: auto;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.gastos-total-texto,
+.gastos-total-monto {
+    font-family: var(--font-titulos);
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--color-primario);
+    margin: 0;
+}
+
+/* CARGAR GASTO */
+
+.seccion-cargar-gasto {
+    background-color: var(--color-primario);
+    border-radius: 27px;
+    padding: 24px;
+}
+
+.cargar-gasto-titulo {
+    font-family: var(--font-titulos);
+    font-size: 30px;
+    font-weight: 600;
+    color: var(--color-blanco);
+    margin-bottom: 37px;
+}
+
+.formulario-gasto {
+    background-color: var(--color-secundario-claro);
+    border-radius: 20px;
+    padding: 24px;
+    margin-top: 25px;
+}
+
+.formulario-gasto .form-label {
+    font-family: var(--font-textos);
+    font-weight: 600;
+}
+
+.formulario-gasto .form-control,
+.formulario-gasto .form-select {
+    border: none;
+    border-radius: 10px;
+}
+
+.formulario-gasto-acciones {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.btn-limpiar,
+.btn-guardar {
+    min-width: 130px;
+    font-family: var(--font-titulos);
+    font-weight: 600;
+    border: none;
+    border-radius: 7px;
+}
+
+.btn-limpiar {
+    background-color: var(--color-gris-claro);
+    color: var(--color-negro);
+}
+
+.btn-guardar {
+    background-color: var(--color-primario);
+    color: var(--color-blanco);
+}

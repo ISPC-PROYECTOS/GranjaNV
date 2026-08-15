@@ -1,1 +1,158 @@
-<p>compras works!</p>
+<main class="container-fluid finanzas">
+
+    <button class="btn btn-volver-panel" type="button">
+        ← Panel de control
+    </button>
+
+    <section class="row seccion-finanzas my-3 g-4">
+
+        <!-- GASTOS -->
+        <div class="col-12 col-lg-6">
+            <section class="seccion-gastos">
+
+                <div class="gastos-encabezado">
+                    <h2 class="gastos-titulo">GASTOS</h2>
+                    <div class="gastos-buscador">
+                        <i class="hgi-stroke hgi-search-01"></i>
+
+                        <input type="search" class="gastos-buscador-input" placeholder="Buscar"
+                            aria-label="Buscar gastos">
+                    </div>
+                </div>
+
+                <div class="gastos-lista">
+
+                    @for (gasto of gastos; track gasto.id) {
+                    <div class="gasto-item">
+
+                        <div class="gasto-info">
+                            <p class="gasto-concepto">
+                                {{ gasto.descripcion }} - {{ gasto.categoria }}
+                            </p>
+                        </div>
+
+                        <p class="gasto-monto">
+                            -${{ gasto.monto }}
+                        </p>
+
+                        <div class="gasto-acciones">
+
+                            <button type="button" class="btn btn-gasto-editar" aria-label="Editar gasto">
+                                <i class="hgi-stroke hgi-pencil-edit-01"></i>
+                            </button>
+
+                            <button type="button" class="btn btn-gasto-eliminar" aria-label="Eliminar gasto">
+                                <i class="hgi-stroke hgi-delete-02"></i>
+                            </button>
+
+                        </div>
+                    </div>
+                    }
+                </div>
+
+                <div class="gastos-total">
+                    <p class="gastos-total-texto">Total →</p>
+                    <p class="gastos-total-monto">
+                        -${{ totalGastos }}
+                    </p>
+                </div>
+
+            </section>
+        </div>
+
+
+        <!-- CARGAR GASTO -->
+        <div class="col-12 col-lg-6">
+            <section class="seccion-cargar-gasto">
+
+                <h2 class="cargar-gasto-titulo">CARGAR GASTO</h2>
+
+                <form class="formulario-gasto" [formGroup]="formularioGastos" (ngSubmit)="guardarGasto()">
+
+                    <div class="mb-3">
+                        <label for="monto" class="form-label">
+                            Monto
+                        </label>
+
+                        <input type="number" id="monto" class="form-control" formControlName="monto"
+                            placeholder="$0,00">
+
+                        @if(
+                        formularioGastos.get('monto')?.touched && formularioGastos.get('monto')?.hasError('required')
+                        ){
+                        <p>El monto es obligatorio.</p>
+                        } @else if (
+                        formularioGastos.get('monto')?.touched && formularioGastos.get('monto')?.hasError('min')
+                        ) {
+                        <p>El monto debe ser mayor a 0.</p>
+                        }
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="categoria" class="form-label">
+                            Categoría
+                        </label>
+
+                        <select id="categoria" class="form-select" formControlName="categoria">
+                            <option value="">Seleccionar</option>
+                            <option value="Alimento">Alimento</option>
+                            <option value="Medicamentos">Medicamentos</option>
+                            <option value="Insumos">Insumos</option>
+                            <option value="Servicios">Servicios</option>
+                            <option value="Otros">Otros</option>
+                        </select>
+
+                        @if (
+                        formularioGastos.get('categoria')?.touched && formularioGastos.get('categoria')?.hasError('required')
+                        ) {
+                        <p>La categoría es obligatoria.</p>
+                        }
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">
+                            Descripción
+                        </label>
+
+                        <input type="text" id="descripcion" class="form-control" formControlName="descripcion">
+
+                        @if (
+                        formularioGastos.get('descripcion')?.touched && formularioGastos.get('descripcion')?.hasError('required')
+                        ) {
+                        <p>La descripción es obligatoria.</p>
+                        } @else if (
+                            formularioGastos.get('descripcion')?.touched && formularioGastos.get('descripcion')?.hasError('minlength')
+                        ) {
+                        <p>La descripción debe tener al menos 3 caracteres.</p>
+                        }
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="fecha" class="form-label">
+                            Fecha
+                        </label>
+
+                        <input type="date" id="fecha" class="form-control" formControlName="fecha" [max]="fechaMaxima">
+                        @if (
+                        formularioGastos.get('fecha')?.touched && formularioGastos.get('fecha')?.hasError('required')
+                        ) {
+                        <p>La fecha es obligatoria</p>
+                        }
+                    </div>
+
+                    <div class="formulario-gasto-acciones">
+
+                        <button type="button" class="btn btn-limpiar" (click)="limpiarFormulario()">
+                            Limpiar
+                        </button>
+
+                        <button type="submit" class="btn btn-guardar">
+                            Guardar
+                        </button>
+
+                    </div>
+                </form>
+            </section>
+        </div>
+    </section>
+</main>

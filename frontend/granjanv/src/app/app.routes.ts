@@ -4,6 +4,8 @@ import { RegistroUsuarioComponent } from './features/dashboard/panel-administrad
 import { adminGuard } from './core/guards/admin-guard';
 // 🟢 Agregamos la comilla ' que faltaba al final del path
 import { PanelDeControl } from './features/dashboard/panel-administrador/panel-de-control/panel-de-control';
+import { Compras } from './features/dashboard/panel-administrador/compras/compras';
+
 export const routes: Routes = [
   { path: 'auth/login', component: LoginComponent },
 
@@ -11,6 +13,10 @@ export const routes: Routes = [
   { 
     path: 'dashboard/admin/panel-de-control', 
     component: PanelDeControl 
+  },
+  {
+    path: 'dashboard/admin/finanzas',
+    component: Compras
   },
   {
     path: 'dashboard/admin/registro-usuario',
