@@ -46,7 +46,11 @@ INSTALLED_APPS = [
 
     "corsheaders",
     "users",
+<<<<<<< Updated upstream
     "compras",
+=======
+    "home",
+>>>>>>> Stashed changes
 ]
 
 MIDDLEWARE = [
