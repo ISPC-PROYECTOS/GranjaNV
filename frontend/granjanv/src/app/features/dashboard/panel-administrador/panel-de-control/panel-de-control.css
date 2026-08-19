@@ -223,3 +223,11 @@
         max-width: 50%;
     }
 }
+
+@media (max-width: 480px) {
+    .card-acciones p {
+        max-width: 55px;
+        line-height: 1.3;
+        min-height: 32px;
+    }
+}
