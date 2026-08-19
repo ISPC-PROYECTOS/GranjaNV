@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Gasto } from '../../../../core/models/gasto.model';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-compras',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './compras.html',
   styleUrl: './compras.css',
 })
