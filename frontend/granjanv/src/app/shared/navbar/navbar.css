@@ -22,6 +22,8 @@
   font-size: 0.88rem;
   font-weight: 500;
   white-space: nowrap;
+  box-shadow: 0 3px 3px var(--color-secundario-claro);
+
 }
 
 .btn-icon {

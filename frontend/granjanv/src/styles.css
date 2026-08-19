@@ -20,3 +20,9 @@
   --font-titulos: 'Montserrat', sans-serif;
   --font-textos: 'Open Sans', sans-serif;
 }
+
+html,
+body {
+  margin: 0;
+  background-color: var(--color-secundario-claro);
+}
