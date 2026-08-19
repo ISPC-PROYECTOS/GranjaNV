@@ -1,0 +1,13 @@
+<div class="gallinas-container">
+  <h2 class="section-title">{{ titulo }}</h2>
+
+  <div class="gallinas-grid">
+    <div class="gallina-card" *ngFor="let gallina of gallinas">
+      <div class="gallina-image">IMG</div>
+      <div class="gallina-info">
+        <h3>{{ gallina.nombre }}</h3>
+        <p>{{ gallina.descripcion }}</p>
+      </div>
+    </div>
+  </div>
+</div>

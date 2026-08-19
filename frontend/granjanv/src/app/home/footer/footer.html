@@ -1,0 +1,56 @@
+<footer class="footer">
+  <div class="footer-container">
+    <!-- Sección: Sobre la Granja -->
+    <div class="footer-section">
+      <h3>{{ grupoEmpresa }}</h3>
+      <p>{{ descripcion }}</p>
+      <p class="ubicacion">📍 {{ contacto.ubicacion }}</p>
+    </div>
+
+    <!-- Sección: Contacto -->
+    <div class="footer-section">
+      <h3>Contacto</h3>
+      <ul class="contact-list">
+        <li>📞 <a href="tel:+54011" class="contact-link">{{ contacto.telefono }}</a></li>
+        <li>✉️ <a href="mailto:info@granjaNV.com" class="contact-link">{{ contacto.email }}</a></li>
+      </ul>
+    </div>
+
+    <!-- Sección: Horarios -->
+    <div class="footer-section">
+      <h3>Horarios</h3>
+      <ul class="hours-list">
+        <li>L-V: {{ horarios.lunes_viernes }}</li>
+        <li>Sáb: {{ horarios.sabados }}</li>
+        <li>Dom: {{ horarios.domingos }}</li>
+      </ul>
+    </div>
+
+    <!-- Sección: Redes Sociales -->
+    <div class="footer-section">
+      <h3>Síguenos</h3>
+      <div class="social-links">
+        <a *ngFor="let red of redesSociales" href="{{ red.url }}" class="social-link" title="{{ red.nombre }}">
+          {{ red.icono }}
+        </a>
+      </div>
+    </div>
+
+    <!-- Sección: Navegación -->
+    <div class="footer-section">
+      <h3>Navegación</h3>
+      <ul class="footer-menu">
+        <li><a href="#">Inicio</a></li>
+        <li><a href="#">Sobre la Granja</a></li>
+        <li><a href="#">Nuestros Productos</a></li>
+        <li><a href="#">Nuestras Gallinas</a></li>
+        <li><a href="#">Tips</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Copyright -->
+  <div class="footer-bottom">
+    <p>&copy; {{ anyoActual }} {{ grupoEmpresa }}. Todos los derechos reservados.</p>
+  </div>
+</footer>

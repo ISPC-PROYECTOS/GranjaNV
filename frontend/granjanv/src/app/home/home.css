@@ -1,0 +1,9 @@
+.home-container {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.home-section {
+  width: 100%;
+  scroll-margin-top: 80px;
+}

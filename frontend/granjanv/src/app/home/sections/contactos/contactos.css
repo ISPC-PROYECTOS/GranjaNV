@@ -1,0 +1,124 @@
+.contactos-container {
+  padding: 60px 20px;
+  background-color: #FBF5F3;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-size: 36px;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  margin: 0 0 40px 0;
+  font-family: 'Montserrat', Arial, sans-serif;
+}
+
+.contactos-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.contactos-info h3 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 16px 0;
+}
+
+.contactos-info p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+  margin: 0 0 24px 0;
+}
+
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.detail {
+  font-size: 14px;
+  color: #333;
+  padding: 12px;
+  background-color: #f5f5f5;
+  border-radius: 6px;
+}
+
+.contactos-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: 'Open Sans', Arial, sans-serif;
+  transition: border-color 0.3s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #5a7c59;
+  box-shadow: 0 0 0 3px rgba(90, 124, 89, 0.1);
+}
+
+.btn-enviar {
+  background-color: #5a7c59;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: 'Open Sans', Arial, sans-serif;
+}
+
+.btn-enviar:hover:not(:disabled) {
+  background-color: #4a6449;
+}
+
+.btn-enviar:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .contactos-container {
+    padding: 40px 16px;
+  }
+
+  .section-title {
+    font-size: 28px;
+  }
+
+  .contactos-content {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 24px;
+  }
+}

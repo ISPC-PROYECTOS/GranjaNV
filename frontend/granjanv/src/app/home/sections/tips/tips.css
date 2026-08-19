@@ -1,0 +1,111 @@
+.tips-container {
+  padding: 0 24px 60px;
+  background-color: #FBF5F3;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-size: 32px;
+  font-weight: 500;
+  text-align: center;
+  color: #333;
+  margin: 0 -24px 42px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #777;
+  font-family: 'Montserrat', Arial, sans-serif;
+}
+
+.tips-subsection {
+  margin-bottom: 58px;
+}
+
+.subsection-title {
+  width: fit-content;
+  margin: 0 auto 30px;
+  padding: 5px 18px;
+  border-radius: 16px;
+  background-color: #e8f0e4;
+  color: #111;
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-size: 25px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 62px;
+}
+
+.tip-card {
+  min-height: 260px;
+  padding: 4px 8px 24px;
+  border-radius: 14px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.recipe-card {
+  background-color: #6b8b63;
+  color: #f7eae0;
+}
+
+.care-card {
+  background-color: #e8f0e4;
+  color: #111;
+}
+
+.tip-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.tip-icon {
+  width: 136px;
+  height: 108px;
+  margin: 22px auto 16px;
+  border: 1px solid #aaa;
+  background-color: #dfe6df;
+  color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+
+.tip-card h4 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: 'Montserrat', Arial, sans-serif;
+}
+
+.tip-card p {
+  margin: 0;
+  font-size: 14px;
+  color: inherit;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .tips-container {
+    padding: 0 16px 40px;
+  }
+
+  .section-title {
+    margin-left: -16px;
+    margin-right: -16px;
+    font-size: 28px;
+  }
+
+  .tips-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .subsection-title {
+    font-size: 21px;
+  }
+}

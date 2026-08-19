@@ -1,0 +1,17 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-logo">
+      <span>LOGO</span>
+    </div>
+    
+    <ul class="navbar-menu">
+      <li *ngFor="let section of sections" class="navbar-item">
+        <button 
+          class="navbar-link" 
+          (click)="navigateTo(section.id)">
+          {{ section.name }}
+        </button>
+      </li>
+    </ul>
+  </div>
+</nav>

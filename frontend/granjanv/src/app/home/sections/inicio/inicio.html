@@ -1,0 +1,35 @@
+<div class="inicio-container">
+  <div class="inicio-header">
+    <h1>{{ titulo }}</h1>
+    <p class="inicio-subtitle">{{ descripcion }}</p>
+    <button class="btn-conocer">Conocenos</button>
+  </div>
+  
+  <div class="inicio-content">
+    <div class="inicio-cards">
+      <div class="card" (click)="navigateTo('productos')">
+        <div class="card-image"></div>
+        <div class="card-content">
+          <h3>Nuestros productos</h3>
+          <p>Huevos frescos de la mejor calidad</p>
+        </div>
+      </div>
+
+      <div class="card" (click)="navigateTo('tips')">
+        <div class="card-image"></div>
+        <div class="card-content">
+          <h3>Tips</h3>
+          <p>Tips y consejos prácticos</p>
+        </div>
+      </div>
+
+      <div class="card" (click)="navigateTo('gallinas')">
+        <div class="card-image"></div>
+        <div class="card-content">
+          <h3>Nuestras Gallinas</h3>
+          <p>Bienestar de las gallinas</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+<div class="home-container">
+  <app-navbar (sectionClicked)="scrollToSection($event)"></app-navbar>
+
+  <section #inicioSection id="inicio" class="home-section">
+    <app-inicio (sectionClicked)="scrollToSection($event)"></app-inicio>
+  </section>
+
+  <section #sobreGranjaSection id="sobre-granja" class="home-section">
+    <app-sobre-granja></app-sobre-granja>
+  </section>
+
+  <section #productosSection id="productos" class="home-section">
+    <app-productos></app-productos>
+  </section>
+
+  <section #galinasSection id="gallinas" class="home-section">
+    <app-gallinas></app-gallinas>
+  </section>
+
+  <section #tipsSection id="tips" class="home-section">
+    <app-tips></app-tips>
+  </section>
+
+  <section #contactosSection id="contactos" class="home-section">
+    <app-contactos></app-contactos>
+  </section>
+
+  <app-footer></app-footer>
+</div>

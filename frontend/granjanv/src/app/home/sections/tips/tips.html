@@ -1,0 +1,27 @@
+<div class="tips-container">
+  <h2 class="section-title">{{ titulo }}</h2>
+
+  <section class="tips-subsection recetas-section">
+    <h3 class="subsection-title">Recetas</h3>
+
+    <div class="tips-grid">
+      <article class="tip-card recipe-card" *ngFor="let receta of recetas">
+        <div class="tip-icon">IMG</div>
+        <h4>{{ receta.titulo }}</h4>
+        <p>{{ receta.descripcion }}</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="tips-subsection cuidados-section">
+    <h3 class="subsection-title">Cuidados de los Huevos</h3>
+
+    <div class="tips-grid">
+      <article class="tip-card care-card" *ngFor="let cuidado of cuidados">
+        <div class="tip-icon">IMG</div>
+        <h4>{{ cuidado.titulo }}</h4>
+        <p>{{ cuidado.descripcion }}</p>
+      </article>
+    </div>
+  </section>
+</div>

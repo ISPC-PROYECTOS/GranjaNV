@@ -1,0 +1,61 @@
+<div class="contactos-container">
+  <h2 class="section-title">{{ titulo }}</h2>
+
+  <div class="contactos-content">
+    <div class="contactos-info">
+      <h3>Ponte en contacto con nosotros</h3>
+      <p>Nos encantaría saber de ti. Envíanos un mensaje y nos comunicaremos pronto.</p>
+      
+      <div class="contact-details">
+        <div class="detail">
+          <strong>Email:</strong> info@granjasv.com
+        </div>
+        <div class="detail">
+          <strong>Teléfono:</strong> +34 XXX XXX XXX
+        </div>
+        <div class="detail">
+          <strong>Dirección:</strong> Calle Principal, 123
+        </div>
+      </div>
+    </div>
+
+    <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contactos-form">
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input 
+          type="text" 
+          id="nombre" 
+          formControlName="nombre" 
+          placeholder="Tu nombre"
+          class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          formControlName="email" 
+          placeholder="tu@email.com"
+          class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label for="mensaje">Mensaje</label>
+        <textarea 
+          id="mensaje" 
+          formControlName="mensaje" 
+          placeholder="Tu mensaje..."
+          rows="5"
+          class="form-input"></textarea>
+      </div>
+
+      <button 
+        type="submit" 
+        [disabled]="!contactForm.valid"
+        class="btn-enviar">
+        Enviar Mensaje
+      </button>
+    </form>
+  </div>
+</div>
