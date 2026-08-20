@@ -27,7 +27,7 @@
 
                         <div class="gasto-info">
                             <p class="gasto-concepto">
-                                {{ gasto.descripcion }} - {{ gasto.categoria }}
+                                {{ gasto.descripcion }} - {{ gasto.categoria_display }}
                             </p>
                         </div>
 
@@ -37,11 +37,13 @@
 
                         <div class="gasto-acciones">
 
-                            <button type="button" class="btn btn-gasto-editar" aria-label="Editar gasto">
+                            <button type="button" class="btn btn-gasto-editar" 
+                            aria-label="Editar gasto" (click)="editarGasto(gasto)">
                                 <i class="hgi-stroke hgi-pencil-edit-01"></i>
                             </button>
 
-                            <button type="button" class="btn btn-gasto-eliminar" aria-label="Eliminar gasto">
+                            <button type="button" class="btn btn-gasto-eliminar" 
+                            aria-label="Eliminar gasto"  (click)="eliminarGasto(gasto.id)">
                                 <i class="hgi-stroke hgi-delete-02"></i>
                             </button>
 
@@ -94,12 +96,12 @@
                         </label>
 
                         <select id="categoria" class="form-select" formControlName="categoria">
-                            <option value="">Seleccionar</option>
-                            <option value="Alimento">Alimento</option>
-                            <option value="Medicamentos">Medicamentos</option>
-                            <option value="Insumos">Insumos</option>
-                            <option value="Servicios">Servicios</option>
-                            <option value="Otros">Otros</option>
+                            <option value="ALIMENTO">Alimento</option>
+                            <option value="COMBUSTIBLE">Combustible</option>
+                            <option value="INSUMOS">Insumos Veterinarios</option>
+                            <option value="MANTENIMIENTO">Mantenimiento / Ferretería</option>
+                            <option value="LIMPIEZA">Artículos de Limpieza</option>
+                            <option value="OTROS">Otros</option>        
                         </select>
 
                         @if (
