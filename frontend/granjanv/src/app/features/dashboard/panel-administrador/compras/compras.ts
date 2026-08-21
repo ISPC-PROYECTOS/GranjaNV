@@ -48,10 +48,6 @@ export class Compras implements OnInit {
     });
   }
 
-  get totalGastos(): number {
-    return this.gastos.reduce((total, gasto) => total + Number(gasto.monto), 0);
-  }
-
   guardarGasto(): void {
     if (this.formularioGastos.valid) {
       const gasto = this.formularioGastos.value;
@@ -82,9 +78,13 @@ export class Compras implements OnInit {
       this.formularioGastos.markAllAsTouched();
     }
   }
-  
+
   eliminarGasto(id: number): void {
-    console.log('ID a eliminar:', id);
+    const confirmar = window.confirm('¿Estás seguro de que querés eliminar este gasto?');
+
+    if (!confirmar) {
+      return;
+    }
 
     this.gastosService.eliminarGasto(id).subscribe({
       next: () => {
@@ -111,5 +111,7 @@ export class Compras implements OnInit {
     this.formularioGastos.reset({
       fecha: this.fechaMaxima,
     });
+
+    this.gastoEditandoId = null;
   }
 }

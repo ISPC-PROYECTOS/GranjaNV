@@ -80,8 +80,9 @@
                         </div>
                         <p class="metrica-titulo">COMPRAS</p>
                     </div>
-                    <p class="metrica-valor">-$13.000</p>
-                    <button class="btn metrica-btn" type="button" routerLink="/dashboard/admin/finanzas">
+                    <p class="metrica-valor">
+                        -${{ totalCompras }}
+                    </p> <button class="btn metrica-btn" type="button" routerLink="/dashboard/admin/finanzas">
                         <i class="hgi-stroke hgi-arrow-right-02"></i>
                     </button>
                 </div>
@@ -132,7 +133,8 @@
                         <p class="acceso-titulo">FINANZAS</p>
                     </div>
                     <p class="acceso-descripcion">Balance • Gastos</p>
-                    <button class="btn acceso-btn" type="button" routerLink="/dashboard/admin/finanzas">Ingresar →</button>
+                    <button class="btn acceso-btn" type="button" routerLink="/dashboard/admin/finanzas">Ingresar
+                        →</button>
                 </div>
             </div>
         </div>

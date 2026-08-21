@@ -24,4 +24,8 @@ export class Gastos {
   actualizarGasto(id: number, gasto: Partial<Gasto>) {
     return this.http.patch<Gasto>(`${this.apiUrl}${id}/`, gasto);
   }
+
+  obtenerTotalGastos() {
+    return this.http.get<{ total: string }>(`${this.apiUrl}total/`);
+  }
 }
