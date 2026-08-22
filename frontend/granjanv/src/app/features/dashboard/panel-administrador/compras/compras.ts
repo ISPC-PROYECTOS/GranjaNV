@@ -130,4 +130,16 @@ export class Compras implements OnInit {
 
     this.gastoEditandoId = null;
   }
+
+  formatearNumero(valor: number | string | null | undefined): string {
+    if (valor === null || valor === undefined || valor === '') return '0,00';
+
+    const numero = Number(valor);
+    if (isNaN(numero)) return '0,00';
+
+    const [enteros, decimales] = numero.toFixed(2).split('.');
+    const enterosConPuntos = enteros.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+    return `${enterosConPuntos},${decimales}`;
+  }
 }

@@ -29,5 +29,17 @@ export class PanelDeControl {
       console.error('Error al obtener el total de compras:', error);
     }
   });
-}
+  }
+
+  formatearNumero(valor: number | string | null | undefined): string {
+    if (valor === null || valor === undefined || valor === '') return '0';
+
+    const numero = typeof valor === 'string' ? parseFloat(valor) : valor;
+    if (isNaN(numero)) return '0';
+
+    // Redondea al entero más cercano y aplica la regex de millares
+    return Math.round(numero)
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  } 
 }
