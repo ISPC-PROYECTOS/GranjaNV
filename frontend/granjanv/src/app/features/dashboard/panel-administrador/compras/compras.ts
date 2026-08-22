@@ -20,7 +20,7 @@ export class Compras implements OnInit {
   fechaMaxima = new Date().toISOString().split('T')[0];
 
   gastos: Gasto[] = [];
-
+  totalGastos: number = 0;
   gastoEditandoId: number | null = null;
 
   constructor(private fb: FormBuilder) {
@@ -34,6 +34,7 @@ export class Compras implements OnInit {
 
   ngOnInit(): void {
     this.cargarGastos();
+    this.cargarTotalGastos();
   }
 
   cargarGastos(): void {
@@ -48,6 +49,18 @@ export class Compras implements OnInit {
     });
   }
 
+  cargarTotalGastos(): void {
+    this.gastosService.obtenerTotalGastos().subscribe({
+      next: (respuesta) => {
+        this.totalGastos = Number(respuesta.total);
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error al obtener el total de gastos:', error);
+      }
+    });
+  }
+
   guardarGasto(): void {
     if (this.formularioGastos.valid) {
       const gasto = this.formularioGastos.value;
@@ -56,6 +69,7 @@ export class Compras implements OnInit {
         this.gastosService.actualizarGasto(this.gastoEditandoId, gasto).subscribe({
           next: () => {
             this.cargarGastos();
+            this.cargarTotalGastos();
             this.limpiarFormulario();
             this.gastoEditandoId = null;
           },
@@ -67,6 +81,7 @@ export class Compras implements OnInit {
         this.gastosService.crearGasto(gasto).subscribe({
           next: () => {
             this.cargarGastos();
+            this.cargarTotalGastos();
             this.limpiarFormulario();
           },
           error: (error) => {
@@ -89,6 +104,7 @@ export class Compras implements OnInit {
     this.gastosService.eliminarGasto(id).subscribe({
       next: () => {
         this.cargarGastos();
+        this.cargarTotalGastos();
       },
       error: (error) => {
         console.error('Error al eliminar el gasto:', error);
