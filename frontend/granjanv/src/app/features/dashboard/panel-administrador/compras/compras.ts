@@ -1,18 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+
 import { Gasto } from '../../../../core/models/gasto.model';
+import { Gastos } from '../../../../core/services/gastos';
 
 @Component({
   selector: 'app-compras',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './compras.html',
   styleUrl: './compras.css',
 })
-export class Compras {
+export class Compras implements OnInit {
+  private gastosService = inject(Gastos);
+  private cdr = inject(ChangeDetectorRef);
 
   formularioGastos: FormGroup;
 
   fechaMaxima = new Date().toISOString().split('T')[0];
+
+  gastos: Gasto[] = [];
+
+  gastoEditandoId: number | null = null;
 
   constructor(private fb: FormBuilder) {
     this.formularioGastos = this.fb.group({
@@ -23,47 +32,86 @@ export class Compras {
     });
   }
 
-  // DATOS DE PRUEBA
+  ngOnInit(): void {
+    this.cargarGastos();
+  }
 
-  gastos: Gasto[] = [
-    {
-      id: 1,
-      descripcion: 'Alimento balanceado',
-      categoria: 'Alimento',
-      monto: 25000,
-      fecha: '10/08/2026',
-    },
-    {
-      id: 2,
-      descripcion: 'Medicamentos',
-      categoria: 'Insumos',
-      monto: 12500,
-      fecha: '08/08/2026',
-    },
-    {
-      id: 3,
-      descripcion: 'Alambre',
-      categoria: 'Mantenimiento',
-      monto: 8000,
-      fecha: '05/08/2026',
-    },
-  ];
-
-  get totalGastos(): number {
-    return this.gastos.reduce((total, gasto) => total + gasto.monto, 0);
+  cargarGastos(): void {
+    this.gastosService.obtenerGastos().subscribe({
+      next: (gastos) => {
+        this.gastos = gastos;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error al obtener los gastos:', error);
+      },
+    });
   }
 
   guardarGasto(): void {
-    if (this.formularioGastos.valid){
-      console.log(this.formularioGastos.value)
+    if (this.formularioGastos.valid) {
+      const gasto = this.formularioGastos.value;
+
+      if (this.gastoEditandoId !== null) {
+        this.gastosService.actualizarGasto(this.gastoEditandoId, gasto).subscribe({
+          next: () => {
+            this.cargarGastos();
+            this.limpiarFormulario();
+            this.gastoEditandoId = null;
+          },
+          error: (error) => {
+            console.error('Error al actualizar el gasto:', error);
+          },
+        });
+      } else {
+        this.gastosService.crearGasto(gasto).subscribe({
+          next: () => {
+            this.cargarGastos();
+            this.limpiarFormulario();
+          },
+          error: (error) => {
+            console.error('Error al guardar el gasto:', error);
+          },
+        });
+      }
     } else {
       this.formularioGastos.markAllAsTouched();
     }
+  }
+
+  eliminarGasto(id: number): void {
+    const confirmar = window.confirm('¿Estás seguro de que querés eliminar este gasto?');
+
+    if (!confirmar) {
+      return;
+    }
+
+    this.gastosService.eliminarGasto(id).subscribe({
+      next: () => {
+        this.cargarGastos();
+      },
+      error: (error) => {
+        console.error('Error al eliminar el gasto:', error);
+      },
+    });
+  }
+
+  editarGasto(gasto: Gasto): void {
+    this.gastoEditandoId = gasto.id;
+
+    this.formularioGastos.patchValue({
+      monto: Number(gasto.monto),
+      categoria: gasto.categoria,
+      descripcion: gasto.descripcion,
+      fecha: gasto.fecha,
+    });
   }
 
   limpiarFormulario(): void {
     this.formularioGastos.reset({
       fecha: this.fechaMaxima,
     });
+
+    this.gastoEditandoId = null;
   }
 }

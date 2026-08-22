@@ -18,7 +18,8 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard/admin/finanzas',
-    component: Compras
+    component: Compras,
+    canActivate: [adminGuard]
   },
   {
     path: 'dashboard/admin/registro-usuario',

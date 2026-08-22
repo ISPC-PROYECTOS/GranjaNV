@@ -1,53 +1,48 @@
-<header class="navbar-wrapper my-2 mx-3">
-  <nav class="navbar-card p-2 px-3 shadow-sm d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
-      
-    <!-- BLOQUE IZQUIERDO: Logo + Clima + Fecha -->
-    <div class="d-flex flex-column flex-md-row align-items-center gap-2 gap-md-3 w-100 w-md-auto justify-content-center justify-content-md-start">
-      <!-- Logo -->
-      <a class="navbar-brand m-0" href="#">
-        <img 
-          src="logo-granjanv.png" 
-          alt="Logo Granja NV" 
-          class="brand-logo" 
-        />
-      </a>
+<header class="navbar-wrapper my-3 mx-3">
+  <nav class="navbar-card p-2 px-3 shadow-sm">
 
-      <!-- Clima + Fecha -->
-      <div class="d-flex align-items-center gap-2 flex-wrap justify-content-center">
-        <div class="info-pill px-3 py-1 d-flex align-items-center gap-2">
-          <i class="hgi-stroke hgi-cloud-sun"></i>
-          <span class="weather-text">{{ climaInfo }}</span>
-        </div>
-        <div class="info-pill px-3 py-1 d-flex align-items-center gap-2">
-          <i class="hgi-stroke hgi-calendar-01"></i>
-          <span class="weather-text">{{ fechaActual }}</span>
-        </div>
+    <!-- BLOQUE IZQUIERDO: Logo + Clima + Fecha -->
+    <div class="navbar-logo"> <!-- Logo -->
+      <a class="navbar-brand m-0" href="#">
+        <img src="logo-granja.png" alt="Logo Granja NV" class="brand-logo" />
+      </a>
+    </div>
+
+    <!-- Clima + Fecha -->
+    <div class="navbar-info">
+      <div class="info-pill px-3 py-1 d-flex align-items-center gap-2">
+        <i class="hgi-stroke hgi-cloud-sun"></i>
+        <span class="weather-text">{{ climaInfo }}</span>
+      </div>
+      <div class="info-pill px-3 py-1 d-flex align-items-center gap-2">
+        <i class="hgi-stroke hgi-calendar-01"></i>
+        <span class="weather-text">{{ fechaActual }}</span>
       </div>
     </div>
-    
+
     <!-- BLOQUE DERECHO: Acciones de usuario (Oculto en Login) -->
     @if (!esVistaLogin()) {
-      <div class="d-flex align-items-center gap-3">
-        <button class="btn btn-icon p-1 position-relative" type="button" aria-label="Notificaciones">
-          <i class="hgi-stroke hgi-notification-01 fs-5"></i>
-        </button>
+    <div class="navbar-acciones"> <button class="btn btn-icon p-1 position-relative" type="button"
+        aria-label="Notificaciones">
+        <i class="hgi-stroke hgi-notification-01 fs-5"></i>
+      </button>
 
-        <div class="dropdown">
-          <button 
-            class="btn profile-pill d-flex align-items-center gap-2 py-1 px-2 border-0 dropdown-toggle" 
-            type="button" 
-            data-bs-toggle="dropdown" 
-            aria-expanded="false">
-            <span class="avatar-circle">{{ usuarioInicial () }}</span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
-            <li><a class="dropdown-item" href="#"><i class="hgi-stroke hgi-settings-02 me-2"></i>Configuración</a></li>
-            <li><a class="dropdown-item" href="#"><i class="hgi-stroke hgi-moon-02 me-2"></i>Modo oscuro</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><button class="dropdown-item text-danger" (click)="cerrarSesion()"><i class="hgi-stroke hgi-logout-01 me-2"></i>Cerrar sesión</button></li>
-          </ul>
-        </div>
+      <div class="dropdown">
+        <button class="btn profile-pill d-flex align-items-center gap-2 py-1 px-2 border-0 dropdown-toggle"
+          type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <span class="avatar-circle">{{ usuarioInicial () }}</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+          <li><a class="dropdown-item" href="#"><i class="hgi-stroke hgi-settings-02 me-2"></i>Configuración</a></li>
+          <li><a class="dropdown-item" href="#"><i class="hgi-stroke hgi-moon-02 me-2"></i>Modo oscuro</a></li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+          <li><button class="dropdown-item text-danger" (click)="cerrarSesion()"><i
+                class="hgi-stroke hgi-logout-01 me-2"></i>Cerrar sesión</button></li>
+        </ul>
       </div>
+    </div>
     }
 
   </nav>
