@@ -1,0 +1,243 @@
+.dashboard-admin{
+    background-color: #F7EAE0;
+    min-height: calc(100vh - 70px);
+    padding-left: 32px;
+    padding-right: 32px;
+}
+
+/* ACCIONES RÁPIDAS MOBILE */
+
+.acciones-rapidas {
+    background-color: var(--color-blanco);
+    border: 2px solid var(--color-primario);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.acciones-titulo {
+    font-family: var(--font-titulos);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-primario);
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.card-acciones {
+    background-color: var(--color-primario-claro);
+    border: 1px solid var(--color-primario);
+    border-radius: 16px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    /* min-height: 110px; */
+    height: 110px;
+    padding: 10px;
+    text-align: center;
+}
+
+.accion-icono {
+    width: 48px;
+    height: 48px;
+
+    background-color: var(--color-blanco);
+    border-radius: 14px;
+    color: var(--color-primario);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.card-acciones p {
+    font-family: var(--font-textos);
+    font-size: 12px;
+    line-height: 1.3;
+    min-height: 32px;
+    margin: 0;
+}
+
+/* MÉTRICAS */
+
+.card-metricas .card-body {
+    position: relative;
+}
+
+.card-metricas{
+    background-color: var(--color-blanco);
+    border: 2px solid var(--color-primario);
+    border-radius: 27px;
+}
+
+.metrica-titulo{
+    font-family: var(--font-textos);
+    font-weight: 400;
+    font-size: 20px;
+    margin: 0;
+}
+
+.metrica-valor{
+    font-family: var(--font-titulos);
+    font-weight: 600;
+    font-size: 37px;
+    margin-left: 60px;
+}
+
+.metrica-icono {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--color-secundario);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.metrica-icono-verde {
+    background-color: var(--color-primario);
+    color: var(--color-blanco);
+}
+
+.metrica-icono-naranja {
+    background-color: var(--color-secundario);
+    color: var(--color-blanco);
+}
+
+.metrica-icono i {
+    font-size: 30px;
+}
+
+.metrica-encabezado {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.metrica-btn {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+
+    padding: 0;
+    border: 0;
+    color: var(--color-negro);
+
+    transition: transform 0.2s ease, color 0.2s ease;
+
+}
+
+.metrica-btn:hover {
+    color: var(--color-primario);
+    transform: translateX(4px);
+}
+
+.metrica-btn i {
+    font-size: 37px;
+}
+
+/* ACCESOS */
+
+.seccion-accesos {
+    background-color: var(--color-primario-claro);
+    border-radius: 27px;
+    padding: 16px;
+    box-shadow: 0 0 7px var(--color-primario);
+}
+
+.card-accesos {
+    background-color: var(--color-blanco);
+    border: 2px solid var(--color-secundario);
+    border-radius: 27px;
+}
+
+.card-accesos .card-body {
+    min-height: 190px;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+}
+
+.acceso-titulo {
+    font-family: var(--font-titulos);
+    font-size: 27px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.1;
+}
+
+.acceso-descripcion {
+    font-family: var(--font-textos);
+    font-weight: 400;
+    font-size: 16px;
+
+    margin-top: auto;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+
+    border-bottom: 1px solid var(--color-gris-claro);
+}
+
+.acceso-icono {
+    width: 57px;
+    height: 57px;
+    background-color: var(--color-secundario-claro);
+    border-radius: 8px;
+    color: var(--color-secundario);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 12px;
+}
+
+.acceso-icono i {
+    font-size: 37px;
+}
+
+.acceso-btn {
+    align-self: flex-end;
+
+    background-color: var(--color-primario);
+    color: var(--color-blanco);
+    font-family: var(--font-titulos);
+    font-weight: 600;
+    font-size: 20px;
+
+    padding: 6px 14px;
+    border: none;
+    border-radius: 6px;
+}
+
+.acceso-btn:hover {
+    background-color: var(--color-secundario-claro);
+    color: var(--color-secundario);
+}
+
+.acceso-encabezado {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+@media (min-width: 1200px) and (max-width: 1324px) {
+    .seccion-metricas > div {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-acciones p {
+        max-width: 55px;
+        line-height: 1.3;
+        min-height: 32px;
+    }
+}

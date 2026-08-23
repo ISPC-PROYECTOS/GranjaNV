@@ -1,28 +1,42 @@
-# Angular specific
-/dist/
-/out-tsc/
-/tmp/
-/coverage/
-/e2e/test-output/
-/.angular/
-.angular/
+# ==========================================
+# Entornos Virtuales y Dependencias (Backend)
+# ==========================================
+backend/.venv/
+.venv/
+ENV/
+env/
 
-# Node modules and dependency files
-/node_modules/
-/package-lock.json
-/yarn.lock
+# ==========================================
+# Python & Django
+# ==========================================
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+backend/db.sqlite3
 
-# Environment files
-/.env
+# Configuración de Linters / Formateadores
+.pytest_cache/
+.cache/
 
-# Angular CLI and build artefacts
-/.angular-cli.json
-/.ng/
 
-# TypeScript cache
-*.tsbuildinfo
-
-# Logs
+# ==========================================
+# Frontend (Node / Angular)
+# ==========================================
+frontend/node_modules/
+frontend/.angular/
+frontend/dist/
+frontend/tmp/
+*.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+
+# ==========================================
+# Sistemas Operativos e IDEs
+# ==========================================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+repomix-output.xml
