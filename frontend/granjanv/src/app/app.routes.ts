@@ -9,6 +9,26 @@ import { Compras } from './features/dashboard/panel-administrador/compras/compra
 import { Home } from './home/home';
 
 export const routes: Routes = [
+  { path: 'auth/login', component: LoginComponent },
+
+  // 🟢 Ruta de Victoria (coincide con la que invoca auth.ts al loguear como Admin)
+  { 
+    path: 'dashboard/admin/panel-de-control', 
+    component: PanelDeControl,
+    canActivate: [adminGuard] 
+  },
+  {
+    path: 'dashboard/admin/finanzas',
+    component: Compras,
+    canActivate: [adminGuard]
+  },
+  {
+    path: 'dashboard/admin/registro-usuario',
+    component: RegistroUsuarioComponent,
+    canActivate: [adminGuard]
+  },
+  { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
+  { path: '**', redirectTo: 'auth/login' }
 	{ path: '', component: Home },
 	{ path: '**', redirectTo: '' }
 ];
