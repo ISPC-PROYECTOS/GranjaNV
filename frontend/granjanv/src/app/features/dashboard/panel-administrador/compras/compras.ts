@@ -133,6 +133,13 @@ export class Compras implements OnInit {
       descripcion: gasto.descripcion,
       fecha: gasto.fecha,
     });
+
+    // Scroll  hacia el formulario y foco en el campo monto
+    setTimeout(() => {
+      const formulario = document.getElementById('form-gasto');
+      formulario?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('monto')?.focus();
+    }, 50);
   }
 
   limpiarFormulario(): void {
