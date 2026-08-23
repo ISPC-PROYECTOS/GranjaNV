@@ -81,7 +81,7 @@
                         </label>
 
                         <input type="number" id="monto" class="form-control" formControlName="monto"
-                            placeholder="$0,00">
+                            placeholder="$0,00" step="100" >
 
                         @if(
                         formularioGastos.get('monto')?.touched && formularioGastos.get('monto')?.hasError('required')
