@@ -90,16 +90,20 @@
     display: flex;
     align-items: center;
     gap: 16px;
+    min-width: 0; /*prueba*/
 }
 
 .gasto-info {
     flex: 1;
+    min-width: 120px; /*prueba*/
 }
 
 .gasto-concepto {
     font-family: var(--font-textos);
     font-size: 18px;
     margin: 0;
+    line-height: 1.3;
+    overflow-wrap: anywhere; /*prueba*/ 
 }
 
 .gasto-monto {
@@ -108,12 +112,44 @@
     font-weight: 600;
     margin: 0;
     white-space: nowrap;
+    flex-shrink: 0; /* prueba*/
 }
 
 .gasto-acciones {
     display: flex;
     align-items: center;
     gap: 4px;
+    flex-shrink: 0; /* prueba */
+}
+
+/* Ajuste específico para pantallas móviles estrechas. Prueba de linea 125/153 */
+@media (max-width: 576px) {
+    .finanzas {
+        padding: 12px 14px;
+    }
+
+    .seccion-finanzas {
+        padding: 14px;
+        border-radius: 20px;
+    }
+
+    .seccion-gastos {
+        padding: 16px;
+        border-radius: 20px;
+    }
+
+    .gasto-item {
+        flex-wrap: wrap; /* En celular pasa monto y acciones a la línea siguiente si hace falta */
+        gap: 8px 12px;
+    }
+
+    .gasto-info {
+        flex: 1 1 100%; /* La descripción ocupa el ancho completo superior */
+    }
+
+    .gasto-monto {
+        margin-left: auto; /* Empuja el monto y las acciones juntos a la derecha */
+    }
 }
 
 .btn-gasto-editar,

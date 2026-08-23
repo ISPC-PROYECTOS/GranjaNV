@@ -60,7 +60,17 @@ export class Compras implements OnInit {
       }
     });
   }
+  mensajeExito: string | null = null;
+  private timerExito: any = null;
 
+  mostrarExito(mensaje: string): void {
+    this.mensajeExito = mensaje;
+    if (this.timerExito) clearTimeout(this.timerExito);
+    this.timerExito = setTimeout(() => {
+      this.mensajeExito = null;
+      this.cdr.detectChanges();
+    }, 3000);
+  }
   guardarGasto(): void {
     if (this.formularioGastos.valid) {
       const gasto = this.formularioGastos.value;
@@ -71,6 +81,7 @@ export class Compras implements OnInit {
             this.cargarGastos();
             this.cargarTotalGastos();
             this.limpiarFormulario();
+            this.mostrarExito('¡Gasto actualizado con éxito!');
             this.gastoEditandoId = null;
           },
           error: (error) => {
@@ -83,6 +94,7 @@ export class Compras implements OnInit {
             this.cargarGastos();
             this.cargarTotalGastos();
             this.limpiarFormulario();
+            this.mostrarExito('¡Gasto cargado con éxito!');
           },
           error: (error) => {
             console.error('Error al guardar el gasto:', error);
@@ -121,6 +133,13 @@ export class Compras implements OnInit {
       descripcion: gasto.descripcion,
       fecha: gasto.fecha,
     });
+
+    // Scroll  hacia el formulario y foco en el campo monto
+    setTimeout(() => {
+      const formulario = document.getElementById('form-gasto');
+      formulario?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('monto')?.focus();
+    }, 50);
   }
 
   limpiarFormulario(): void {
