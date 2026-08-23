@@ -68,7 +68,11 @@
             <section class="seccion-cargar-gasto">
 
                 <h2 class="cargar-gasto-titulo">CARGAR GASTO</h2>
-
+                @if (mensajeExito){
+                    <div class="alert alert-success py-2 text-center mb-3">
+                      {{ mensajeExito }}
+                    </div>
+                }
                 <form class="formulario-gasto" [formGroup]="formularioGastos" (ngSubmit)="guardarGasto()">
 
                     <div class="mb-3">
