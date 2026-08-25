@@ -5,12 +5,13 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from core.mixins import RangoFechaMixin
 from users.permissions import IsAdminRole
 from .models import Gasto
 from .serializers import GastoSerializer
 
 
-class GastoViewSet(viewsets.ModelViewSet):
+class GastoViewSet(RangoFechaMixin, viewsets.ModelViewSet):
     queryset = Gasto.objects.all()
     serializer_class = GastoSerializer
     permission_classes = [IsAuthenticated, IsAdminRole]
