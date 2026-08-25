@@ -1,0 +1,241 @@
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300   1) /* PÁGINA */
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300   2) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300   3) .finanzas {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300   4)     background-color: var(--color-secundario-claro);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300   5)     min-height: calc(100vh - 70px);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300   6)     padding: 20px 32px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300   7) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300   8) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300   9) .btn-volver-panel {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  10)     background-color: var(--color-secundario);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  11)     color: var(--color-blanco);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  12)     font-family: var(--font-titulos);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  13)     font-weight: 600;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  14)     border: none;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  15)     border-radius: 10px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  16)     padding: 8px 14px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  17) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  18) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  19) /* CONTENEDOR PRINCIPAL */
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  20) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  21) .seccion-finanzas {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  22)     background-color: var(--color-primario-claro);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  23)     border-radius: 37px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  24)     box-shadow: 0 4px 4px var(--color-primario);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  25)     padding: 24px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  26)     margin-left: 0;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  27)     margin-right: 0;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  28) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  29) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  30) /* GASTOS */
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  31) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  32) .seccion-gastos {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  33)     background-color: var(--color-blanco);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  34)     border: 1px solid var(--color-gris-oscuro);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  35)     border-radius: 27px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  36)     min-height: 100%;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  37)     padding: 24px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  38)     display: flex;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  39)     flex-direction: column;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  40) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  41) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  42) .gastos-encabezado {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  43)     display: flex;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  44)     align-items: center;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  45)     justify-content: space-between;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  46)     gap: 16px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  47)     margin-bottom: 24px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  48) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  49) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  50) .gastos-titulo {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  51)     font-family: var(--font-titulos);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  52)     font-size: 30px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  53)     font-weight: 600;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  54)     margin: 0;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  55) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  56) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  57) .gastos-buscador {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  58)     display: flex;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  59)     align-items: center;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  60)     gap: 8px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  61)     border: 1px solid var(--color-negro);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  62)     border-radius: 10px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  63)     padding: 3px 12px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  64) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  65) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  66) .gastos-buscador i {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  67)     font-size: 27px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  68) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  69) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  70) .gastos-buscador-input {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  71)     width: 110px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  72)     border: none;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  73)     outline: none;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  74)     background-color: transparent;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  75)     font-family: var(--font-titulos);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  76)     font-size: 20px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  77)     font-weight: 600;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  78) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  79) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  80) .gastos-lista {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  81)     display: flex;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  82)     flex-direction: column;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  83)     gap: 12px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  84) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  85) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  86) .gasto-item {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  87)     background-color: var(--color-gris-claro);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  88)     border-radius: 18px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  89)     padding: 18px 20px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  90)     display: flex;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  91)     align-items: center;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  92)     gap: 16px;
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300  93)     min-width: 0; /*prueba*/
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  94) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  95) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  96) .gasto-info {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  97)     flex: 1;
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300  98)     min-width: 120px; /*prueba*/
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300  99) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 100) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 101) .gasto-concepto {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 102)     font-family: var(--font-textos);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 103)     font-size: 18px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 104)     margin: 0;
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 105)     line-height: 1.3;
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 106)     overflow-wrap: anywhere; /*prueba*/ 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 107) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 108) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 109) .gasto-monto {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 110)     font-family: var(--font-titulos);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 111)     font-size: 18px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 112)     font-weight: 600;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 113)     margin: 0;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 114)     white-space: nowrap;
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 115)     flex-shrink: 0; /* prueba*/
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 116) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 117) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 118) .gasto-acciones {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 119)     display: flex;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 120)     align-items: center;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 121)     gap: 4px;
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 122)     flex-shrink: 0; /* prueba */
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 123) }
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 124) 
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 125) /* Ajuste específico para pantallas móviles estrechas. Prueba de linea 125/153 */
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 126) @media (max-width: 576px) {
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 127)     .finanzas {
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 128)         padding: 12px 14px;
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 129)     }
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 130) 
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 131)     .seccion-finanzas {
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 132)         padding: 14px;
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 133)         border-radius: 20px;
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 134)     }
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 135) 
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 136)     .seccion-gastos {
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 137)         padding: 16px;
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 138)         border-radius: 20px;
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 139)     }
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 140) 
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 141)     .gasto-item {
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 142)         flex-wrap: wrap; /* En celular pasa monto y acciones a la línea siguiente si hace falta */
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 143)         gap: 8px 12px;
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 144)     }
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 145) 
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 146)     .gasto-info {
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 147)         flex: 1 1 100%; /* La descripción ocupa el ancho completo superior */
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 148)     }
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 149) 
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 150)     .gasto-monto {
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 151)         margin-left: auto; /* Empuja el monto y las acciones juntos a la derecha */
+5cd14805 (PereyraHebe    2026-08-23 00:18:16 -0300 152)     }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 153) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 154) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 155) .btn-gasto-editar,
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 156) .btn-gasto-eliminar {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 157)     padding: 4px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 158)     border: none;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 159)     color: var(--color-negro);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 160)     font-size: 22px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 161) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 162) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 163) .gastos-total {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 164)     background-color: var(--color-primario-claro);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 165)     border-radius: 10px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 166)     margin-top: auto;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 167)     padding: 12px 16px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 168)     display: flex;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 169)     align-items: center;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 170)     justify-content: center;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 171)     gap: 8px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 172) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 173) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 174) .gastos-total-texto,
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 175) .gastos-total-monto {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 176)     font-family: var(--font-titulos);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 177)     font-size: 24px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 178)     font-weight: 600;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 179)     color: var(--color-primario);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 180)     margin: 0;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 181) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 182) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 183) /* CARGAR GASTO */
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 184) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 185) .seccion-cargar-gasto {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 186)     background-color: var(--color-primario);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 187)     border-radius: 27px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 188)     padding: 24px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 189) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 190) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 191) .cargar-gasto-titulo {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 192)     font-family: var(--font-titulos);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 193)     font-size: 30px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 194)     font-weight: 600;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 195)     color: var(--color-blanco);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 196)     margin-bottom: 37px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 197) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 198) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 199) .formulario-gasto {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 200)     background-color: var(--color-secundario-claro);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 201)     border-radius: 20px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 202)     padding: 24px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 203)     margin-top: 25px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 204) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 205) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 206) .formulario-gasto .form-label {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 207)     font-family: var(--font-textos);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 208)     font-weight: 600;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 209) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 210) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 211) .formulario-gasto .form-control,
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 212) .formulario-gasto .form-select {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 213)     border: none;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 214)     border-radius: 10px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 215) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 216) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 217) .formulario-gasto-acciones {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 218)     display: flex;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 219)     align-items: center;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 220)     justify-content: space-between;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 221)     gap: 24px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 222) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 223) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 224) .btn-limpiar,
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 225) .btn-guardar {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 226)     min-width: 130px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 227)     font-family: var(--font-titulos);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 228)     font-weight: 600;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 229)     border: none;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 230)     border-radius: 7px;
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 231) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 232) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 233) .btn-limpiar {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 234)     background-color: var(--color-gris-claro);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 235)     color: var(--color-negro);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 236) }
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 237) 
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 238) .btn-guardar {
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 239)     background-color: var(--color-primario);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 240)     color: var(--color-blanco);
+3a0401b2 (Victoria Picco 2026-08-15 19:17:50 -0300 241) }

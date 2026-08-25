@@ -27,6 +27,8 @@ export class Compras implements OnInit, OnDestroy {
   private buscadorSubject = new Subject<string>();
   private buscadorSub!: Subscription;
 
+  vistaMobile: 'formulario' | 'gastos' = 'formulario';
+
   constructor(private fb: FormBuilder) {
     this.formularioGastos = this.fb.group({
       monto: [null, [Validators.required, Validators.min(1)]],
@@ -78,9 +80,10 @@ export class Compras implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error al obtener el total de gastos:', error);
-      }
+      },
     });
   }
+
   mensajeExito: string | null = null;
   private timerExito: any = null;
 
@@ -92,6 +95,7 @@ export class Compras implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     }, 3000);
   }
+
   guardarGasto(): void {
     if (this.formularioGastos.valid) {
       const gasto = this.formularioGastos.value;
@@ -155,6 +159,8 @@ export class Compras implements OnInit, OnDestroy {
       fecha: gasto.fecha,
     });
 
+    this.vistaMobile = 'formulario';
+
     // Scroll  hacia el formulario y foco en el campo monto
     setTimeout(() => {
       const formulario = document.getElementById('form-gasto');
@@ -181,5 +187,13 @@ export class Compras implements OnInit, OnDestroy {
     const enterosConPuntos = enteros.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
     return `${enterosConPuntos},${decimales}`;
+  }
+
+  mostrarFormulario(): void {
+    this.vistaMobile = 'formulario';
+  }
+
+  mostrarGastos(): void {
+    this.vistaMobile = 'gastos';
   }
 }

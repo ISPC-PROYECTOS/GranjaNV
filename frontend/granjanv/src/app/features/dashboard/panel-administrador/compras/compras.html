@@ -4,10 +4,25 @@
         ← Panel de control
     </button>
 
+    <div class="d-sm-none finanzas-tabs">
+
+        <button type="button" class="btn finanzas-tab" [class.finanzas-tab-activo]="vistaMobile === 'formulario'"
+            (click)="mostrarFormulario()">
+            Cargar gasto
+        </button>
+
+        <button type="button" class="btn finanzas-tab" [class.finanzas-tab-activo]="vistaMobile === 'gastos'"
+            (click)="mostrarGastos()">
+            Gastos
+        </button>
+
+    </div>
+
     <section class="row seccion-finanzas my-3 g-4">
 
         <!-- GASTOS -->
-        <div class="col-12 col-lg-6 order-2 order-lg-1">
+        <div class="col-12 col-lg-6 order-2 order-lg-1" [class.d-none]="vistaMobile !== 'gastos'"
+            [class.d-sm-block]="true">
             <section class="seccion-gastos">
 
                 <div class="gastos-encabezado">
@@ -32,18 +47,18 @@
                         </div>
 
                         <p class="gasto-monto">
-                            -${{ gasto.monto }}
+                            -${{ formatearNumero(gasto.monto) }}
                         </p>
 
                         <div class="gasto-acciones">
 
-                            <button type="button" class="btn btn-gasto-editar" 
-                            aria-label="Editar gasto" (click)="editarGasto(gasto)">
+                            <button type="button" class="btn btn-gasto-editar" aria-label="Editar gasto"
+                                (click)="editarGasto(gasto)">
                                 <i class="hgi-stroke hgi-pencil-edit-01"></i>
                             </button>
 
-                            <button type="button" class="btn btn-gasto-eliminar" 
-                            aria-label="Eliminar gasto"  (click)="eliminarGasto(gasto.id)">
+                            <button type="button" class="btn btn-gasto-eliminar" aria-label="Eliminar gasto"
+                                (click)="eliminarGasto(gasto.id)">
                                 <i class="hgi-stroke hgi-delete-02"></i>
                             </button>
 
@@ -64,24 +79,26 @@
 
 
         <!-- CARGAR GASTO -->
-        <div class="col-12 col-lg-6 order-1 order-lg-2">
+        <div class="col-12 col-lg-6 order-1 order-lg-2" [class.d-none]="vistaMobile !== 'formulario'"
+            [class.d-sm-block]="true">
             <section class="seccion-cargar-gasto">
 
-                <h2 class="cargar-gasto-titulo">CARGAR GASTO</h2>
+                <h2 class="cargar-gasto-titulo d-none d-sm-block">CARGAR GASTO</h2>
                 @if (mensajeExito){
-                    <div class="alert alert-success py-2 text-center mb-3">
-                      {{ mensajeExito }}
-                    </div>
+                <div class="alert alert-success py-2 text-center mb-3 mensaje-exito">
+                    {{ mensajeExito }}
+                </div>
                 }
-                <form id="form-gasto" class="formulario-gasto" [formGroup]="formularioGastos" (ngSubmit)="guardarGasto()">
+                <form id="form-gasto" class="formulario-gasto" [formGroup]="formularioGastos"
+                    (ngSubmit)="guardarGasto()">
 
                     <div class="mb-3">
                         <label for="monto" class="form-label">
                             Monto
                         </label>
 
-                        <input type="number" id="monto" class="form-control" formControlName="monto"
-                            placeholder="$0,00" step="100" >
+                        <input type="number" id="monto" class="form-control" formControlName="monto" placeholder="$0,00"
+                            step="100">
 
                         @if(
                         formularioGastos.get('monto')?.touched && formularioGastos.get('monto')?.hasError('required')
@@ -105,11 +122,12 @@
                             <option value="INSUMOS">Insumos Veterinarios</option>
                             <option value="MANTENIMIENTO">Mantenimiento / Ferretería</option>
                             <option value="LIMPIEZA">Artículos de Limpieza</option>
-                            <option value="OTROS">Otros</option>        
+                            <option value="OTROS">Otros</option>
                         </select>
 
                         @if (
-                        formularioGastos.get('categoria')?.touched && formularioGastos.get('categoria')?.hasError('required')
+                        formularioGastos.get('categoria')?.touched &&
+                        formularioGastos.get('categoria')?.hasError('required')
                         ) {
                         <p>La categoría es obligatoria.</p>
                         }
@@ -123,11 +141,13 @@
                         <input type="text" id="descripcion" class="form-control" formControlName="descripcion">
 
                         @if (
-                        formularioGastos.get('descripcion')?.touched && formularioGastos.get('descripcion')?.hasError('required')
+                        formularioGastos.get('descripcion')?.touched &&
+                        formularioGastos.get('descripcion')?.hasError('required')
                         ) {
                         <p>La descripción es obligatoria.</p>
                         } @else if (
-                            formularioGastos.get('descripcion')?.touched && formularioGastos.get('descripcion')?.hasError('minlength')
+                        formularioGastos.get('descripcion')?.touched &&
+                        formularioGastos.get('descripcion')?.hasError('minlength')
                         ) {
                         <p>La descripción debe tener al menos 3 caracteres.</p>
                         }
