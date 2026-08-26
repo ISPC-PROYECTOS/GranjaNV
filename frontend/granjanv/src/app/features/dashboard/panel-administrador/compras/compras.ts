@@ -4,11 +4,13 @@ import { RouterLink } from '@angular/router';
 import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { Gasto } from '../../../../core/models/gasto.model';
-import { Gastos } from '../../../../core/services/gastos';
+import { Gastos, FiltroGastos } from '../../../../core/services/gastos';
+import { formatearFechaISO, obtenerRangoMesActual } from '../../../../core/utils/date.utils';
+import { SelectorFecha, RangoFechaSeleccionado } from '../../../../shared/selector-fecha/selector-fecha';
 
 @Component({
   selector: 'app-compras',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, SelectorFecha],
   templateUrl: './compras.html',
   styleUrl: './compras.css',
 })
@@ -18,7 +20,10 @@ export class Compras implements OnInit, OnDestroy {
 
   formularioGastos: FormGroup;
 
-  fechaMaxima = new Date().toISOString().split('T')[0];
+  fechaMaxima = formatearFechaISO(new Date());
+
+  rangoActual: RangoFechaSeleccionado = obtenerRangoMesActual();
+  terminoBusqueda: string = '';
 
   gastos: Gasto[] = [];
   totalGastos: number = 0;
@@ -39,13 +44,13 @@ export class Compras implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.cargarGastos();
-    this.cargarTotalGastos();
+    this.cargarDatos();
 
     this.buscadorSub = this.buscadorSubject
       .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe((termino) => {
-        this.cargarGastos(termino);
+        this.terminoBusqueda = termino;
+        this.cargarDatos();
       });
   }
 
@@ -60,8 +65,23 @@ export class Compras implements OnInit, OnDestroy {
     this.buscadorSubject.next(input.value);
   }
 
-  cargarGastos(termino: string = ''): void {
-    this.gastosService.obtenerGastos(termino).subscribe({
+  onCambioRangoFecha(rango: RangoFechaSeleccionado): void {
+    this.rangoActual = rango;
+    this.cargarDatos();
+  }
+
+  private obtenerFiltrosActivos(): FiltroGastos {
+    return {
+      search: this.terminoBusqueda,
+      fechaDesde: this.rangoActual.fechaDesde,
+      fechaHasta: this.rangoActual.fechaHasta,
+    };
+  }
+
+  cargarDatos(): void {
+    const filtros = this.obtenerFiltrosActivos();
+
+    this.gastosService.obtenerGastos(filtros).subscribe({
       next: (gastos) => {
         this.gastos = gastos;
         this.cdr.detectChanges();
@@ -70,10 +90,8 @@ export class Compras implements OnInit, OnDestroy {
         console.error('Error al obtener los gastos:', error);
       },
     });
-  }
 
-  cargarTotalGastos(): void {
-    this.gastosService.obtenerTotalGastos().subscribe({
+    this.gastosService.obtenerTotalGastos(filtros).subscribe({
       next: (respuesta) => {
         this.totalGastos = Number(respuesta.total);
         this.cdr.detectChanges();
@@ -103,11 +121,9 @@ export class Compras implements OnInit, OnDestroy {
       if (this.gastoEditandoId !== null) {
         this.gastosService.actualizarGasto(this.gastoEditandoId, gasto).subscribe({
           next: () => {
-            this.cargarGastos();
-            this.cargarTotalGastos();
+            this.cargarDatos();
             this.limpiarFormulario();
             this.mostrarExito('¡Gasto actualizado con éxito!');
-            this.gastoEditandoId = null;
           },
           error: (error) => {
             console.error('Error al actualizar el gasto:', error);
@@ -116,8 +132,7 @@ export class Compras implements OnInit, OnDestroy {
       } else {
         this.gastosService.crearGasto(gasto).subscribe({
           next: () => {
-            this.cargarGastos();
-            this.cargarTotalGastos();
+            this.cargarDatos();
             this.limpiarFormulario();
             this.mostrarExito('¡Gasto cargado con éxito!');
           },
@@ -133,15 +148,11 @@ export class Compras implements OnInit, OnDestroy {
 
   eliminarGasto(id: number): void {
     const confirmar = window.confirm('¿Estás seguro de que querés eliminar este gasto?');
-
-    if (!confirmar) {
-      return;
-    }
+    if (!confirmar) return;
 
     this.gastosService.eliminarGasto(id).subscribe({
       next: () => {
-        this.cargarGastos();
-        this.cargarTotalGastos();
+        this.cargarDatos();
       },
       error: (error) => {
         console.error('Error al eliminar el gasto:', error);
@@ -161,7 +172,6 @@ export class Compras implements OnInit, OnDestroy {
 
     this.vistaMobile = 'formulario';
 
-    // Scroll  hacia el formulario y foco en el campo monto
     setTimeout(() => {
       const formulario = document.getElementById('form-gasto');
       formulario?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -173,7 +183,6 @@ export class Compras implements OnInit, OnDestroy {
     this.formularioGastos.reset({
       fecha: this.fechaMaxima,
     });
-
     this.gastoEditandoId = null;
   }
 
@@ -184,9 +193,9 @@ export class Compras implements OnInit, OnDestroy {
     if (isNaN(numero)) return '0,00';
 
     const [enteros, decimales] = numero.toFixed(2).split('.');
-    const enterosConPuntos = enteros.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const enterosConPuntos = (enteros ?? '0').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
-    return `${enterosConPuntos},${decimales}`;
+    return `${enterosConPuntos},${decimales ?? '00'}`;
   }
 
   mostrarFormulario(): void {

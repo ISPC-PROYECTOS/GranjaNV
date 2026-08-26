@@ -1,0 +1,25 @@
+.selector-fecha-caja {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--color-negro);
+  border-radius: 10px;
+  padding: 3px 8px;
+  background-color: transparent;
+}
+
+.selector-fecha-caja i {
+  font-size: 20px;
+  color: var(--color-negro);
+}
+
+.selector-fecha-input {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  font-family: var(--font-titulos);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-negro);
+  cursor: pointer;
+}

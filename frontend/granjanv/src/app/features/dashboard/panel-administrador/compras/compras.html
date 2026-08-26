@@ -27,16 +27,22 @@
 
                 <div class="gastos-encabezado">
                     <h2 class="gastos-titulo">GASTOS</h2>
-                    <div class="gastos-buscador">
-                        <i class="hgi-stroke hgi-search-01"></i>
+                    <div class="gastos-filtros">
+                        <app-selector-fecha 
+                            modo="mes" 
+                            (cambioRango)="onCambioRangoFecha($event)">
+                        </app-selector-fecha>
 
-                        <input type="search" class="gastos-buscador-input" placeholder="Buscar"
-                            aria-label="Buscar gastos" (input)="onBuscar($event)">
+                        <div class="gastos-buscador">
+                            <i class="hgi-stroke hgi-search-01"></i>
+
+                            <input type="search" class="gastos-buscador-input" placeholder="Buscar"
+                                aria-label="Buscar gastos" (input)="onBuscar($event)">
+                        </div>
                     </div>
                 </div>
 
                 <div class="gastos-lista">
-
                     @for (gasto of gastos; track gasto.id) {
                     <div class="gasto-item">
 

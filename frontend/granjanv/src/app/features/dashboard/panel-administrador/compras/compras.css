@@ -78,6 +78,7 @@
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 24px;
+  flex-wrap: wrap;
 }
 
 .gastos-titulo {
@@ -86,7 +87,12 @@
   font-weight: 600;
   margin: 0;
 }
-
+.gastos-filtros {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
 .gastos-buscador {
   display: flex;
   align-items: center;
@@ -251,7 +257,7 @@
   color: var(--color-blanco);
 }
 
-/* Ajuste específico para pantallas móviles estrechas. Prueba de linea 125/153 */
+/* Ajuste específico para pantallas móviles . */
 @media (max-width: 575px) {
   .finanzas {
     padding: 5px 14px;
@@ -320,6 +326,18 @@
 
   .gastos-buscador i {
     font-size: 22px;
+  }
+
+  .gastos-encabezado {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .gastos-filtros {
+    width: 100%;
+    justify-content: space-between;
+    gap: 6px;
   }
 
   .formulario-gasto-acciones {
