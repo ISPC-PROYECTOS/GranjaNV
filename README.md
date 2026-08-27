@@ -36,3 +36,18 @@ El proyecto utiliza una arquitectura desacoplada basada en las siguientes tecnol
 ## 🚀 Guía de Instalación y Ejecución
 
 ⚠️ **EN CONSTRUCCIÓN** *Las instrucciones detalladas para el despliegue del entorno local, configuración de variables de entorno y ejecución de los servidores de desarrollo se añadirán próximamente.*
+
+
+# Granja NV — Sistema de Gestión Integrado
+Repositorio oficial del proyecto ABP para la Tecnicatura Superior en Desarrollo de Software — Equipo **SharkCode**.
+
+---
+
+## 🛠️ Estructura de Trabajo y Desarrollo Colaborativo
+
+### 1. Estrategia de Ramas (Branching Strategy)
+Para garantizar el trabajo en paralelo y la integridad del código fuente, el equipo implementa un flujo basado en **Feature/Personal Branching** con integración continua sobre ramas intermedias:
+
+* `main`: Rama de producción protegida. Contiene únicamente código estable, probado y congelado correspondiente a las Líneas Base (Releases). Queda estrictamente prohibido realizar commits directos sobre `main`.
+* `dev`: Rama central de integración. Confluyen los desarrollos validados del equipo y sirve de base para las pruebas de integración local antes de cada release.
+* **Ramas Personales / Módulos (`hebepereyra`, `Victoria`, `jorge`, `LautiR2D2`, `mariela`):** Cada desarrollador trabaja sus asignaciones de backend o frontend de forma aislada en su propia rama, evitando interferencias y bloqueos mutuos.
