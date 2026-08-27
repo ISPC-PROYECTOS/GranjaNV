@@ -92,11 +92,14 @@ WSGI_APPLICATION = "core.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'granja_db',
-        'USER': 'postgres',
-        'PASSWORD': 'Ispc.2024',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': 'defaultdb',
+        'USER': 'avnadmin',
+        'PASSWORD': 'AVNS_aA-4IvNK-fIp6M4Zj_h',
+        'HOST': 'granjanv-granjanv.a.aivencloud.com',
+        'PORT': '23890',
+        'OPTIONS': {
+            'sslmode': 'require',           # OBLIGATORIO para Aiven
+        },
     }
 }
 
