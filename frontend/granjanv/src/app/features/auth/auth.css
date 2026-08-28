@@ -1,23 +1,15 @@
 :host {
-  --bg-main: #E8F0E5;           /* Fondo de la pantalla */
-  --card-bg: #4E6647;           /* Fondo de las cards (Verde Oliva) */
-  --btn-border: #C97E57;        /* Borde de los botones (Naranja) */
-  
-  --btn-login-bg: #C97E57;      /* Fondo del botón principal (Naranja) para hacer juego */
   --btn-login-hover: #b56b46;
-  --btn-recovery-bg: transparent; /* Botón secundario transparente para que resalte el borde */
-  --btn-recovery-hover: rgba(201, 126, 87, 0.15); 
-  
-  --border-radius: 33px;        /* Radio de bordes Figma */
-  
-  /* Ajustes de contraste para que el texto se lea sobre el fondo verde */
-  --text-main: #FFFFFF;         /* Texto principal en blanco */
-  --text-muted: #DCE3D9;        /* Texto secundario más clarito */
-  --error-color: #ff8a80;       /* Rojo de error adaptado a fondo oscuro */
+  --btn-recovery-bg: transparent;
+  --btn-recovery-hover: rgba(201, 126, 87, 0.15);
+
+  --text-main: #ffffff;
+  --text-muted: #dce3d9;
+  --error-color: #ff8a80;
 
   display: block;
   min-height: 100vh;
-  font-family: Arial, sans-serif;
+  font-family: var(--font-textos);
 }
 
 /* Pantalla principal */
@@ -26,7 +18,7 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: var(--bg-main); /* Nuevo fondo claro */
+  background-color: var(--color-secundario-claro);
   padding: 2rem;
   box-sizing: border-box;
 }
@@ -43,8 +35,8 @@
 /* Base para cada Card */
 .card {
   flex: 1;
-  background: var(--card-bg); /* Nuevo fondo verde oscuro */
-  border-radius: var(--border-radius);
+  background: var(--color-primario-oscuro);
+  border-radius: 33px;
   overflow: hidden;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
@@ -79,13 +71,13 @@
 
 .header h1 {
   margin: 0;
-  color: var(--text-main); /* Título en blanco */
+  color: var(--color-blanco);
   font-size: 1.8rem;
 }
 
 .header p {
   margin-top: 0.5rem;
-  color: var(--text-muted); /* Subtítulo claro */
+  color: var(--text-muted);
   font-size: 0.95rem;
 }
 
@@ -111,7 +103,7 @@
 label {
   font-size: 0.85rem;
   font-weight: bold;
-  color: var(--text-main); /* Labels en blanco */
+  color: var(--color-blanco);
   margin-bottom: 0.5rem;
 }
 
@@ -124,12 +116,12 @@ input {
   box-sizing: border-box;
   outline: none;
   transition: border-color 0.2s;
-  background-color: #FFFFFF; /* Input con fondo blanco para escribir */
-  color: #333333; /* Letra oscura al escribir */
+  background-color: #ffffff;
+  color: #333333;
 }
 
 input:focus {
-  border-color: var(--btn-border); /* Borde naranja al hacer foco */
+  border-color: var(--color-secundario);
 }
 
 input.is-invalid {
@@ -153,12 +145,14 @@ input.is-invalid {
 .btn {
   width: 100%;
   padding: 0.85rem;
-  border: 2px solid var(--btn-border); /* Borde naranja aplicado */
+  border: 2px solid var(--color-secundario);
   border-radius: 12px;
   font-size: 0.95rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
 }
 
 .btn:disabled {
@@ -167,7 +161,7 @@ input.is-invalid {
 }
 
 .btn-login {
-  background-color: var(--btn-login-bg);
+  background-color: var(--color-secundario);
   color: #ffffff;
 }
 
@@ -186,11 +180,17 @@ input.is-invalid {
 
 /* Responsividad para pantallas pequeñas */
 @media (max-width: 768px) {
+  .login-wrapper {
+    min-height: auto;
+    align-items: flex-start;
+    padding-top: 7px;
+  }
+
   .login-container {
     flex-direction: column;
   }
 
   .card-image {
-    height: 180px;
+    display: none;
   }
 }
