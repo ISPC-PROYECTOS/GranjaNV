@@ -1,42 +1,106 @@
-<div class="registro-container">
-  <h3>Alta de Nuevo Usuario</h3>
+<div class="registro-wrapper">
+  <div class="registro-container">
+    
+    <div class="card card-form">
+      <div class="header">
+        <button type="button" class="btn-volver" routerLink="/dashboard/admin/panel-de-control">
+          ← Volver al panel de control
+        </button>
+        <h1>GRANJA NV</h1>
+        <p>Alta de nuevo usuario</p>
+      </div>
 
-  @if (successMessage()) {
-    <div class="success-alert">{{ successMessage() }}</div>
-  }
-  @if (errorMessage()) {
-    <div class="error-alert">{{ errorMessage() }}</div>
-  }
+      @if (errorMessage()) {
+        <div class="alert-error">
+          {{ errorMessage() }}
+        </div>
+      }
 
-  <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="reg-email">Correo Electrónico</label>
-      <input id="reg-email" type="email" formControlName="email" />
+      @if (successMessage()) {
+        <div class="alert-success">
+          {{ successMessage() }}
+        </div>
+      }
+
+      <form [formGroup]="registroForm" (ngSubmit)="onSubmit()" novalidate>
+        
+        <div class="row g-2">
+          <div class="col-md-6 form-group">
+            <label for="reg-nombre">Nombre</label>
+            <input 
+              id="reg-nombre" 
+              type="text" 
+              formControlName="nombre" 
+              placeholder="Ej. Juan"
+              [class.is-invalid]="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched"
+            />
+            @if (registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched) {
+              <span class="error-msg">El nombre es requerido.</span>
+            }
+          </div>
+
+          <div class="col-md-6 form-group">
+            <label for="reg-apellido">Apellido</label>
+            <input 
+              id="reg-apellido" 
+              type="text" 
+              formControlName="apellido" 
+              placeholder="Ej. Pérez"
+              [class.is-invalid]="registroForm.get('apellido')?.invalid && registroForm.get('apellido')?.touched"
+            />
+            @if (registroForm.get('apellido')?.invalid && registroForm.get('apellido')?.touched) {
+              <span class="error-msg">El apellido es requerido.</span>
+            }
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="reg-email">Correo Electrónico</label>
+          <input 
+            id="reg-email" 
+            type="email" 
+            formControlName="email" 
+            placeholder="usuario@granjanv.com"
+            [class.is-invalid]="registroForm.get('email')?.invalid && registroForm.get('email')?.touched"
+          />
+          @if (registroForm.get('email')?.invalid && registroForm.get('email')?.touched) {
+            <span class="error-msg">Ingrese un correo válido.</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="reg-password">Contraseña temporal</label>
+          <input 
+            id="reg-password" 
+            type="password" 
+            formControlName="password" 
+            placeholder="Mínimo 8 caracteres"
+            [class.is-invalid]="registroForm.get('password')?.invalid && registroForm.get('password')?.touched"
+          />
+          @if (registroForm.get('password')?.invalid && registroForm.get('password')?.touched) {
+            <span class="error-msg">La contraseña debe tener al menos 8 caracteres.</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="reg-rol">Rol asignado</label>
+          <select id="reg-rol" formControlName="rol" class="custom-select">
+            <option value="Empleado">Empleado</option>
+            <option value="Administrador">Administrador</option>
+          </select>
+        </div>
+
+        <div class="button-group">
+          <button 
+            type="submit" 
+            class="btn btn-register" 
+            [disabled]="registroForm.invalid">
+            Registrar Usuario
+          </button>
+        </div>
+
+      </form>
     </div>
 
-    <div class="form-group">
-      <label for="reg-password">Contraseña</label>
-      <input id="reg-password" type="password" formControlName="password" />
-    </div>
-
-    <div class="form-group">
-      <label for="reg-nombre">Nombre</label>
-      <input id="reg-nombre" type="text" formControlName="nombre" />
-    </div>
-
-    <div class="form-group">
-      <label for="reg-apellido">Apellido</label>
-      <input id="reg-apellido" type="text" formControlName="apellido" />
-    </div>
-
-    <div class="form-group">
-      <label for="reg-rol">Rol</label>
-      <select id="reg-rol" formControlName="rol">
-        <option value="Empleado">Empleado</option>
-        <option value="Administrador">Administrador</option>
-      </select>
-    </div>
-
-    <button type="submit" [disabled]="registroForm.invalid">Registrar</button>
-  </form>
+  </div>
 </div>

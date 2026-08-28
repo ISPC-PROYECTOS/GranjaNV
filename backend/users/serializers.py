@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework.validators import UniqueValidator
 from .models import Usuario
 
 
@@ -36,6 +37,14 @@ class RegistroUsuarioSerializer(serializers.ModelSerializer):
     Serializador para que el Administrador registre nuevos usuarios.
     Hashea automáticamente la contraseña.
     """
+    email = serializers.EmailField(
+        validators=[
+            UniqueValidator(
+                queryset=Usuario.objects.all(),
+                message="Ya existe un usuario registrado con este correo electrónico."
+            )
+        ]
+    )
     password = serializers.CharField(write_only=True, min_length=8)
 
     class Meta:
