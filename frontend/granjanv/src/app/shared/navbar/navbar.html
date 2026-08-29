@@ -1,48 +1,127 @@
 <header class="navbar-wrapper my-3 mx-3">
   <nav class="navbar-card p-2 px-3 shadow-sm">
 
-    <!-- BLOQUE IZQUIERDO: Logo + Clima + Fecha -->
-    <div class="navbar-logo"> <!-- Logo -->
+    <!-- BLOQUE IZQUIERDO: Logo -->
+    <div class="navbar-logo">
       <a class="navbar-brand m-0" href="#">
         <img src="logo-granja.png" alt="Logo Granja NV" class="brand-logo" />
       </a>
     </div>
 
-    <!-- Clima + Fecha -->
+    <!-- BLOQUE CENTRAL: Clima Interactivo + Fecha -->
     <div class="navbar-info">
-      <div class="info-pill px-3 py-1 d-flex align-items-center gap-2">
-        <i class="hgi-stroke hgi-cloud-sun"></i>
-        <span class="weather-text">{{ climaInfo }}</span>
+      
+      <!-- Widget de Clima Expandible -->
+      <div class="weather-widget-container position-relative">
+        <button 
+          type="button"
+          class="info-pill weather-pill btn border-0 px-3 py-1 d-flex align-items-center gap-2"
+          [class.active]="detallesAbiertos()"
+          (click)="toggleDetallesClima()"
+          [disabled]="cargandoClima()"
+          aria-label="Ver detalles del clima">
+          
+          @if (cargandoClima()) {
+            <span class="spinner-border spinner-border-sm text-secondary" role="status"></span>
+            <span class="weather-text">Cargando...</span>
+          } @else if (clima()) {
+            <i class="hgi-stroke {{ clima()?.iconClass }}"></i>
+            <span class="weather-text">{{ clima()?.temperature }}°C {{ clima()?.description }}</span>
+            <i class="hgi-stroke hgi-arrow-down-01 weather-arrow" [class.rotated]="detallesAbiertos()"></i>
+          } @else {
+            <i class="hgi-stroke hgi-cloud-cross"></i>
+            <span class="weather-text">Clima no disponible</span>
+          }
+        </button>
+
+        <!-- Popover responsivo de detalles meteorológicos -->
+        @if (detallesAbiertos() && clima()) {
+          <div class="weather-dropdown-card shadow p-3 animate-fade-in">
+            <div class="weather-dropdown-header pb-2 mb-2 border-bottom d-flex justify-content-between align-items-center">
+              <span class="fw-bold text-secondary-custom">Condiciones Actuales</span>
+              <span class="badge badge-temp">{{ clima()?.temperature }}°C</span>
+            </div>
+
+            <div class="weather-details-grid">
+              <div class="weather-detail-item">
+                <i class="hgi-stroke hgi-rain text-primary-custom"></i>
+                <div>
+                  <small>Lluvia</small>
+                  <p class="m-0 fw-semibold">{{ clima()?.precipitationProbability }}%</p>
+                </div>
+              </div>
+
+              <div class="weather-detail-item">
+                <i class="hgi-stroke hgi-droplet-02 text-primary-custom"></i>
+                <div>
+                  <small>Humedad</small>
+                  <p class="m-0 fw-semibold">{{ clima()?.humidity }}%</p>
+                </div>
+              </div>
+
+              <div class="weather-detail-item">
+                <i class="hgi-stroke hgi-wind-02 text-primary-custom"></i>
+                <div>
+                  <small>Viento</small>
+                  <div class="d-flex align-items-center gap-1">
+                    <p class="m-0 fw-semibold">{{ clima()?.windSpeed }} km/h</p>
+                    <span class="wind-badge d-inline-flex align-items-center gap-1">
+                      <i 
+                        class="hgi-stroke hgi-arrow-up-02 wind-direction-icon" 
+                        [style.transform]="'rotate(' + clima()?.windFlowRotation + 'deg)'">
+                      </i>
+                      {{ clima()?.windDirectionText }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="weather-detail-item">
+                <i class="hgi-stroke {{ clima()?.iconClass }} text-primary-custom"></i>
+                <div>
+                  <small>Estado</small>
+                  <p class="m-0 fw-semibold">{{ clima()?.description }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
       </div>
+
+      <!-- Pastilla de Fecha -->
       <div class="info-pill px-3 py-1 d-flex align-items-center gap-2">
         <i class="hgi-stroke hgi-calendar-01"></i>
-        <span class="weather-text">{{ fechaActual }}</span>
+        <span class="weather-text">{{ fechaActual() }}</span>
       </div>
     </div>
 
-    <!-- BLOQUE DERECHO: Acciones de usuario (Oculto en Login) -->
+    <!-- BLOQUE DERECHO: Acciones de usuario -->
     @if (!esVistaLogin()) {
-    <div class="navbar-acciones"> <button class="btn btn-icon p-1 position-relative" type="button"
-        aria-label="Notificaciones">
-        <i class="hgi-stroke hgi-notification-01 fs-5"></i>
-      </button>
-
-      <div class="dropdown">
-        <button class="btn profile-pill d-flex align-items-center gap-2 py-1 px-2 border-0 dropdown-toggle"
-          type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <span class="avatar-circle">{{ usuarioInicial () }}</span>
+      <div class="navbar-acciones">
+        <button class="btn btn-icon p-1 position-relative" type="button" aria-label="Notificaciones">
+          <i class="hgi-stroke hgi-notification-01 fs-5"></i>
         </button>
-        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
-          <li><a class="dropdown-item" href="#"><i class="hgi-stroke hgi-settings-02 me-2"></i>Configuración</a></li>
-          <li><a class="dropdown-item" href="#"><i class="hgi-stroke hgi-moon-02 me-2"></i>Modo oscuro</a></li>
-          <li>
-            <hr class="dropdown-divider">
-          </li>
-          <li><button class="dropdown-item text-danger" (click)="cerrarSesion()"><i
-                class="hgi-stroke hgi-logout-01 me-2"></i>Cerrar sesión</button></li>
-        </ul>
+
+        <div class="dropdown">
+          <button 
+            class="btn profile-pill d-flex align-items-center gap-2 py-1 px-2 border-0 dropdown-toggle"
+            type="button" 
+            data-bs-toggle="dropdown" 
+            aria-expanded="false">
+            <span class="avatar-circle">{{ usuarioInicial() }}</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+            <li><a class="dropdown-item" href="#"><i class="hgi-stroke hgi-settings-02 me-2"></i>Configuración</a></li>
+            <li><a class="dropdown-item" href="#"><i class="hgi-stroke hgi-moon-02 me-2"></i>Modo oscuro</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <button class="dropdown-item text-danger" (click)="cerrarSesion()">
+                <i class="hgi-stroke hgi-logout-01 me-2"></i>Cerrar sesión
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
     }
 
   </nav>

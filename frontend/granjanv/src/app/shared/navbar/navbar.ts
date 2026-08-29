@@ -1,7 +1,9 @@
-import { Component, OnInit, inject, computed } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from "@angular/router";
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/services/auth-service';
+import { WeatherService } from '../../core/services/weather-service';
+import { WeatherData } from '../../core/models/weather';
 
 @Component({
   selector: 'app-navbar',
@@ -11,11 +13,11 @@ import { AuthService } from '../../core/services/auth-service';
   styleUrl: './navbar.css'
 })
 export class NavbarComponent implements OnInit {
-
   private router = inject(Router);
   private authService = inject(AuthService);
+  private weatherService = inject(WeatherService);
+  private elementRef = inject(ElementRef);
 
-  // Inicial dinámica reactiva mediante Signal computed
   usuarioInicial = computed(() => {
     const u = this.authService.currentUser();
     if (!u) return 'U';
@@ -25,11 +27,27 @@ export class NavbarComponent implements OnInit {
       : (u.email ? u.email[0].toUpperCase() : 'U');
   });
 
-  climaInfo: string = '18° Parcialmente nublado';
-  fechaActual: string = '';
+  fechaActual = signal<string>('');
+  clima = signal<WeatherData | null>(null);
+  cargandoClima = signal<boolean>(true);
+  detallesAbiertos = signal<boolean>(false);
 
   ngOnInit(): void {
     this.obtenerFechaFormateada();
+    this.cargarDatosClima();
+  }
+
+  private cargarDatosClima(): void {
+    this.cargandoClima.set(true);
+    this.weatherService.getClimaActual().subscribe({
+      next: (data) => {
+        this.clima.set(data);
+        this.cargandoClima.set(false);
+      },
+      error: () => {
+        this.cargandoClima.set(false);
+      }
+    });
   }
 
   private obtenerFechaFormateada(): void {
@@ -39,15 +57,27 @@ export class NavbarComponent implements OnInit {
       month: 'long' 
     };
     const hoy = new Date().toLocaleDateString('es-ES', opciones);
-    this.fechaActual = hoy.charAt(0).toUpperCase() + hoy.slice(1);
+    this.fechaActual.set(hoy.charAt(0).toUpperCase() + hoy.slice(1));
   }
 
-  // Método para verificar la URL actual
+  toggleDetallesClima(): void {
+    if (!this.cargandoClima() && this.clima()) {
+      this.detallesAbiertos.update((v) => !v);
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const targetElement = event.target as HTMLElement;
+    if (!this.elementRef.nativeElement.querySelector('.weather-widget-container')?.contains(targetElement)) {
+      this.detallesAbiertos.set(false);
+    }
+  }
+
   esVistaLogin(): boolean {
     return this.router.url.includes('/auth/login');
   }
 
-  // Método para cerrar sesión vinculado al botón
   cerrarSesion(): void {
     this.authService.logout();
   }
