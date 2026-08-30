@@ -8,10 +8,6 @@ El desarrollo se realiza bajo metodologías ágiles (**Scrum**) abarcando los Sp
 
 ## 👥 Equipo de Desarrollo
 
-<p align="center">
-  <img width="220" alt="SharkCode Logo" src="https://github.com/user-attachments/assets/61b67249-eeaa-4b17-9f7f-95d1899df5f7" />
-</p>
-
 * **Barrera Lautaro** — [@LautyR2D2](https://github.com/LautyR2D2)
 * **Marchisone Jorge** — [@jmarchisone](https://github.com/jmarchisone)
 * **Pereyra Hebe** — [@PereyraHebe](https://github.com/PereyraHebe)
@@ -23,93 +19,79 @@ El desarrollo se realiza bajo metodologías ágiles (**Scrum**) abarcando los Sp
 ## 🛠️ Stack Tecnológico
 
 * **Frontend:** [Angular 21](https://angular.dev/) (SPA modular basada en Signals y componentes Standalone).
-* **Backend:** [Django 6.0](https://www.djangoproject.com/) + [Django REST Framework (DRF)](https://www.django-rest-framework.org/).
+* **Backend:** [Django 6.0](https://www.djangoproject.com/) + [Django REST Framework (DRF)](https://www.django-rest-framework.org/) + [Gunicorn](https://gunicorn.org/).
+* **Servidor Web / Proxy:** [Nginx](https://nginx.org/).
 * **Autenticación:** JWT vía `djangorestframework-simplejwt`.
 * **Base de Datos:** PostgreSQL en la nube (Aiven.io).
+* **Contenedores:** Docker & Docker Compose.
 
 ---
 
 ## ⚙️ Requisitos Previos
 
-Asegúrate de contar con el siguiente software instalado localmente:
-
-* **Python:** Versión `3.11` o superior (Entorno probado en `3.14.x`).
-* **Node.js:** Versión `20.x` LTS o superior (Entorno probado en `v24.14.x`).
-* **npm:** Versión `10.x` / `11.x`.
-* **Git:** Para clonación y control de versiones.
+* **Docker & Docker Compose** (Docker Desktop en Windows/macOS o Docker Engine + compose plugin en Linux).
+* Opcional (para desarrollo local sin Docker): **Python 3.11+** y **Node.js 20+**.
 
 ---
 
-## 🚀 Guía de Instalación y Ejecución
+## 🐳 Ejecución Rápida con Docker (Evaluación Docente)
+
+El proyecto incluye la orquestación y variables de base de datos listas para desplegarse sin configuración manual de archivos `.env`:
 
 ### 1. Clonar el repositorio
 ```bash
-git clone <URL_DEL_REPOSITORIO>
+git clone https://github.com/ISPC-PROYECTOS/GranjaNV.git
 cd <NOMBRE_DEL_DIRECTORIO>
+```
+
+### 2. Levantar la aplicación completa
+Desde la raíz del repositorio, ejecuta:
+```bash
+docker compose up --build -d
+```
+*El servicio `backend` ejecutará automáticamente las migraciones y levantará el servidor WSGI (Gunicorn), mientras que el servicio `frontend` compilará la SPA y la servirá mediante Nginx.*
+
+### 3. Puntos de acceso
+* **Frontend (Aplicación Web):** `http://localhost` (Puerto 80).
+* **Backend API:** `http://localhost:8000/api/`
+* **Panel de Administración Django:** `http://localhost:8000/admin/`
+
+### 4. Detener los servicios
+```bash
+docker compose down
 ```
 
 ---
 
-### 2. Configuración del Backend (Django)
+## 🔐 Credenciales de Prueba
 
-1. Abre una terminal y dirígete al directorio `backend/`:
-   ```bash
-   cd backend
-   ```
-
-2. Crea y activa un entorno virtual de Python:
-   * **Linux / macOS:**
-     ```bash
-     python3 -m venv venv
-     source venv/bin/activate
-     ```
-   * **Windows (PowerShell):**
-     ```powershell
-     python -m venv venv
-     .\venv\Scripts\Activate.ps1
-     ```
-
-3. Instala las dependencias del proyecto:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. Ejecuta el servidor de desarrollo:
-   ```bash
-   python manage.py runserver
-   ```
-   *El backend estará disponible en `http://127.0.0.1:8000/` con conexión directa a la base de datos remota.*
-
----
-
-### 3. Configuración del Frontend (Angular)
-
-1. Abre una segunda terminal y navega hasta la raíz de la aplicación web:
-   ```bash
-   cd frontend/granjanv
-   ```
-
-2. Instala los paquetes y dependencias de Node:
-   ```bash
-   npm install
-   ```
-
-3. Inicia el servidor de desarrollo:
-   ```bash
-   npm start
-   ```
-   *(O `ng serve` si dispones del CLI de Angular instalado globalmente).*
-
-4. Abre tu navegador e ingresa a `http://localhost:4200/`.
-
----
-
-### 4. Credenciales de Prueba
-
-Para ingresar y validar las vistas protegidas del Administrador (carga de compras/gastos y alta de usuarios):
+Para iniciar sesión y verificar los módulos con privilegios administrativos (carga de egresos/gastos y alta de usuarios):
 
 * **Correo Electrónico:** `admin@granjanv.com.ar`
 * **Contraseña:** `adminadmin`
+
+---
+
+## 🚀 Ejecución Alternativa (Desarrollo Local sin Docker)
+
+### 1. Configuración del Backend (Django)
+```bash
+cd backend
+python -m venv venv
+# Linux/macOS: source venv/bin/activate
+# Windows: .\venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python manage.py runserver
+```
+Disponible en `http://127.0.0.1:8000/`.
+
+### 2. Configuración del Frontend (Angular)
+```bash
+cd frontend/granjanv
+npm install
+npm start
+```
+Disponible en `http://localhost:4200/`.
 
 ---
 
@@ -160,4 +142,3 @@ Los mensajes de commit deben redactarse en español siguiendo el estándar:
 Actualmente el proyecto se ejecuta localmente mediante la instalación de dependencias nativas:
 * **Backend:** `pip install -r requirements.txt` dentro de un entorno virtual Python (`venv`).
 * **Frontend:** `npm install` para la instalación de paquetes en Angular.
-*(La infraestructura basada en Docker y variables de entorno se integrará en la etapa de despliegue final).*
