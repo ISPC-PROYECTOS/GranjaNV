@@ -5,6 +5,17 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ---
 
+## [v0.2.0-alpha.2] - 2026-08-30
+
+### Added
+- **Contenerización y Despliegue con Docker:**
+  - `Dockerfile` multi-stage para compilar Angular 21 y servir artefactos estáticos con Nginx.
+  - `Dockerfile` optimizado en Python 3.12-slim con servidor WSGI Gunicorn para Django.
+  - Configuración de `docker-compose.yml` preconfigurado con las variables de entorno operativas para evaluación directa en un solo comando.
+  - Desacoplamiento de configuración en `settings.py` permitiendo lectura de variables del entorno con fallbacks controlados.
+
+---
+
 ## [v0.1.0-alpha.1] - 2026-08-27
 
 ### Added
