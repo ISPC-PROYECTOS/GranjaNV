@@ -1,13 +1,14 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth-service';
 import { RegistroRequest } from '../../../../core/models/user.model';
 
 @Component({
   selector: 'app-registro-usuario',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './registro-usuario.html',
   styleUrl: './registro-usuario.css'
 })
@@ -27,7 +28,10 @@ export class RegistroUsuarioComponent {
   });
 
   onSubmit(): void {
-    if (this.registroForm.invalid) return;
+    if (this.registroForm.invalid) {
+      this.registroForm.markAllAsTouched();
+      return;
+    }
 
     this.successMessage.set(null);
     this.errorMessage.set(null);

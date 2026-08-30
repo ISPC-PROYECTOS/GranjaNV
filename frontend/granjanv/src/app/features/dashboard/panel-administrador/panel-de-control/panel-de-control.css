@@ -1,5 +1,5 @@
 .dashboard-admin{
-    background-color: #F7EAE0;
+    background-color: var(--color-secundario-claro);
     min-height: calc(100vh - 70px);
     padding-left: 32px;
     padding-right: 32px;
