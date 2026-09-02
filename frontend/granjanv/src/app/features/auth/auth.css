@@ -1,12 +1,4 @@
 :host {
-  --btn-login-hover: #b56b46;
-  --btn-recovery-bg: transparent;
-  --btn-recovery-hover: rgba(201, 126, 87, 0.15);
-
-  --text-main: #ffffff;
-  --text-muted: #dce3d9;
-  --error-color: #ff8a80;
-
   display: block;
   min-height: 100vh;
   font-family: var(--font-textos);
@@ -77,61 +69,8 @@
 
 .header p {
   margin-top: 0.5rem;
-  color: var(--text-muted);
+  color: var(--color-crema);
   font-size: 0.95rem;
-}
-
-/* Alertas */
-.alert-error {
-  background-color: rgba(255, 138, 128, 0.15);
-  color: var(--error-color);
-  border: 1px solid var(--error-color);
-  padding: 0.75rem 1rem;
-  border-radius: 10px;
-  font-size: 0.85rem;
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-/* Formulario */
-.form-group {
-  margin-bottom: 1.25rem;
-  display: flex;
-  flex-direction: column;
-}
-
-label {
-  font-size: 0.85rem;
-  font-weight: bold;
-  color: var(--color-blanco);
-  margin-bottom: 0.5rem;
-}
-
-input {
-  width: 100%;
-  padding: 0.8rem 1rem;
-  border: 1px solid #cccccc;
-  border-radius: 12px;
-  font-size: 0.95rem;
-  box-sizing: border-box;
-  outline: none;
-  transition: border-color 0.2s;
-  background-color: #ffffff;
-  color: #333333;
-}
-
-input:focus {
-  border-color: var(--color-secundario);
-}
-
-input.is-invalid {
-  border-color: var(--error-color);
-}
-
-.error-msg {
-  color: var(--error-color);
-  font-size: 0.75rem;
-  margin-top: 0.35rem;
 }
 
 /* Botones */
@@ -160,26 +99,22 @@ input.is-invalid {
   cursor: not-allowed;
 }
 
-.btn-login {
-  background-color: var(--color-secundario);
-  color: #ffffff;
-}
-
-.btn-login:hover:not(:disabled) {
-  background-color: var(--btn-login-hover);
-}
-
 .btn-recovery {
-  background-color: var(--btn-recovery-bg);
-  color: #ffffff;
+  background-color: transparent;
+  color: var(--color-blanco);
 }
 
 .btn-recovery:hover:not(:disabled) {
-  background-color: var(--btn-recovery-hover);
+  background-color: rgba(201, 126, 87, 0.15);
+}
+
+.btn-recovery:focus-visible {
+  outline: 2px solid var(--color-crema);
+  outline-offset: 3px;
 }
 
 /* Responsividad para pantallas pequeñas */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .login-wrapper {
     min-height: auto;
     align-items: flex-start;
