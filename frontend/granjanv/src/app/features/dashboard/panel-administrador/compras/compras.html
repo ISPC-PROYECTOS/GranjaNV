@@ -1,4 +1,4 @@
-<main class="container-fluid finanzas">
+<main class="container-fluid gestion-pagina">
 
     <button class="btn btn-volver-panel" type="button" routerLink="/dashboard/admin/panel-de-control">
         ← Panel de control
@@ -18,27 +18,20 @@
 
     </div>
 
-    <section class="row seccion-finanzas my-3 g-4">
+    <section class="row gestion-seccion my-3 g-4">
 
         <!-- GASTOS -->
         <div class="col-12 col-lg-6 order-2 order-lg-1" [class.d-none]="vistaMobile !== 'gastos'"
             [class.d-sm-block]="true">
-            <section class="seccion-gastos">
+            <section class="seccion-izquierda">
 
                 <div class="gastos-encabezado">
-                    <h2 class="gastos-titulo">GASTOS</h2>
-                    <div class="gastos-filtros">
-                        <app-selector-fecha 
-                            modo="mes" 
-                            (cambioRango)="onCambioRangoFecha($event)">
-                        </app-selector-fecha>
+                    <h2 class="gestion-titulo gastos-titulo">GASTOS</h2>
+                    <div class="gestion-buscador">
+                        <i class="hgi-stroke hgi-search-01"></i>
 
-                        <div class="gastos-buscador">
-                            <i class="hgi-stroke hgi-search-01"></i>
-
-                            <input type="search" class="gastos-buscador-input" placeholder="Buscar"
-                                aria-label="Buscar gastos" (input)="onBuscar($event)">
-                        </div>
+                        <input type="search" class="gestion-buscador-input" placeholder="Buscar"
+                            aria-label="Buscar gastos" (input)="onBuscar($event)">
                     </div>
                 </div>
 
@@ -87,15 +80,15 @@
         <!-- CARGAR GASTO -->
         <div class="col-12 col-lg-6 order-1 order-lg-2" [class.d-none]="vistaMobile !== 'formulario'"
             [class.d-sm-block]="true">
-            <section class="seccion-cargar-gasto">
+            <section class="seccion-derecha">
 
-                <h2 class="cargar-gasto-titulo d-none d-sm-block">CARGAR GASTO</h2>
+                <h2 class="gestion-titulo cargar-gasto-titulo d-none d-sm-block">CARGAR GASTO</h2>
                 @if (mensajeExito){
-                <div class="alert alert-success py-2 text-center mb-3 mensaje-exito">
+                <div class="alerta-exito mensaje-exito">
                     {{ mensajeExito }}
                 </div>
                 }
-                <form id="form-gasto" class="formulario-gasto" [formGroup]="formularioGastos"
+                <form id="form-gasto" class="gestion-formulario" [formGroup]="formularioGastos"
                     (ngSubmit)="guardarGasto()">
 
                     <div class="mb-3">
@@ -109,11 +102,11 @@
                         @if(
                         formularioGastos.get('monto')?.touched && formularioGastos.get('monto')?.hasError('required')
                         ){
-                        <p>El monto es obligatorio.</p>
+                        <p class="error-msg">El monto es obligatorio.</p>
                         } @else if (
                         formularioGastos.get('monto')?.touched && formularioGastos.get('monto')?.hasError('min')
                         ) {
-                        <p>El monto debe ser mayor a 0.</p>
+                        <p class="error-msg">El monto debe ser mayor a 0.</p>
                         }
                     </div>
 
@@ -135,7 +128,7 @@
                         formularioGastos.get('categoria')?.touched &&
                         formularioGastos.get('categoria')?.hasError('required')
                         ) {
-                        <p>La categoría es obligatoria.</p>
+                        <p class="error-msg">La categoría es obligatoria.</p>
                         }
                     </div>
 
@@ -150,12 +143,12 @@
                         formularioGastos.get('descripcion')?.touched &&
                         formularioGastos.get('descripcion')?.hasError('required')
                         ) {
-                        <p>La descripción es obligatoria.</p>
+                        <p class="error-msg">La descripción es obligatoria.</p>
                         } @else if (
                         formularioGastos.get('descripcion')?.touched &&
                         formularioGastos.get('descripcion')?.hasError('minlength')
                         ) {
-                        <p>La descripción debe tener al menos 3 caracteres.</p>
+                        <p class="error-msg">La descripción debe tener al menos 3 caracteres.</p>
                         }
                     </div>
 
@@ -168,11 +161,11 @@
                         @if (
                         formularioGastos.get('fecha')?.touched && formularioGastos.get('fecha')?.hasError('required')
                         ) {
-                        <p>La fecha es obligatoria</p>
+                        <p class="error-msg">La fecha es obligatoria</p>
                         }
                     </div>
 
-                    <div class="formulario-gasto-acciones">
+                    <div class="gestion-formulario-acciones">
 
                         <button type="button" class="btn btn-limpiar" (click)="limpiarFormulario()">
                             Limpiar

@@ -15,13 +15,13 @@
 
       <!-- Alertas -->
       @if (errorMessage()) {
-      <div class="alert-error">
+      <div class="alerta-error">
         {{ errorMessage() }}
       </div>
       }
 
       @if (successMessage()) {
-      <div class="alert-success">
+      <div class="alerta-exito">
         {{ successMessage() }}
       </div>
       }
@@ -52,7 +52,7 @@
 
         <!-- Acciones -->
         <div class="button-group">
-          <button type="submit" class="btn btn-login" [disabled]="isLoading() || loginForm.invalid">
+          <button type="submit" class="btn-formulario" [disabled]="isLoading() || loginForm.invalid">
             {{ isLoading() ? 'Iniciando...' : 'Iniciar sesión' }}
           </button>
 
@@ -90,8 +90,8 @@
 
         <!-- Acciones -->
         <div class="button-group">
-          <button type="submit" class="btn btn-login" [disabled]="isLoading() || resetOtpForm.invalid">
-            {{ isLoading() ? 'Guardando...' : 'Cambiar Contraseña' }}
+          <button type="submit" class="btn-formulario" [disabled]="isLoading() || resetOtpForm.invalid">
+            {{ isLoading() ? 'Guardando...' : 'Cambiar contraseña' }}
           </button>
 
           <button type="button" class="btn btn-recovery" (click)="cancelReset()" [disabled]="isLoading()">
