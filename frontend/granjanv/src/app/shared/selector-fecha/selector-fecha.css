@@ -1,25 +1,27 @@
+:host {
+  display: inline-block;
+}
+
 .selector-fecha-caja {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border: 1px solid var(--color-negro);
-  border-radius: 10px;
-  padding: 3px 8px;
-  background-color: transparent;
+  background: transparent;
+  cursor: pointer;
+  padding: 3px 10px;
 }
 
 .selector-fecha-caja i {
-  font-size: 20px;
+  font-size: 27px;
   color: var(--color-negro);
 }
 
-.selector-fecha-input {
-  border: none;
-  outline: none;
-  background-color: transparent;
-  font-family: var(--font-titulos);
-  font-size: 14px;
+.panel-filtro-fechas {
+  min-width: 210px;
+  border-radius: 12px;
+  border: 1px solid var(--color-gris-claro);
+  font-family: var(--font-textos);
+}
+
+.panel-filtro-fechas label {
+  font-size: 12px;
   font-weight: 600;
   color: var(--color-negro);
-  cursor: pointer;
 }

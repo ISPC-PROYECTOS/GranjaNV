@@ -1,6 +1,7 @@
-import { Component, OnInit, input, output } from '@angular/core';
+import { Component, OnInit, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { obtenerRangoMesActual, obtenerRangoSemanaActual } from '../../core/utils/date.utils';
+import { FormsModule } from '@angular/forms';
+import { obtenerRangoMesActual } from '../../core/utils/date.utils';
 
 export interface RangoFechaSeleccionado {
   fechaDesde: string;
@@ -10,53 +11,48 @@ export interface RangoFechaSeleccionado {
 @Component({
   selector: 'app-selector-fecha',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './selector-fecha.html',
   styleUrl: './selector-fecha.css',
 })
 export class SelectorFecha implements OnInit {
-  modo = input<'mes' | 'semana'>('mes');
   cambioRango = output<RangoFechaSeleccionado>();
 
-  valorInput: string = '';
+  tipoFiltro: 'mes' | 'rango' = 'mes';
+  mesSeleccionado: string = '';
+  fechaDesde: string = '';
+  fechaHasta: string = '';
 
   ngOnInit(): void {
-    if (this.modo() === 'mes') {
-      const rango = obtenerRangoMesActual();
-      this.valorInput = rango.fechaDesde.slice(0, 7);
-      this.cambioRango.emit(rango);
+    const rango = obtenerRangoMesActual();
+    this.mesSeleccionado = rango.fechaDesde.slice(0, 7);
+    this.fechaDesde = rango.fechaDesde;
+    this.fechaHasta = rango.fechaHasta;
+    this.cambioRango.emit(rango);
+  }
+
+  onCambioTipo(): void {
+    if (this.tipoFiltro === 'mes') {
+      this.onCambioMes();
     } else {
-      const rango = obtenerRangoSemanaActual();
-      this.valorInput = rango.fechaDesde;
-      this.cambioRango.emit(rango);
+      this.aplicarRango();
     }
   }
 
-  onInputFecha(event: Event): void {
-    const inputEl = event.target as HTMLInputElement;
-    if (!inputEl.value) return;
+  onCambioMes(): void {
+    if (!this.mesSeleccionado) return;
+    const [anio, mes] = this.mesSeleccionado.split('-').map(Number);
+    const fechaRef = new Date(anio, mes - 1, 1);
+    const rango = obtenerRangoMesActual(fechaRef);
+    this.cambioRango.emit(rango);
+  }
 
-    this.valorInput = inputEl.value;
-
-    if (this.modo() === 'mes') {
-      const partes = inputEl.value.split('-');
-      const anio = Number(partes[0]);
-      const mes = Number(partes[1]);
-      if (!isNaN(anio) && !isNaN(mes)) {
-        const fechaRef = new Date(anio, mes - 1, 1);
-        const rango = obtenerRangoMesActual(fechaRef);
-        this.cambioRango.emit(rango);
-      }
-    } else {
-      const partes = inputEl.value.split('-');
-      const anio = Number(partes[0]);
-      const mes = Number(partes[1]);
-      const dia = Number(partes[2]);
-      if (!isNaN(anio) && !isNaN(mes) && !isNaN(dia)) {
-        const fechaRef = new Date(anio, mes - 1, dia);
-        const rango = obtenerRangoSemanaActual(fechaRef);
-        this.cambioRango.emit(rango);
-      }
+  aplicarRango(): void {
+    if (this.fechaDesde && this.fechaHasta) {
+      this.cambioRango.emit({
+        fechaDesde: this.fechaDesde,
+        fechaHasta: this.fechaHasta,
+      });
     }
   }
 }

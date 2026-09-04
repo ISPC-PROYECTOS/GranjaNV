@@ -27,11 +27,17 @@
 
                 <div class="gastos-encabezado">
                     <h2 class="gestion-titulo gastos-titulo">GASTOS</h2>
-                    <div class="gestion-buscador">
-                        <i class="hgi-stroke hgi-search-01"></i>
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <app-selector-fecha 
+                            modo="mes" 
+                            (cambioRango)="onCambioRangoFecha($event)">
+                        </app-selector-fecha>
 
-                        <input type="search" class="gestion-buscador-input" placeholder="Buscar"
-                            aria-label="Buscar gastos" (input)="onBuscar($event)">
+                        <div class="gestion-buscador">
+                            <i class="hgi-stroke hgi-search-01"> </i>
+                            <input type="search" class="gestion-buscador-input" placeholder="Buscar"
+                                aria-label="Buscar gastos" (input)="onBuscar($event)">
+                        </div>
                     </div>
                 </div>
 

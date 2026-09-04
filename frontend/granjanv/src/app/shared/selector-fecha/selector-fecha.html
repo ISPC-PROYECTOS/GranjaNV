@@ -1,10 +1,55 @@
-<div class="selector-fecha-caja">
-  <i class="hgi-stroke hgi-calendar-01"></i>
-  <input
-    [type]="modo() === 'mes' ? 'month' : 'date'"
-    class="selector-fecha-input"
-    [value]="valorInput"
-    (change)="onInputFecha($event)"
-    aria-label="Seleccionar período de fecha"
-  />
+<div class="dropdown">
+  <button
+    type="button"
+    class="gestion-buscador selector-fecha-caja"
+    data-bs-toggle="dropdown"
+    data-bs-auto-close="outside"
+    aria-expanded="false"
+    title="Filtrar por fecha"
+  >
+    <i class="hgi-stroke hgi-calendar-01"> </i>
+  </button>
+
+  <div class="dropdown-menu dropdown-menu-end p-3 panel-filtro-fechas shadow">
+    <div class="mb-2">
+      <label class="form-label mb-1">Tipo de filtro</label>
+      <select class="form-select form-select-sm" [(ngModel)]="tipoFiltro" (change)="onCambioTipo()">
+        <option value="mes">Por mes</option>
+        <option value="rango">Rango de fechas</option>
+      </select>
+    </div>
+
+    @if (tipoFiltro === 'mes') {
+      <div>
+        <label class="form-label mb-1">Mes</label>
+        <input
+          type="month"
+          class="form-control form-control-sm"
+          [(ngModel)]="mesSeleccionado"
+          (change)="onCambioMes()"
+        />
+      </div>
+    } @else {
+      <div class="d-flex flex-column gap-2">
+        <div>
+          <label class="form-label mb-1">Desde</label>
+          <input
+            type="date"
+            class="form-control form-control-sm"
+            [(ngModel)]="fechaDesde"
+            (change)="aplicarRango()"
+          />
+        </div>
+        <div>
+          <label class="form-label mb-1">Hasta</label>
+          <input
+            type="date"
+            class="form-control form-control-sm"
+            [(ngModel)]="fechaHasta"
+            (change)="aplicarRango()"
+          />
+        </div>
+      </div>
+    }
+  </div>
 </div>
