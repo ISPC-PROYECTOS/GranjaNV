@@ -1,7 +1,10 @@
 export interface Gasto {
   id: number;
-  descripcion: string;
+  monto: string;
   categoria: string;
-  monto: number;
+  categoria_display: string;
+  descripcion: string;
   fecha: string;
+  creado_en: string;
+  actualizado_en: string;
 }

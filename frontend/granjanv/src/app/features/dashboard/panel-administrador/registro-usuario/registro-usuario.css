@@ -1,0 +1,47 @@
+:host {
+  display: block;
+  min-height: calc(100vh - 70px);
+  font-family: var(--font-textos);
+}
+
+.registro-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2.5rem 1rem;
+  box-sizing: border-box;
+}
+
+.registro-container {
+  width: 100%;
+  max-width: 560px;
+}
+
+.card-form {
+  background: var(--color-primario-oscuro);
+  border-radius: 33px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border: none;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.header h1 {
+  margin: 0;
+  color: var(--color-blanco);
+  font-size: 1.8rem;
+}
+
+.header p {
+  margin-top: 0.4rem;
+  color: var(--color-crema);
+  font-size: 0.95rem;
+}
+
+.button-group {
+  margin-top: 1.5rem;
+}

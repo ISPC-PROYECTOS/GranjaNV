@@ -1,30 +1,31 @@
-/* Import de Tipografías Oficiales del UI Kit */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans:wght@400;500;600&display=swap');
-
-:host {
-  --color-primario: #67875F;
-  --color-primario-claro: #E8F0E5;
-  --color-secundario: #C97E57;
-  --color-negro: #111111;
-  --color-crema: #FBF5F3;
-  --color-blanco: #FFFFFF;
-  --color-gris-claro: #E8E3E0;
-  
-  --font-titulos: 'Montserrat', sans-serif;
-  --font-textos: 'Open Sans', sans-serif;
-}
-
 .navbar-card {
   background-color: var(--color-blanco);
   border-radius: 20px;
   border: 1px solid var(--color-gris-claro);
   font-family: var(--font-textos);
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .brand-logo {
   width: 42px;
   height: 42px;
   object-fit: contain;
+}
+
+.navbar-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar-acciones {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
 }
 
 .info-pill {
@@ -34,8 +35,107 @@
   font-size: 0.88rem;
   font-weight: 500;
   white-space: nowrap;
+  box-shadow: 0 3px 3px var(--color-secundario-claro);
 }
 
+/* Botón interactivo de clima */
+.weather-pill {
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.weather-pill:hover,
+.weather-pill.active {
+  background-color: #d6e4d2;
+}
+
+.weather-arrow {
+  font-size: 0.75rem;
+  transition: transform 0.2s ease;
+}
+
+.weather-arrow.rotated {
+  transform: rotate(180deg);
+}
+
+/* Popover Desplegable */
+.weather-dropdown-card {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 260px;
+  background-color: var(--color-blanco);
+  border: 1px solid var(--color-gris-claro);
+  border-radius: 16px;
+  z-index: 1050;
+}
+
+.weather-dropdown-header {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-temp {
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+  font-family: var(--font-titulos);
+  font-size: 0.8rem;
+  border-radius: 6px;
+  padding: 3px 6px;
+}
+
+.text-primary-custom {
+  color: var(--color-primario);
+  font-size: 1.25rem;
+}
+
+.text-secondary-custom {
+  color: var(--color-secundario);
+}
+
+.weather-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.weather-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--color-crema);
+  padding: 6px 8px;
+  border-radius: 10px;
+}
+
+.weather-detail-item small {
+  display: block;
+  font-size: 0.68rem;
+  color: #666;
+}
+
+.weather-detail-item p {
+  font-size: 0.8rem;
+  color: var(--color-negro);
+}
+
+.wind-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  background-color: var(--color-primario-claro);
+  color: var(--color-primario);
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+
+.wind-direction-icon {
+  font-size: 0.75rem;
+  display: inline-block !important; /* Vital para que style.transform opere sobre la etiqueta <i> */
+  transition: transform 0.3s ease;
+}
+
+/* Elementos de Perfil */
 .btn-icon {
   border: none;
   background: transparent;
@@ -59,4 +159,71 @@
   justify-content: center;
   font-family: var(--font-titulos);
   font-weight: 600;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.18s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsividad Mobile */
+@media (max-width: 767px) {
+  .navbar-card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    row-gap: 8px;
+    padding: 10px 14px;
+  }
+
+  .navbar-logo {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .navbar-acciones {
+    grid-column: 2;
+    grid-row: 1;
+    margin-left: 0;
+  }
+
+  .navbar-info {
+    grid-column: 1 / -1;
+    grid-row: 2;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .weather-widget-container {
+    width: 100%;
+  }
+
+  .info-pill {
+    width: 100%;
+    justify-content: center;
+    padding: 4px 6px !important;
+    font-size: 11px;
+  }
+  
+  .weather-text {
+    font-size: 11px;
+  }
+
+  .weather-dropdown-card {
+    left: 0;
+    width: 280px;
+    max-width: 85vw;
+  }
 }
