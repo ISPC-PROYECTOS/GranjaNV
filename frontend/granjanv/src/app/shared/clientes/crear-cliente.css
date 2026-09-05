@@ -1,0 +1,53 @@
+
+/* Contenedor principal que se mostrará dentro de la vista de pedidos */
+.contenedor-crear-cliente {
+  background-color: var(--color-primario);
+  border: none;
+  border-radius: 27px;
+  padding: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Botón X de cierre exclusivo de este componente */
+.btn-cerrar-x {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  background: transparent;
+  border: none;
+  font-size: 26px;
+  font-weight: bold;
+  color: var(--color-blanco);
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.btn-cerrar-x:hover {
+  color: var(--color-error);
+  transform: scale(1.1);
+}
+
+.titulo-cliente {
+  color: var(--color-blanco);
+  margin-bottom: 37px; /* Mismo margen que usa cargar-gasto-titulo */
+}
+
+/* Ajustes móviles exclusivos para este contenedor */
+@media (max-width: 575px) {
+  .contenedor-crear-cliente {
+    padding: 16px;
+    border-radius: 20px;
+  }
+  
+  .btn-cerrar-x {
+    top: 12px;
+    right: 12px;
+  }
+}

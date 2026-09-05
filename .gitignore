@@ -5,6 +5,8 @@ backend/.venv/
 .venv/
 ENV/
 env/
+backend/venv/
+venv/
 
 # ==========================================
 # Python & Django

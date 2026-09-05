@@ -1,0 +1,83 @@
+<div class="contenedor-crear-cliente position-relative">
+  
+  <button class="btn-cerrar-x" type="button" (click)="cerrarFormulario()" aria-label="Cerrar sin guardar">
+    <i class="hgi-stroke hgi-cancel-01"></i>
+  </button>
+
+  <h3 class="gestion-titulo titulo-cliente">NUEVO CLIENTE</h3>
+
+  @if (errorBackend()) {
+    <div class="alerta-error">
+      {{ errorBackend() }}
+    </div>
+  }
+
+  <form class="gestion-formulario m-0" [formGroup]="formularioCliente" (ngSubmit)="guardar()">
+    
+    <div class="row g-3">
+      <!-- Nombre -->
+      <div class="col-md-6 mb-2">
+        <label for="nombre" class="form-label">Nombre *</label>
+        <input type="text" id="nombre" class="form-control" formControlName="nombre" placeholder="Ej. Juan o Almacen X">
+        @if (formularioCliente.get('nombre')?.touched && formularioCliente.get('nombre')?.hasError('required')) {
+          <p class="error-msg">El nombre es obligatorio.</p>
+        }
+      </div>
+
+      <!-- Apellido -->
+      <div class="col-md-6 mb-2">
+        <label for="apellido" class="form-label">Apellido</label>
+        <input type="text" id="apellido" class="form-control" formControlName="apellido" placeholder="Ej. Pérez (Opcional)">
+      </div>
+
+      <!-- Teléfono -->
+      <div class="col-md-6 mb-2">
+        <label for="telefono" class="form-label">Teléfono *</label>
+        <input type="text" id="telefono" class="form-control" formControlName="telefono" placeholder="Ej. 3854123456">
+        @if (formularioCliente.get('telefono')?.touched && formularioCliente.get('telefono')?.hasError('required')) {
+          <p class="error-msg">El teléfono es obligatorio.</p>
+        }
+      </div>
+
+      <!-- Email -->
+      <div class="col-md-6 mb-2">
+        <label for="email" class="form-label">Correo Electrónico</label>
+        <input type="email" id="email" class="form-control" formControlName="email" placeholder="cliente@correo.com (Opcional)">
+        @if (formularioCliente.get('email')?.touched && formularioCliente.get('email')?.hasError('email')) {
+          <p class="error-msg">Ingresá un correo electrónico válido.</p>
+        }
+      </div>
+
+      <!-- Dirección -->
+      <div class="col-md-8 mb-2">
+        <label for="direccion" class="form-label">Dirección *</label>
+        <input type="text" id="direccion" class="form-control" formControlName="direccion" placeholder="Ej. Av. Belgrano 1234">
+        @if (formularioCliente.get('direccion')?.touched && formularioCliente.get('direccion')?.hasError('required')) {
+          <p class="error-msg">La dirección es obligatoria.</p>
+        } @else if (formularioCliente.get('direccion')?.touched && formularioCliente.get('direccion')?.hasError('minlength')) {
+          <p class="error-msg">Ingresá una dirección más específica.</p>
+        }
+      </div>
+
+      <!-- Tipo -->
+      <div class="col-md-4 mb-3">
+        <label for="tipo" class="form-label">Tipo de Cliente *</label>
+        <select id="tipo" class="form-select" formControlName="tipo">
+          <option value="MINORISTA">Minorista</option>
+          <option value="MAYORISTA">Mayorista</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Botones de Acción -->
+    <div class="gestion-formulario-acciones mt-3">
+      <button type="button" class="btn btn-limpiar" (click)="limpiar()" [disabled]="isLoading()">
+        Limpiar
+      </button>
+      <button type="submit" class="btn btn-guardar" [disabled]="isLoading()">
+        {{ isLoading() ? 'Guardando...' : 'Guardar' }}
+      </button>
+    </div>
+
+  </form>
+</div>

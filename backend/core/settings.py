@@ -50,12 +50,11 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
     "users",
-<<<<<<< Updated upstream
+
     "compras",
     "clientes",
-=======
     "home",
->>>>>>> Stashed changes
+
 ]
 
 MIDDLEWARE = [
