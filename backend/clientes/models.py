@@ -6,7 +6,7 @@ class Cliente(models.Model):
         MAYORISTA = 'MAYORISTA', 'Mayorista'
         MINORISTA = 'MINORISTA', 'Minorista'
 
-    nombre = models.CharField(max_length=120)
+    nombre = models.CharField(max_length=120, unique=True)
     apellido = models.CharField(max_length=120, blank=True, default='')
     telefono = models.CharField(max_length=30)
     direccion = models.CharField(max_length=255)
