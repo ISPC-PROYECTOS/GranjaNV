@@ -28,6 +28,12 @@ class Cliente(models.Model):
     def __str__(self):
         if self.apellido:
             return f"{self.nombre} {self.apellido}"
-        return self.nombrefrom 
+        return self.nombre
 
+    def save(self, *args, **kwargs):
+        if self.nombre:
+            self.nombre = self.nombre.strip().upper()
+        if self.apellido:
+            self.apellido = self.apellido.strip().upper()
+        super().save(*args, **kwargs)
 
