@@ -1,5 +1,7 @@
 <main class="container-fluid dashboard-admin pb-4">
+
     <section class="acciones-rapidas d-md-none my-4">
+
         <h2 class="acciones-titulo">ACCIONES RÁPIDAS</h2>
         <div class="row g-3">
             <div class="col-4">
@@ -32,83 +34,44 @@
         </div>
     </section>
 
-
     <section class="row g-3 seccion-metricas">
 
+        @for (metrica of metricas; track metrica.titulo) {
         <div class="col-12 col-md-6 col-xl-3">
             <div class="card card-metricas">
                 <div class="card-body">
+
                     <div class="metrica-encabezado">
-                        <div class="metrica-icono metrica-icono-naranja">
-                            <i class="hgi-stroke hgi-task-01"></i>
+                        <div class="metrica-icono" [class.metrica-icono-naranja]="metrica.color === 'naranja'"
+                            [class.metrica-icono-verde]="metrica.color === 'verde'">
+                            <i class="hgi-stroke" [class]="metrica.icono"></i>
                         </div>
-                        <p class="metrica-titulo">PEDIDOS PENDIENTES</p>
+
+                        <p class="metrica-titulo">
+                            {{ metrica.titulo }}
+                        </p>
                     </div>
-                    <p class="metrica-valor">12</p>
 
-                    <button class="btn metrica-btn" type="button">
-                        <i class="hgi-stroke hgi-arrow-right-02"></i>
-                    </button>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-md-6 col-xl-3">
-            <div class="card card-metricas">
-                <div class="card-body">
-                    <div class="metrica-encabezado">
-                        <div class="metrica-icono metrica-icono-verde">
-                            <i class="hgi-stroke hgi-money-receive-02"></i>
-                        </div>
-                        <p class="metrica-titulo">VENTAS</p>
-                    </div>
-                    <p class="metrica-valor">$37.000</p>
-                    <button class="btn metrica-btn" type="button">
-                        <i class="hgi-stroke hgi-arrow-right-02"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-md-6 col-xl-3">
-            <div class="card card-metricas">
-                <div class="card-body">
-                    <div class="metrica-encabezado">
-                        <div class="metrica-icono metrica-icono-naranja">
-                            <i class="hgi-stroke hgi-shopping-cart-01"></i>
-                        </div>
-                        <p class="metrica-titulo">COMPRAS</p>
-                    </div>
                     <p class="metrica-valor">
+                        @if (metrica.titulo === 'COMPRAS') {
                         -${{ formatearNumero(totalCompras) }}
-                    </p> <button class="btn metrica-btn" type="button" routerLink="/dashboard/admin/finanzas">
+                        } @else {
+                        {{ metrica.valor }}
+                        }
+                    </p>
+
+                    <button class="btn metrica-btn" type="button" [routerLink]="metrica.ruta">
                         <i class="hgi-stroke hgi-arrow-right-02"></i>
                     </button>
+
                 </div>
             </div>
         </div>
-
-        <div class="col-12 col-md-6 col-xl-3">
-            <div class="card card-metricas">
-                <div class="card-body">
-                    <div class="metrica-encabezado">
-                        <div class="metrica-icono metrica-icono-verde">
-                            <i class="hgi-stroke hgi-eggs"></i>
-                        </div>
-                        <p class="metrica-titulo">PRODUCCIÓN</p>
-                    </div>
-                    <p class="metrica-valor">283</p>
-                    <button class="btn metrica-btn" type="button">
-                        <i class="hgi-stroke hgi-arrow-right-02"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
+        }
     </section>
 
     <section class="row mt-4 g-3 seccion-accesos">
+
         <div class="col-md-6 d-none d-md-block">
             <div class="card card-accesos">
                 <div class="card-body">
@@ -123,6 +86,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col-md-6 d-none d-md-block">
             <div class="card card-accesos">
                 <div class="card-body">
@@ -138,6 +102,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col-md-6 d-none d-md-block">
             <div class="card card-accesos">
                 <div class="card-body">
@@ -152,6 +117,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="col-12 col-md-6">
             <div class="card card-accesos">
                 <div class="card-body">
@@ -162,8 +128,10 @@
                         <p class="acceso-titulo">GESTIÓN Y REPORTES</p>
                     </div>
                     <p class="acceso-descripcion">Reportes • Métricas • Usuarios</p>
-                    <button class="btn acceso-btn" type="button">Ingresar →</button>
+                    <button class="btn acceso-btn" type="button" routerLink="/dashboard/admin/registro-usuario">Ingresar
+                        →</button>
                 </div>
             </div>
         </div>
     </section>
+</main>

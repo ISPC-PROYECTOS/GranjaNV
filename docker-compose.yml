@@ -1,0 +1,31 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: granjanv_backend
+    restart: always
+    environment:
+      - DJANGO_SECRET_KEY=django-insecure-nsq0#1&#o+uh*21#%tf88z%f@j0*cleudc-=l3ct_v$vkb43x0
+      - DJANGO_DEBUG=True
+      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,backend
+      - DB_NAME=defaultdb
+      - DB_USER=avnadmin
+      - DB_PASSWORD=AVNS_aA-4IvNK-fIp6M4Zj_h
+      - DB_HOST=granjanv-granjanv.a.aivencloud.com
+      - DB_PORT=23890
+      - DB_SSLMODE=require
+      - CORS_ALLOWED_ORIGINS=http://localhost,http://localhost:80,http://localhost:4200,http://127.0.0.1:4200
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ./frontend/granjanv
+      dockerfile: Dockerfile
+    container_name: granjanv_frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend

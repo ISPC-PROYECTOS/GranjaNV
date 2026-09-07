@@ -1,6 +1,7 @@
-import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { Gasto } from '../../../../core/models/gasto.model';
 import { Gastos } from '../../../../core/services/gastos';
@@ -11,7 +12,7 @@ import { Gastos } from '../../../../core/services/gastos';
   templateUrl: './compras.html',
   styleUrl: './compras.css',
 })
-export class Compras implements OnInit {
+export class Compras implements OnInit, OnDestroy {
   private gastosService = inject(Gastos);
   private cdr = inject(ChangeDetectorRef);
 
@@ -22,6 +23,11 @@ export class Compras implements OnInit {
   gastos: Gasto[] = [];
   totalGastos: number = 0;
   gastoEditandoId: number | null = null;
+
+  private buscadorSubject = new Subject<string>();
+  private buscadorSub!: Subscription;
+
+  vistaMobile: 'formulario' | 'gastos' = 'formulario';
 
   constructor(private fb: FormBuilder) {
     this.formularioGastos = this.fb.group({
@@ -35,10 +41,27 @@ export class Compras implements OnInit {
   ngOnInit(): void {
     this.cargarGastos();
     this.cargarTotalGastos();
+
+    this.buscadorSub = this.buscadorSubject
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((termino) => {
+        this.cargarGastos(termino);
+      });
   }
 
-  cargarGastos(): void {
-    this.gastosService.obtenerGastos().subscribe({
+  ngOnDestroy(): void {
+    if (this.buscadorSub) {
+      this.buscadorSub.unsubscribe();
+    }
+  }
+
+  onBuscar(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.buscadorSubject.next(input.value);
+  }
+
+  cargarGastos(termino: string = ''): void {
+    this.gastosService.obtenerGastos(termino).subscribe({
       next: (gastos) => {
         this.gastos = gastos;
         this.cdr.detectChanges();
@@ -57,9 +80,10 @@ export class Compras implements OnInit {
       },
       error: (error) => {
         console.error('Error al obtener el total de gastos:', error);
-      }
+      },
     });
   }
+
   mensajeExito: string | null = null;
   private timerExito: any = null;
 
@@ -71,6 +95,7 @@ export class Compras implements OnInit {
       this.cdr.detectChanges();
     }, 3000);
   }
+
   guardarGasto(): void {
     if (this.formularioGastos.valid) {
       const gasto = this.formularioGastos.value;
@@ -134,6 +159,8 @@ export class Compras implements OnInit {
       fecha: gasto.fecha,
     });
 
+    this.vistaMobile = 'formulario';
+
     // Scroll  hacia el formulario y foco en el campo monto
     setTimeout(() => {
       const formulario = document.getElementById('form-gasto');
@@ -160,5 +187,13 @@ export class Compras implements OnInit {
     const enterosConPuntos = enteros.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
     return `${enterosConPuntos},${decimales}`;
+  }
+
+  mostrarFormulario(): void {
+    this.vistaMobile = 'formulario';
+  }
+
+  mostrarGastos(): void {
+    this.vistaMobile = 'gastos';
   }
 }
