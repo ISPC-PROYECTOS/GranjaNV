@@ -1,137 +1,177 @@
 <main class="container-fluid dashboard-admin pb-4">
 
-    <section class="acciones-rapidas d-md-none my-4">
-
+    <!-- ACCIONES RÁPIDAS MOBILE -->
+    <section class="acciones-rapidas d-md-none my-4" aria-label="Acciones rápidas del panel">
         <h2 class="acciones-titulo">ACCIONES RÁPIDAS</h2>
         <div class="row g-3">
             <div class="col-4">
-                <div class="card-acciones">
+                <div 
+                    class="card-acciones" 
+                    routerLink="/dashboard/admin/ventas" 
+                    role="link" 
+                    tabindex="0"
+                    aria-label="Registrar un nuevo pedido">
                     <div class="accion-icono">
-                        <i class="hgi-stroke hgi-task-add-01"></i>
+                        <i class="hgi-stroke hgi-task-add-01" aria-hidden="true"></i>
                     </div>
                     <p>Nuevo pedido</p>
                 </div>
             </div>
 
             <div class="col-4">
-                <div class="card-acciones">
+                <div 
+                    class="card-acciones" 
+                    routerLink="/dashboard/admin/ventas" 
+                    role="link" 
+                    tabindex="0"
+                    aria-label="Ir a ventas y pedidos">
                     <div class="accion-icono">
-                        <i class="hgi-stroke hgi-dollar-circle"></i>
+                        <i class="hgi-stroke hgi-dollar-circle" aria-hidden="true"></i>
                     </div>
                     <p>Registrar venta</p>
                 </div>
             </div>
 
             <div class="col-4">
-                <div class="card-acciones" routerLink="/dashboard/admin/finanzas" role="button">
+                <div 
+                    class="card-acciones" 
+                    routerLink="/dashboard/admin/finanzas" 
+                    role="link" 
+                    tabindex="0"
+                    aria-label="Registrar una compra de insumos">
                     <div class="accion-icono">
-                        <i class="hgi-stroke hgi-shopping-cart-add-01"></i>
+                        <i class="hgi-stroke hgi-shopping-cart-add-01" aria-hidden="true"></i>
                     </div>
                     <p>Registrar compra</p>
                 </div>
             </div>
-
         </div>
     </section>
 
-    <section class="row g-3 seccion-metricas">
-
-        @for (metrica of metricas; track metrica.titulo) {
+    <!-- SECCIÓN MÉTRICAS -->
+    <section class="row g-3 seccion-metricas" aria-label="Métricas del negocio">
+        @for (metrica of metricas(); track metrica.titulo) {
         <div class="col-12 col-md-6 col-xl-3">
-            <div class="card card-metricas">
+            <article class="card card-metricas">
                 <div class="card-body">
 
-                    <div class="metrica-encabezado">
-                        <div class="metrica-icono" [class.metrica-icono-naranja]="metrica.color === 'naranja'"
+                    <header class="metrica-encabezado">
+                        <div 
+                            class="metrica-icono" 
+                            [class.metrica-icono-naranja]="metrica.color === 'naranja'"
                             [class.metrica-icono-verde]="metrica.color === 'verde'">
-                            <i class="hgi-stroke" [class]="metrica.icono"></i>
+                            <i class="hgi-stroke" [class]="metrica.icono" aria-hidden="true"></i>
                         </div>
 
-                        <p class="metrica-titulo">
+                        <h3 class="metrica-titulo">
                             {{ metrica.titulo }}
-                        </p>
-                    </div>
+                        </h3>
+                    </header>
 
                     <p class="metrica-valor">
-                        @if (metrica.titulo === 'COMPRAS') {
-                        -${{ formatearNumero(totalCompras) }}
-                        } @else {
                         {{ metrica.valor }}
-                        }
                     </p>
 
-                    <button class="btn metrica-btn" type="button" [routerLink]="metrica.ruta">
-                        <i class="hgi-stroke hgi-arrow-right-02"></i>
-                    </button>
+                    @if (metrica.ruta) {
+                        <button 
+                            class="btn metrica-btn" 
+                            type="button" 
+                            [routerLink]="metrica.ruta"
+                            [attr.aria-label]="'Ir a la sección de ' + metrica.titulo">
+                            <i class="hgi-stroke hgi-arrow-right-02" aria-hidden="true"></i>
+                        </button>
+                    }
 
                 </div>
-            </div>
+            </article>
         </div>
         }
     </section>
 
-    <section class="row mt-4 g-3 seccion-accesos">
+    <!-- SECCIÓN ACCESOS PRINCIPALES -->
+    <section class="row mt-4 g-3 seccion-accesos" aria-label="Módulos de administración">
 
         <div class="col-md-6 d-none d-md-block">
-            <div class="card card-accesos">
+            <article class="card card-accesos">
                 <div class="card-body">
                     <div class="acceso-encabezado">
                         <div class="acceso-icono">
-                            <i class="hgi-stroke hgi-text-check"></i>
+                            <i class="hgi-stroke hgi-text-check" aria-hidden="true"></i>
                         </div>
-                        <p class="acceso-titulo">VENTAS</p>
+                        <h2 class="acceso-titulo">VENTAS</h2>
                     </div>
                     <p class="acceso-descripcion">Clientes • Pedidos • Cobros</p>
-                    <button class="btn acceso-btn" type="button">Ingresar →</button>
+                    <button 
+                        class="btn acceso-btn" 
+                        type="button" 
+                        routerLink="/dashboard/admin/ventas"
+                        aria-label="Ingresar al módulo de ventas y pedidos">
+                        Ingresar →
+                    </button>
                 </div>
-            </div>
+            </article>
         </div>
 
         <div class="col-md-6 d-none d-md-block">
-            <div class="card card-accesos">
+            <article class="card card-accesos">
                 <div class="card-body">
                     <div class="acceso-encabezado">
                         <div class="acceso-icono">
-                            <i class="hgi-stroke hgi-pie-chart"></i>
+                            <i class="hgi-stroke hgi-pie-chart" aria-hidden="true"></i>
                         </div>
-                        <p class="acceso-titulo">FINANZAS</p>
+                        <h2 class="acceso-titulo">FINANZAS</h2>
                     </div>
                     <p class="acceso-descripcion">Balance • Gastos</p>
-                    <button class="btn acceso-btn" type="button" routerLink="/dashboard/admin/finanzas">Ingresar
-                        →</button>
+                    <button 
+                        class="btn acceso-btn" 
+                        type="button" 
+                        routerLink="/dashboard/admin/finanzas"
+                        aria-label="Ingresar al módulo de finanzas y compras">
+                        Ingresar →
+                    </button>
                 </div>
-            </div>
+            </article>
         </div>
 
         <div class="col-md-6 d-none d-md-block">
-            <div class="card card-accesos">
+            <article class="card card-accesos">
                 <div class="card-body">
                     <div class="acceso-encabezado">
                         <div class="acceso-icono">
-                            <i class="hgi-stroke hgi-barns"></i>
+                            <i class="hgi-stroke hgi-barns" aria-hidden="true"></i>
                         </div>
-                        <p class="acceso-titulo">PRODUCCIÓN</p>
+                        <h2 class="acceso-titulo">PRODUCCIÓN</h2>
                     </div>
                     <p class="acceso-descripcion">Huevos • Gallinas</p>
-                    <button class="btn acceso-btn" type="button">Ingresar →</button>
+                    <button 
+                        class="btn acceso-btn" 
+                        type="button"
+                        aria-label="Ingresar al módulo de producción avícola">
+                        Ingresar →
+                    </button>
                 </div>
-            </div>
+            </article>
         </div>
         
         <div class="col-12 col-md-6">
-            <div class="card card-accesos">
+            <article class="card card-accesos">
                 <div class="card-body">
                     <div class="acceso-encabezado">
                         <div class="acceso-icono">
-                            <i class="hgi-stroke hgi-chart-line-data-01"></i>
+                            <i class="hgi-stroke hgi-chart-line-data-01" aria-hidden="true"></i>
                         </div>
-                        <p class="acceso-titulo">GESTIÓN Y REPORTES</p>
+                        <h2 class="acceso-titulo">GESTIÓN Y REPORTES</h2>
                     </div>
                     <p class="acceso-descripcion">Reportes • Métricas • Usuarios</p>
-                    <button class="btn acceso-btn" type="button" routerLink="/dashboard/admin/registro-usuario">Ingresar
-                        →</button>
+                    <button 
+                        class="btn acceso-btn" 
+                        type="button" 
+                        routerLink="/dashboard/admin/registro-usuario"
+                        aria-label="Ingresar al módulo de gestión y usuarios">
+                        Ingresar →
+                    </button>
                 </div>
-            </div>
+            </article>
         </div>
     </section>
 </main>

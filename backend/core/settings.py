@@ -9,9 +9,10 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
+
 import os
-from pathlib import Path
 from datetime import timedelta
+from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get(
     "DJANGO_SECRET_KEY",
-    "django-insecure-nsq0#1&#o+uh*21#%tf88z%f@j0*cleudc-=l3ct_v$vkb43x0"
+    "django-insecure-nsq0#1&#o+uh*21#%tf88z%f@j0*cleudc-=l3ct_v$vkb43x0",
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -31,7 +32,9 @@ DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() in ("true", "1", "t")
 
 ALLOWED_HOSTS = [
     host.strip()
-    for host in os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,backend").split(",")
+    for host in os.environ.get(
+        "DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,backend"
+    ).split(",")
     if host.strip()
 ]
 
@@ -50,11 +53,10 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
     "users",
-
+    "pedidos",
     "compras",
     "clientes",
     "home",
-
 ]
 
 MIDDLEWARE = [
@@ -72,7 +74,7 @@ CORS_ALLOWED_ORIGINS = [
     origin.strip()
     for origin in os.environ.get(
         "CORS_ALLOWED_ORIGINS",
-        "http://localhost:4200,http://127.0.0.1:4200,http://localhost,http://localhost:80"
+        "http://localhost:4200,http://127.0.0.1:4200,http://localhost,http://localhost:80",
     ).split(",")
     if origin.strip()
 ]
@@ -116,7 +118,7 @@ DATABASES = {
 }
 
 # Especificar el modelo de usuario personalizado
-AUTH_USER_MODEL = 'users.Usuario'
+AUTH_USER_MODEL = "users.Usuario"
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -129,7 +131,9 @@ REST_FRAMEWORK = {
 }
 
 AUTH_PASSWORD_VALIDATORS = [
-    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
+    },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
@@ -137,13 +141,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # JWT Settings
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'USER_ID_FIELD': 'id_usuario',
-    'USER_ID_CLAIM': 'user_id',
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "USER_ID_FIELD": "id_usuario",
+    "USER_ID_CLAIM": "user_id",
 }
 
 
@@ -164,5 +168,5 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-#Mock email backend for development
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Mock email backend for development
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
