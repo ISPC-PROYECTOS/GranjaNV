@@ -16,6 +16,11 @@ PRECIOS_MAPLE_REFERENCIA: dict[str, Decimal] = {
 }
 
 
+class MetricasDashboardSerializer(serializers.Serializer):
+    pedidos_pendientes = serializers.IntegerField(min_value=0)
+    total_ventas_cobradas = serializers.DecimalField(max_digits=12, decimal_places=2)
+
+
 class ItemPedidoReadSerializer(serializers.ModelSerializer):
     tipo_huevo_display = serializers.CharField(
         source="get_tipo_huevo_display", read_only=True
@@ -55,7 +60,6 @@ class ItemPedidoWriteSerializer(serializers.Serializer):
 
 
 class PedidoReadSerializer(serializers.ModelSerializer):
-    # Reutilización directa del Serializer oficial del módulo clientes
     cliente = ClienteSerializer(read_only=True)
     items = ItemPedidoReadSerializer(many=True, read_only=True)
     resumen_productos = serializers.SerializerMethodField()

@@ -1,1 +1,452 @@
-<p>ventas works!</p>
+<main class="container-fluid gestion-pagina pb-4">
+  <button
+    class="btn btn-volver-panel"
+    type="button"
+    routerLink="/dashboard/admin/panel-de-control"
+  >
+    ← Panel de control
+  </button>
+
+  <!-- Navegación móvil por pestañas (Nuevo Pedido a la izquierda, Pedidos a la derecha) -->
+  <nav class="d-sm-none finanzas-tabs" role="tablist" aria-label="Secciones de ventas móvil">
+    <button
+      type="button"
+      role="tab"
+      id="tab-formulario"
+      aria-controls="seccion-panel-formulario"
+      class="btn finanzas-tab"
+      [attr.aria-selected]="vistaMobile() === 'formulario'"
+      [class.finanzas-tab-activo]="vistaMobile() === 'formulario'"
+      (click)="vistaMobile.set('formulario')"
+    >
+      {{ pedidoEditandoId() ? 'Editar Pedido' : 'Nuevo Pedido' }}
+    </button>
+
+    <button
+      type="button"
+      role="tab"
+      id="tab-pedidos"
+      aria-controls="seccion-panel-pedidos"
+      class="btn finanzas-tab"
+      [attr.aria-selected]="vistaMobile() === 'pedidos'"
+      [class.finanzas-tab-activo]="vistaMobile() === 'pedidos'"
+      (click)="vistaMobile.set('pedidos')"
+    >
+      Pedidos
+    </button>
+  </nav>
+
+  <section class="row gestion-seccion my-2 g-4">
+    <!-- SECCIÓN IZQUIERDA: PEDIDOS PENDIENTES Y CERRADOS -->
+    <div
+      id="seccion-panel-pedidos"
+      role="tabpanel"
+      aria-labelledby="tab-pedidos"
+      class="col-12 col-lg-6 order-2 order-lg-1"
+      [class.d-none]="vistaMobile() !== 'pedidos'"
+      [class.d-sm-block]="true"
+    >
+      <section class="seccion-izquierda">
+        <header class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+          <h2 class="gestion-titulo mb-0">PEDIDOS PENDIENTES</h2>
+
+          <div class="d-flex align-items-center gap-2">
+            <app-selector-fecha
+              (cambioRango)="onCambioRangoPendientes($event)"
+            ></app-selector-fecha>
+
+            <div class="gestion-buscador">
+              <i class="hgi-stroke hgi-search-01" aria-hidden="true"></i>
+              <input
+                type="search"
+                class="gestion-buscador-input"
+                placeholder="Buscar"
+                aria-label="Buscar pedidos pendientes"
+                (input)="onBuscarPendientes($event)"
+              />
+            </div>
+          </div>
+        </header>
+
+        <!-- Lista de Pedidos Pendientes -->
+        <div class="pedidos-lista" role="feed" aria-busy="{{ isLoading() }}">
+          @for (pedido of pedidosPendientes(); track pedido.id) {
+            <article class="pedido-card">
+              <header
+                class="pedido-card-header"
+                role="button"
+                tabindex="0"
+                [attr.aria-expanded]="pedidoExpandidoId() === pedido.id"
+                (click)="toggleExpandir(pedido.id)"
+                (keydown.enter)="toggleExpandir(pedido.id)"
+              >
+                <div class="pedido-info-principal">
+                  <div class="d-flex align-items-center justify-content-between pe-2">
+                    <h3 class="pedido-cliente-nombre">
+                      {{ pedido.cliente.nombre }} {{ pedido.cliente.apellido }}
+                    </h3>
+                    <span class="pedido-monto-destacado" title="Monto total del pedido">
+                      ${{ formatearMoneda(pedido.total) }}
+                    </span>
+                  </div>
+
+                  <p class="pedido-resumen">
+                    {{ pedido.resumen_productos }} —
+                    <strong
+                      >{{ pedido.dia_semana_entrega }}
+                      {{ formatearFechaDisplay(pedido.fecha_entrega) }}</strong
+                    >
+                  </p>
+
+                  <p class="pedido-contacto-extra">
+                    <span class="me-3"
+                      ><i class="hgi-stroke hgi-location-01" aria-hidden="true"></i>
+                      {{ pedido.cliente.direccion }}</span
+                    >
+                    <span
+                      ><i class="hgi-stroke hgi-call-02" aria-hidden="true"></i>
+                      {{ pedido.cliente.telefono }}</span
+                    >
+                  </p>
+                </div>
+
+                <div class="pedido-indicadores-accion">
+                  <span
+                    class="indicador-circulo"
+                    [class.indicador-activo]="pedido.estado_entrega"
+                    title="{{ pedido.estado_entrega ? 'Entregado' : 'Pendiente de entrega' }}"
+                  ></span>
+                  <span
+                    class="indicador-circulo"
+                    [class.indicador-activo]="pedido.estado_pago"
+                    title="{{ pedido.estado_pago ? 'Pagado' : 'Pendiente de pago' }}"
+                  ></span>
+                  <i
+                    class="hgi-stroke hgi-arrow-down-01 icono-chevron"
+                    [class.rotado]="pedidoExpandidoId() === pedido.id"
+                    aria-hidden="true"
+                  ></i>
+                </div>
+              </header>
+
+              @if (pedidoExpandidoId() === pedido.id) {
+                <footer class="pedido-card-footer animate-fade-in">
+                  <div
+                    class="d-flex flex-wrap gap-2 w-100 justify-content-between align-items-center"
+                  >
+                    <div class="d-flex gap-2">
+                      <button
+                        type="button"
+                        class="btn btn-estado-toggle"
+                        [class.completado]="pedido.estado_entrega"
+                        (click)="toggleEntrega(pedido)"
+                      >
+                        <i class="hgi-stroke hgi-tick-02" aria-hidden="true"></i>
+                        {{ pedido.estado_entrega ? 'Entregado' : 'Pend. Entrega' }}
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-estado-toggle"
+                        [class.completado]="pedido.estado_pago"
+                        (click)="togglePago(pedido)"
+                      >
+                        <i class="hgi-stroke hgi-dollar-circle" aria-hidden="true"></i>
+                        {{ pedido.estado_pago ? 'Pagado' : 'Pend. Pago' }}
+                      </button>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                      <button
+                        type="button"
+                        class="btn btn-accion-item btn-eliminar"
+                        aria-label="Eliminar pedido"
+                        (click)="eliminarPedido(pedido.id)"
+                      >
+                        <i class="hgi-stroke hgi-delete-02" aria-hidden="true"></i> Eliminar
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-accion-item btn-editar"
+                        aria-label="Editar pedido"
+                        (click)="editarPedido(pedido)"
+                      >
+                        <i class="hgi-stroke hgi-pencil-edit-01" aria-hidden="true"></i> Editar
+                      </button>
+                    </div>
+                  </div>
+                </footer>
+              }
+            </article>
+          } @empty {
+            <p class="text-center text-muted py-4 m-0">No hay pedidos pendientes en este rango.</p>
+          }
+        </div>
+
+        <div class="referencias-leyenda my-2">
+          <div class="d-flex align-items-center gap-2">
+            <span class="indicador-circulo indicador-activo"></span> <span>Entregado</span>
+            <span class="indicador-circulo indicador-activo ms-3"></span> <span>Pagado</span>
+          </div>
+        </div>
+
+        <!-- SECCIÓN DESPLEGABLE: PEDIDOS CERRADOS -->
+        <div class="seccion-pedidos-cerrados mt-auto pt-2 border-top">
+          <button
+            type="button"
+            class="btn btn-toggle-cerrados w-100"
+            [attr.aria-expanded]="mostrarCerrados()"
+            (click)="toggleMostrarCerrados()"
+          >
+            <span class="d-flex align-items-center gap-2 fw-semibold">
+              <i class="hgi-stroke hgi-checkmark-circle-02" aria-hidden="true"></i>
+              Pedidos cerrados ({{ pedidosCerrados().length }})
+            </span>
+            <i
+              class="hgi-stroke hgi-arrow-down-01 icono-chevron"
+              [class.rotado]="mostrarCerrados()"
+              aria-hidden="true"
+            ></i>
+          </button>
+
+          @if (mostrarCerrados()) {
+            <div class="contenedor-cerrados-expandido animate-fade-in mt-2">
+              <div class="d-flex justify-content-between align-items-center mb-2 gap-2 flex-wrap">
+                <span class="small text-muted fw-semibold">Filtros de pedidos cerrados:</span>
+                <div class="d-flex align-items-center gap-2">
+                  <app-selector-fecha
+                    (cambioRango)="onCambioRangoCerrados($event)"
+                  ></app-selector-fecha>
+
+                  <div class="gestion-buscador buscador-sm">
+                    <i class="hgi-stroke hgi-search-01" aria-hidden="true"></i>
+                    <input
+                      type="search"
+                      class="gestion-buscador-input buscador-input-sm"
+                      placeholder="Buscar"
+                      aria-label="Buscar pedidos cerrados"
+                      (input)="onBuscarCerrados($event)"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="pedidos-cerrados-lista">
+                @for (cerrado of pedidosCerrados(); track cerrado.id) {
+                  <div
+                    class="pedido-card pedido-card-cerrado p-2 px-3 mb-2 d-flex justify-content-between align-items-center"
+                  >
+                    <div>
+                      <div class="d-flex align-items-center gap-2">
+                        <strong class="text-dark">
+                          {{ cerrado.cliente.nombre }} {{ cerrado.cliente.apellido }}
+                        </strong>
+                        <span class="badge badge-cerrado-fecha">
+                          {{ cerrado.dia_semana_entrega }}
+                          {{ formatearFechaDisplay(cerrado.fecha_entrega) }}
+                        </span>
+                      </div>
+                      <small class="text-muted d-block">
+                        {{ cerrado.resumen_productos }}
+                      </small>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2">
+                      <span class="pedido-monto-cerrado"
+                        >${{ formatearMoneda(cerrado.total) }}</span
+                      >
+                      <button
+                        type="button"
+                        class="btn btn-gasto-eliminar p-1"
+                        title="Eliminar pedido cerrado"
+                        aria-label="Eliminar registro"
+                        (click)="eliminarPedido(cerrado.id)"
+                      >
+                        <i class="hgi-stroke hgi-delete-02 fs-6" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </div>
+                } @empty {
+                  <p class="text-center text-muted py-2 m-0 small">
+                    No hay pedidos cerrados en este período.
+                  </p>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    </div>
+
+    <!-- SECCIÓN DERECHA: FORMULARIO NUEVO / EDITAR PEDIDO -->
+    <div
+      id="seccion-panel-formulario"
+      role="tabpanel"
+      aria-labelledby="tab-formulario"
+      class="col-12 col-lg-6 order-1 order-lg-2"
+      [class.d-none]="vistaMobile() !== 'formulario'"
+      [class.d-sm-block]="true"
+    >
+      <section class="seccion-derecha">
+        <h2 class="gestion-titulo text-white mb-2">
+          {{ pedidoEditandoId() ? 'EDITAR PEDIDO' : 'NUEVO PEDIDO' }}
+        </h2>
+
+        @if (mensajeExito()) {
+          <div class="alerta-exito" role="alert">{{ mensajeExito() }}</div>
+        }
+        @if (errorBackend()) {
+          <div class="alerta-error" role="alert">{{ errorBackend() }}</div>
+        }
+
+        <div class="gestion-formulario p-3 mt-1">
+          <!-- Autocompletado de Clientes -->
+          <div class="mb-2 position-relative">
+            <label for="buscar-cliente" class="form-label">Cliente *</label>
+            <input
+              id="buscar-cliente"
+              type="text"
+              class="form-control"
+              placeholder="Buscar cliente..."
+              [ngModel]="terminoBusquedaCliente()"
+              (ngModelChange)="terminoBusquedaCliente.set($event)"
+              autocomplete="off"
+            />
+            @if (clientesFiltrados().length > 0 && !clienteSeleccionado()) {
+              <ul class="dropdown-clientes-sugerencias shadow" role="listbox">
+                @for (c of clientesFiltrados(); track c.id) {
+                  <li
+                    role="option"
+                    tabindex="0"
+                    (click)="seleccionarCliente(c)"
+                    (keydown.enter)="seleccionarCliente(c)"
+                  >
+                    <strong>{{ c.nombre }} {{ c.apellido }}</strong> — {{ c.direccion }} ({{
+                      c.telefono
+                    }})
+                  </li>
+                }
+              </ul>
+            }
+          </div>
+
+          <div class="row g-2 mb-2">
+            <div class="col-6">
+              <label for="contacto-cliente" class="form-label">Contacto</label>
+              <input
+                id="contacto-cliente"
+                type="text"
+                class="form-control campo-deshabilitado"
+                [value]="clienteSeleccionado()?.telefono || 'Se autocompleta'"
+                readonly
+              />
+            </div>
+            <div class="col-6">
+              <label for="direccion-cliente" class="form-label">Dirección</label>
+              <input
+                id="direccion-cliente"
+                type="text"
+                class="form-control campo-deshabilitado"
+                [value]="clienteSeleccionado()?.direccion || 'Se autocompleta'"
+                readonly
+              />
+            </div>
+          </div>
+
+          <!-- Selección y Contadores de Variedades de Huevo -->
+          <div class="mb-3">
+            <span class="form-label d-block mb-1">Productos (Maples x 30 unidades)</span>
+            <div class="productos-grid">
+              @for (prod of productos(); track prod.codigo) {
+                <div class="producto-fila">
+                  <div class="producto-nombre">
+                    <span>{{ prod.nombre }}</span>
+                    <small>${{ prod.precioMaple }} / maple</small>
+                  </div>
+                  <div class="producto-contador">
+                    <button
+                      type="button"
+                      class="btn-step"
+                      aria-label="Restar un maple"
+                      (click)="decrementarProducto(prod.codigo)"
+                    >
+                      -
+                    </button>
+                    <span class="contador-valor">{{ prod.maples }}</span>
+                    <button
+                      type="button"
+                      class="btn-step"
+                      aria-label="Sumar un maple"
+                      (click)="incrementarProducto(prod.codigo)"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Totales Calculados -->
+          <div class="row g-2 mb-3 align-items-end">
+            <div class="col-6">
+              <label for="total-maples-calc" class="form-label label-totales">Total Maples</label>
+              <input
+                id="total-maples-calc"
+                type="text"
+                class="form-control campo-deshabilitado text-center fw-bold"
+                [value]="cantidadTotalMaples()"
+                readonly
+              />
+            </div>
+            <div class="col-6">
+              <label for="precio-estimado-calc" class="form-label label-totales">Precio Estimado</label>
+              <input
+                id="precio-estimado-calc"
+                type="text"
+                class="form-control campo-deshabilitado text-center fw-bold"
+                [value]="'$' + formatearMoneda(precioTotal())"
+                readonly
+              />
+            </div>
+          </div>
+
+          <!-- Selección de Fecha de Entrega Dinámica -->
+          <div class="mb-3">
+            <label for="fecha-entrega-manual" class="form-label d-block">
+              Fecha de entrega programada *
+            </label>
+            <div class="dias-entrega-chips mb-2" role="group" aria-label="Días próximos de entrega">
+              @for (opcion of opcionesProximosDias(); track opcion.fechaIso) {
+                <button
+                  type="button"
+                  class="btn btn-dia-chip"
+                  [class.activo]="fechaEntregaSeleccionada() === opcion.fechaIso"
+                  (click)="seleccionarDiaEntrega(opcion.fechaIso)"
+                >
+                  {{ opcion.etiqueta }}
+                </button>
+              }
+            </div>
+            <input
+              id="fecha-entrega-manual"
+              type="date"
+              class="form-control"
+              [min]="fechaMinima"
+              [ngModel]="fechaEntregaSeleccionada()"
+              (ngModelChange)="fechaEntregaSeleccionada.set($event)"
+              required
+            />
+          </div>
+
+          <!-- Acciones del Formulario -->
+          <div class="gestion-formulario-acciones pt-2">
+            <button type="button" class="btn btn-limpiar" (click)="limpiar()">Limpiar</button>
+            <button type="button" class="btn btn-guardar" (click)="guardarPedido()">
+              {{ pedidoEditandoId() ? 'Actualizar' : 'Guardar' }}
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+</main>
