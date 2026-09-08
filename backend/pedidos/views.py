@@ -1,3 +1,4 @@
+from core.mixins import RangoFechaMixin
 from django.db import transaction
 from django.db.models import Q, QuerySet
 from rest_framework import status, viewsets
@@ -10,9 +11,10 @@ from .models import Pedido
 from .serializers import PedidoReadSerializer, PedidoWriteSerializer
 
 
-class PedidoViewSet(viewsets.ModelViewSet):
+class PedidoViewSet(RangoFechaMixin, viewsets.ModelViewSet):
     queryset = Pedido.objects.select_related("cliente").prefetch_related("items").all()
     permission_classes = [IsAuthenticated, IsAdminRole]
+    fecha_campo = "fecha_entrega"
 
     def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:
@@ -22,12 +24,14 @@ class PedidoViewSet(viewsets.ModelViewSet):
     def get_queryset(self) -> QuerySet[Pedido]:
         qs = super().get_queryset()
 
-        # Filtro de pedidos pendientes (pago o entrega sin completar)
         pendientes = self.request.query_params.get("pendientes", None)
-        if pendientes is not None and pendientes.lower() == "true":
+        cerrados = self.request.query_params.get("cerrados", None)
+
+        if cerrados is not None and cerrados.lower() == "true":
+            qs = qs.filter(estado_pago=True, estado_entrega=True)
+        elif pendientes is not None and pendientes.lower() == "true":
             qs = qs.filter(Q(estado_pago=False) | Q(estado_entrega=False))
 
-        # Buscador por datos de cliente o dirección
         search = self.request.query_params.get("search", None)
         if search:
             termino = search.strip()
@@ -41,8 +45,6 @@ class PedidoViewSet(viewsets.ModelViewSet):
 
     @transaction.atomic
     def perform_destroy(self, instance: Pedido) -> None:
-        # Hook listo para el próximo Sprint:
-        # ProduccionService.restituir_stock(instance.items.all())
         instance.delete()
 
     @action(detail=True, methods=["patch"], url_path="toggle-pago")

@@ -2,36 +2,18 @@ from decimal import Decimal
 from typing import Any
 
 from clientes.models import Cliente
+from clientes.serializers import ClienteSerializer
 from django.db import transaction
 from rest_framework import serializers
 
 from .models import ItemPedido, Pedido
 
-# Precios oficiales vigentes por maple (30 unidades)
 PRECIOS_MAPLE_REFERENCIA: dict[str, Decimal] = {
     ItemPedido.TipoHuevo.BLANCO_1: Decimal("4500.00"),
     ItemPedido.TipoHuevo.BLANCO_2: Decimal("4200.00"),
     ItemPedido.TipoHuevo.COLOR_1: Decimal("4800.00"),
     ItemPedido.TipoHuevo.COLOR_2: Decimal("4500.00"),
 }
-
-
-class ClienteResumenSerializer(serializers.ModelSerializer):
-    nombre_completo = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Cliente
-        fields = [
-            "id",
-            "nombre",
-            "apellido",
-            "nombre_completo",
-            "telefono",
-            "direccion",
-        ]
-
-    def get_nombre_completo(self, obj: Cliente) -> str:
-        return f"{obj.nombre} {obj.apellido}".strip()
 
 
 class ItemPedidoReadSerializer(serializers.ModelSerializer):
@@ -73,20 +55,19 @@ class ItemPedidoWriteSerializer(serializers.Serializer):
 
 
 class PedidoReadSerializer(serializers.ModelSerializer):
-    cliente = ClienteResumenSerializer(read_only=True)
+    # Reutilización directa del Serializer oficial del módulo clientes
+    cliente = ClienteSerializer(read_only=True)
     items = ItemPedidoReadSerializer(many=True, read_only=True)
-    dia_entrega_display = serializers.CharField(
-        source="get_dia_entrega_display", read_only=True
-    )
     resumen_productos = serializers.SerializerMethodField()
+    dia_semana_entrega = serializers.SerializerMethodField()
 
     class Meta:
         model = Pedido
         fields = [
             "id",
             "cliente",
-            "dia_entrega",
-            "dia_entrega_display",
+            "fecha_entrega",
+            "dia_semana_entrega",
             "estado_pago",
             "estado_entrega",
             "total",
@@ -104,6 +85,18 @@ class PedidoReadSerializer(serializers.ModelSerializer):
         ]
         return " + ".join(partes) if partes else "Sin productos"
 
+    def get_dia_semana_entrega(self, obj: Pedido) -> str:
+        dias = {
+            0: "Lunes",
+            1: "Martes",
+            2: "Miércoles",
+            3: "Jueves",
+            4: "Viernes",
+            5: "Sábado",
+            6: "Domingo",
+        }
+        return dias.get(obj.fecha_entrega.weekday(), "")
+
 
 class PedidoWriteSerializer(serializers.ModelSerializer):
     cliente = serializers.PrimaryKeyRelatedField(
@@ -116,7 +109,7 @@ class PedidoWriteSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "cliente",
-            "dia_entrega",
+            "fecha_entrega",
             "estado_pago",
             "estado_entrega",
             "observaciones",
