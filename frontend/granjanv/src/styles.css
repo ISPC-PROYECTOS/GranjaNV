@@ -5,22 +5,22 @@
 @import url('https://cdn.hugeicons.com/font/hgi-stroke-rounded.css');
 
 :root {
-  --color-primario: #67875F;
-  --color-primario-oscuro: #4E6647;
-  --color-primario-claro: #E8F0E5;
+  --color-primario: #67875f;
+  --color-primario-oscuro: #4e6647;
+  --color-primario-claro: #e8f0e5;
 
-  --color-secundario: #C97E57;
-  --color-secundario-oscuro: #A6623E;
-  --color-secundario-claro: #F7EAE0;
+  --color-secundario: #c97e57;
+  --color-secundario-oscuro: #a6623e;
+  --color-secundario-claro: #f7eae0;
 
   --color-negro: #111111;
-  --color-crema: #FBF5F3;
-  --color-blanco: #FFFFFF;
-  --color-gris-claro: #E8E3E0;
-  --color-gris-oscuro: #9A9590;
+  --color-crema: #fbf5f3;
+  --color-blanco: #ffffff;
+  --color-gris-claro: #e8e3e0;
+  --color-gris-oscuro: #9a9590;
 
-  --color-error: #FF6B6B;
-  --color-error-oscuro: #9F2424;
+  --color-error: #ff6b6b;
+  --color-error-oscuro: #9f2424;
   --color-exito: #81c784;
 
   --font-titulos: 'Montserrat', sans-serif;
@@ -54,6 +54,35 @@ body {
 }
 
 /* =================================
+   TABS MOBILE
+================================= */
+
+.tabs-mobile {
+  display: flex;
+  gap: 12px;
+  background-color: var(--color-blanco);
+  border-radius: 12px;
+  padding: 7px;
+  margin-bottom: 12px;
+}
+
+.tab-mobile {
+  flex: 1;
+  background-color: #c9d5c6;
+  color: var(--color-blanco);
+  border: none;
+  border-radius: 10px;
+  padding: 14px 8px;
+  font-family: var(--font-textos);
+  font-size: 17px;
+}
+
+.tab-mobile-activo {
+  background-color: var(--color-primario);
+  box-shadow: 3px 3px 3px rgba(201, 126, 87, 0.45);
+}
+
+/* =================================
    ALERTAS
 ================================= */
 
@@ -83,7 +112,6 @@ body {
   font-size: 0.75rem;
   margin-top: 0.35rem;
 }
-
 
 /* =================================
    FORMULARIOS - LOGIN Y REGISTRO
@@ -183,7 +211,7 @@ body {
   background-color: var(--color-primario-claro);
   border-radius: 37px;
   box-shadow: 0 4px 4px var(--color-primario);
-  padding: 24px;
+  padding: 12px 24px 24px;
   margin-left: 0;
   margin-right: 0;
 }
@@ -274,33 +302,4 @@ body {
   padding: 24px;
   display: flex;
   flex-direction: column;
-}
-
-.gestion-buscador {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid var(--color-negro);
-  border-radius: 10px;
-  padding: 3px 12px;
-}
-
-.gestion-buscador i {
-  font-size: 27px;
-}
-
-.gestion-buscador-input {
-  width: 110px;
-  border: none;
-  outline: none;
-  background-color: transparent;
-  font-family: var(--font-titulos);
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.gestion-buscador-input::-webkit-search-cancel-button {
-  cursor: pointer;
-  filter: grayscale(1);
-  opacity: 0.7;
 }

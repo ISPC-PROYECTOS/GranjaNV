@@ -14,12 +14,16 @@ import {
   ItemPedidoWrite,
   OpcionDiaEntrega,
 } from '../../../../core/models/pedido.model';
-import { SelectorFecha, RangoFechaSeleccionado } from '../../../../shared/selector-fecha/selector-fecha';
+import {
+  SelectorFecha,
+  RangoFechaSeleccionado,
+} from '../../../../shared/selector-fecha/selector-fecha';
 import { formatearFechaISO, obtenerRangoMesActual } from '../../../../core/utils/date.utils';
+import { Buscador } from '../../../../shared/buscador/buscador';
 
 @Component({
   selector: 'app-ventas',
-  imports: [CommonModule, FormsModule, RouterLink, SelectorFecha],
+  imports: [CommonModule, FormsModule, RouterLink, SelectorFecha, Buscador],
   templateUrl: './ventas.html',
   styleUrl: './ventas.css',
 })
@@ -63,11 +67,11 @@ export class Ventas implements OnInit {
   ]);
 
   readonly precioTotal = computed(() =>
-    this.productos().reduce((acc, p) => acc + p.maples * p.precioMaple, 0)
+    this.productos().reduce((acc, p) => acc + p.maples * p.precioMaple, 0),
   );
 
   readonly cantidadTotalMaples = computed(() =>
-    this.productos().reduce((acc, p) => acc + p.maples, 0)
+    this.productos().reduce((acc, p) => acc + p.maples, 0),
   );
 
   readonly clientesFiltrados = computed(() => {
@@ -75,8 +79,7 @@ export class Ventas implements OnInit {
     if (!q) return [];
     return this.clientes().filter(
       (c) =>
-        c.nombre.toLowerCase().includes(q) ||
-        (c.apellido && c.apellido.toLowerCase().includes(q))
+        c.nombre.toLowerCase().includes(q) || (c.apellido && c.apellido.toLowerCase().includes(q)),
     );
   });
 
@@ -123,9 +126,8 @@ export class Ventas implements OnInit {
     });
   }
 
-  onBuscarPendientes(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.busquedaPendientes.set(input.value);
+  onBuscarPendientes(valor: string): void {
+    this.busquedaPendientes.set(valor);
     this.cargarPedidosPendientes();
   }
 
@@ -134,9 +136,8 @@ export class Ventas implements OnInit {
     this.cargarPedidosPendientes();
   }
 
-  onBuscarCerrados(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.busquedaCerrados.set(input.value);
+  onBuscarCerrados(valor: string): void {
+    this.busquedaCerrados.set(valor);
     this.cargarPedidosCerrados();
   }
 
@@ -165,15 +166,13 @@ export class Ventas implements OnInit {
 
   incrementarProducto(codigo: TipoHuevo): void {
     this.productos.update((items) =>
-      items.map((i) => (i.codigo === codigo ? { ...i, maples: i.maples + 1 } : i))
+      items.map((i) => (i.codigo === codigo ? { ...i, maples: i.maples + 1 } : i)),
     );
   }
 
   decrementarProducto(codigo: TipoHuevo): void {
     this.productos.update((items) =>
-      items.map((i) =>
-        i.codigo === codigo && i.maples > 0 ? { ...i, maples: i.maples - 1 } : i
-      )
+      items.map((i) => (i.codigo === codigo && i.maples > 0 ? { ...i, maples: i.maples - 1 } : i)),
     );
   }
 
@@ -227,8 +226,7 @@ export class Ventas implements OnInit {
           this.cargarPedidosCerrados();
           this.vistaMobile.set('pedidos');
         },
-        error: (err) =>
-          this.errorBackend.set(err.error?.detail || 'Error al guardar el pedido.'),
+        error: (err) => this.errorBackend.set(err.error?.detail || 'Error al guardar el pedido.'),
       });
     }
   }
@@ -237,7 +235,7 @@ export class Ventas implements OnInit {
     this.pedidoEditandoId.set(pedido.id);
     this.clienteSeleccionado.set(pedido.cliente);
     this.terminoBusquedaCliente.set(
-      `${pedido.cliente.nombre} ${pedido.cliente.apellido || ''}`.trim()
+      `${pedido.cliente.nombre} ${pedido.cliente.apellido || ''}`.trim(),
     );
     this.fechaEntregaSeleccionada.set(pedido.fecha_entrega);
 
@@ -245,7 +243,7 @@ export class Ventas implements OnInit {
       catalogo.map((item) => {
         const encontrado = pedido.items.find((i) => i.tipo_huevo === item.codigo);
         return { ...item, maples: encontrado ? encontrado.cantidad_maples : 0 };
-      })
+      }),
     );
 
     this.vistaMobile.set('formulario');

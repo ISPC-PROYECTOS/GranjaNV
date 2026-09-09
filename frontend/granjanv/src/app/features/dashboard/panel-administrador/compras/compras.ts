@@ -6,11 +6,15 @@ import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs'
 import { Gasto } from '../../../../core/models/gasto.model';
 import { Gastos, FiltroGastos } from '../../../../core/services/gastos';
 import { formatearFechaISO, obtenerRangoMesActual } from '../../../../core/utils/date.utils';
-import { SelectorFecha, RangoFechaSeleccionado } from '../../../../shared/selector-fecha/selector-fecha';
+import {
+  SelectorFecha,
+  RangoFechaSeleccionado,
+} from '../../../../shared/selector-fecha/selector-fecha';
+import { Buscador } from '../../../../shared/buscador/buscador';
 
 @Component({
   selector: 'app-compras',
-  imports: [ReactiveFormsModule, RouterLink, SelectorFecha],
+  imports: [ReactiveFormsModule, RouterLink, SelectorFecha, Buscador],
   templateUrl: './compras.html',
   styleUrl: './compras.css',
 })
@@ -60,9 +64,8 @@ export class Compras implements OnInit, OnDestroy {
     }
   }
 
-  onBuscar(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.buscadorSubject.next(input.value);
+  onBuscar(valor: string): void {
+    this.buscadorSubject.next(valor);
   }
 
   onCambioRangoFecha(rango: RangoFechaSeleccionado): void {

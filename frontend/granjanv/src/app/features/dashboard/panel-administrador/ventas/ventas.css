@@ -1,36 +1,31 @@
-/* PESTAÑAS MÓVILES (Idéntico a Compras) */
-.finanzas-tabs {
-  display: flex;
-  gap: 12px;
-  background-color: var(--color-blanco);
-  border-radius: 12px;
-  padding: 7px;
-  margin-bottom: 12px;
-}
-
-.finanzas-tab {
-  flex: 1;
-  background-color: #c9d5c6;
-  color: var(--color-blanco);
-  border: none;
-  border-radius: 10px;
-  padding: 12px 8px;
-  font-family: var(--font-textos);
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.finanzas-tab-activo {
-  background-color: var(--color-primario);
-  box-shadow: 3px 3px 3px rgba(201, 126, 87, 0.45);
-}
-
 /* LISTA DE PEDIDOS PENDIENTES */
+.titulo-pedidos {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.titulo-pedidos-superior {
+  font-family: var(--font-titulos);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.pedidos-panel {
+  height: 735px; /* probá alrededor de este valor */
+  display: flex;
+  flex-direction: column;
+}
+
 .pedidos-lista {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  max-height: 420px;
+  flex: 1;
+  min-height: 0;
+  /* max-height: 420px; */
   overflow-y: auto;
   padding-right: 6px;
 }
@@ -40,6 +35,7 @@
   border-radius: 18px;
   overflow: hidden;
   transition: box-shadow 0.2s ease;
+  flex-shrink: 0;
 }
 
 .pedido-card-header {
@@ -186,15 +182,6 @@
   background-color: var(--color-crema);
   border-radius: 12px;
   padding: 10px;
-}
-
-.buscador-sm {
-  padding: 2px 8px;
-}
-
-.buscador-input-sm {
-  width: 80px;
-  font-size: 14px;
 }
 
 .pedidos-cerrados-lista {
@@ -426,6 +413,10 @@
     min-width: 0;
     flex: 1;
     width: 100%;
+  }
+
+  .pedidos-panel {
+    height: auto;
   }
 
   .pedidos-lista {
