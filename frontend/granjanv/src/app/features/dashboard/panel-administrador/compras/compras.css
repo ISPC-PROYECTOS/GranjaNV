@@ -1,30 +1,3 @@
-/* BOTONES SWITCHES MOBILE */
-
-.finanzas-tabs {
-  display: flex;
-  gap: 12px;
-  background-color: var(--color-blanco);
-  border-radius: 12px;
-  padding: 7px;
-  margin-bottom: 12px;
-}
-
-.finanzas-tab {
-  flex: 1;
-  background-color: #c9d5c6;
-  color: var(--color-blanco);
-  border: none;
-  border-radius: 10px;
-  padding: 14px 8px;
-  font-family: var(--font-textos);
-  font-size: 17px;
-}
-
-.finanzas-tab-activo {
-  background-color: var(--color-primario);
-  box-shadow: 3px 3px 3px rgba(201, 126, 87, 0.45);
-}
-
 /* GASTOS */
 
 .gastos-encabezado {
@@ -219,6 +192,22 @@
     border-radius: 20px;
   }
 
+  .gastos-encabezado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: nowrap;
+  }
+
+  .gastos-encabezado > div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+
   .gasto-item {
     flex-wrap: wrap; /* En celular pasa monto y acciones a la línea siguiente si hace falta */
     gap: 8px 12px;
@@ -255,32 +244,6 @@
     padding: 6px;
   }
 
-  .gestion-buscador {
-    padding: 5px 8px;
-    gap: 4px;
-  }
-
-  .gestion-buscador-input {
-    width: 75px;
-    font-size: 16px;
-  }
-
-  .gestion-buscador i {
-    font-size: 22px;
-  }
-
-  .gastos-encabezado {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .gastos-filtros {
-    width: 100%;
-    justify-content: space-between;
-    gap: 6px;
-  }
-
   .gestion-formulario-acciones {
     gap: 12px;
   }
@@ -298,5 +261,5 @@
     margin-right: auto;
     padding: 6px;
     font-size: 14px;
-}
+  }
 }
