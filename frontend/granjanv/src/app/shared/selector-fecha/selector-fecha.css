@@ -4,12 +4,20 @@
 
 .selector-fecha-caja {
   background: transparent;
+  border: 1px solid var(--color-negro);
+  border-radius: 10px;
   cursor: pointer;
-  padding: 3px 10px;
+  width: 45px;
+  height: 45px;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .selector-fecha-caja i {
-  font-size: 27px;
+  font-size: 30px;
   color: var(--color-negro);
 }
 
