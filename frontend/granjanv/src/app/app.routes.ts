@@ -31,6 +31,13 @@ export const routes: Routes = [
       ),
     canActivate: [adminGuard]
   },
+  {
+    path: 'dashboard/produccion',
+    loadComponent: () =>
+      import('./features/dashboard/panel-produccion/panel-produccion').then(
+        (m) => m.PanelProduccion
+      ),
+  },
   { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent }
 ];

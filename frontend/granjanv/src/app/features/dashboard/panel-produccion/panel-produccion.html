@@ -1,0 +1,32 @@
+<main class="container-fluid gestion-pagina pb-4">
+
+  <!-- Header de navegación a Pedidos -->
+  <header class="d-flex justify-content-end pt-2 mb-3">
+    <button 
+      type="button" 
+      class="btn btn-volver-panel m-0" 
+      routerLink="/dashboard/admin/ventas"
+      aria-label="Ir al módulo de pedidos">
+      PEDIDOS →
+    </button>
+  </header>
+
+  <!-- Grilla principal -->
+  <section class="row g-4">
+    
+    <!-- COLUMNA IZQUIERDA: Métricas acumuladas -->
+    <div class="col-12 col-lg-6 order-2 order-lg-1">
+      <app-gestion-gallinas></app-gestion-gallinas>
+    </div>
+
+    <!-- COLUMNA DERECHA: Organismo de formularios -->
+    <div class="col-12 col-lg-6 order-1 order-lg-2">
+      <section class="seccion-derecha">
+        <app-gestion-huevos></app-gestion-huevos>
+        <app-registro-incidentes></app-registro-incidentes>
+      </section>
+    </div>
+
+  </section>
+
+</main>

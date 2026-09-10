@@ -1,0 +1,50 @@
+<!-- Título principal -->
+<h2 class="gestion-titulo text-white mb-2">PRODUCCIÓN DIARIA</h2>
+
+<!-- Formulario sobre tarjeta beige -->
+<form class="gestion-formulario m-0 p-3">
+
+  <div class="mb-3">
+    <label for="prod-galpon" class="form-label">Galpón</label>
+    <select id="prod-galpon" class="form-select">
+      <option value="" disabled selected>Seleccionar</option>
+      <option value="1">Galpón 1</option>
+      <option value="2">Galpón 2</option>
+      <option value="3">Galpón 3</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="prod-tipo" class="form-label">Tipo</label>
+    <select id="prod-tipo" class="form-select">
+      <option value="" disabled selected>Seleccionar</option>
+      <option value="BLANCO">Blanco</option>
+      <option value="COLOR">Color</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="prod-numero" class="form-label">Número</label>
+    <select id="prod-numero" class="form-select">
+      <option value="" disabled selected>Seleccionar</option>
+      <option value="1">N° 1</option>
+      <option value="2">N° 2</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="prod-cantidad" class="form-label">Cantidad de maples</label>
+    <input id="prod-cantidad" type="number" class="form-control" placeholder="0" min="0">
+  </div>
+
+  <div class="mb-3">
+    <label for="prod-rotos" class="form-label">Cantidad huevos rotos</label>
+    <input id="prod-rotos" type="number" class="form-control" placeholder="0" min="0">
+  </div>
+
+  <div class="gestion-formulario-acciones pt-2">
+    <button type="button" class="btn btn-limpiar">Limpiar</button>
+    <button type="submit" class="btn btn-guardar">Guardar</button>
+  </div>
+
+</form>
