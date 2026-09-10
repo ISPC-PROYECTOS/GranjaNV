@@ -26,9 +26,16 @@ export class Footer {
   };
   
   redesSociales = [
-    { nombre: 'Facebook', icono: '📘', url: '#' },
-    { nombre: 'Instagram', icono: '📷', url: '#' },
-    { nombre: 'WhatsApp', icono: '💬', url: '#' }
+      {
+    nombre: 'Facebook',
+    icono: '/ImagenesHome/facebook.svg',
+    url: 'https://www.facebook.com'
+  },
+  {
+    nombre: 'Instagram',
+    icono: '/ImagenesHome/instagram.svg',
+    url: 'https://www.instagram.com'
+  }
   ];
   
   anyoActual = new Date().getFullYear();

@@ -80,6 +80,13 @@
   font-size: 14px;
 }
 
+.producto-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
 .producto-info {
   padding: 20px;
 }

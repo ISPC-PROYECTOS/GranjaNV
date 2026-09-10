@@ -31,7 +31,7 @@
       <h3>Síguenos</h3>
       <div class="social-links">
         <a *ngFor="let red of redesSociales" href="{{ red.url }}" class="social-link" title="{{ red.nombre }}">
-          {{ red.icono }}
+          <img [src]="red.icono" [alt]="red.nombre">
         </a>
       </div>
     </div>

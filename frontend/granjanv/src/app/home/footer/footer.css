@@ -108,6 +108,13 @@
   transform: scale(1.1);
 }
 
+.social-link img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
 .footer-bottom {
   text-align: center;
   margin-top: 30px;

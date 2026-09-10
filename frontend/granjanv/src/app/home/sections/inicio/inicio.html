@@ -2,7 +2,14 @@
   <div class="inicio-header">
     <h1>{{ titulo }}</h1>
     <p class="inicio-subtitle">{{ descripcion }}</p>
-    <button class="btn-conocer">Conocenos</button>
+    <button 
+      class="btn-conocer"
+      type="button"
+      (click)="navigateTo('sobre-granja')"
+
+    >
+      Conocenos
+    </button>
   </div>
   
   <div class="inicio-content">

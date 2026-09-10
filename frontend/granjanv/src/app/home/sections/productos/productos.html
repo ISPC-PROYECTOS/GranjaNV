@@ -13,13 +13,15 @@
     </button>
 
     <div class="productos-grid">
-    <div class="producto-card" *ngFor="let producto of productosVisibles">
-      <div class="producto-image"></div>
-      <div class="producto-info">
-        <h3>{{ producto.nombre }}</h3>
-        <p>{{ producto.descripcion }}</p>
+      <div class="producto-card" *ngFor="let producto of productosVisibles">
+        <div class="producto-image">
+          <img [src]="producto.imagen" [alt]="producto.nombre">
+        </div>
+        <div class="producto-info">
+          <h3>{{ producto.nombre }}</h3>
+          <p>{{ producto.descripcion }}</p>
+        </div>
       </div>
-    </div>
     </div>
 
     <button

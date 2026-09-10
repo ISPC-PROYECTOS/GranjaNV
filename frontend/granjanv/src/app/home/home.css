@@ -17,7 +17,43 @@
   display: block;
 }
 
+.whatsapp-flotante {
+  position: fixed;
+  top: 50%;
+  right: 24px;
+  z-index: 1000;
+  width: 58px;
+  height: 58px;
+  padding: 12px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  background-color: #25D366;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transform: translateY(-50%);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.whatsapp-flotante:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.whatsapp-flotante img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
 @media (max-width: 768px) {
+  .whatsapp-flotante {
+    right: 14px;
+    width: 52px;
+    height: 52px;
+    padding: 10px;
+  }
+
   .home-section-toggle {
     width: 100%;
     display: flex;
