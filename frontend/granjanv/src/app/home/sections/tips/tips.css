@@ -16,6 +16,12 @@
   font-family: 'Montserrat', Arial, sans-serif;
 }
 
+@media (max-width: 768px) {
+  .section-title {
+    display: none;
+  }
+}
+
 .tips-subsection {
   margin-bottom: 58px;
 }

@@ -6,18 +6,53 @@
 }
 
 .section-title {
-  font-size: 36px;
-  font-weight: bold;
+  font-size: 32px;
+  font-weight: 500;
   text-align: center;
   color: #333;
   margin: 0 0 40px 0;
   font-family: 'Montserrat', Arial, sans-serif;
 }
 
+@media (max-width: 768px) {
+  .section-title {
+    display: none;
+  }
+}
+
+.productos-carrusel {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 16px;
+}
+
 .productos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
+}
+
+.carrusel-flecha {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background-color: transparent;
+  color: #5a7c59;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.carrusel-flecha:hover:not(:disabled) {
+  color: #4a6449;
+  transform: scale(1.08);
+}
+
+.carrusel-flecha:disabled {
+  color: #c8d3c5;
+  cursor: not-allowed;
 }
 
 .producto-card {
@@ -74,5 +109,17 @@
 
   .productos-grid {
     gap: 16px;
+    grid-template-columns: 1fr;
+  }
+
+  .productos-carrusel {
+    grid-template-columns: 36px minmax(0, 1fr) 36px;
+    gap: 8px;
+  }
+
+  .carrusel-flecha {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
   }
 }

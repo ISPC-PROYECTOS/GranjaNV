@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 })
 export class Navbar {
   @Output() sectionClicked = new EventEmitter<string>();
+  menuAbierto = false;
 
   sections = [
     { name: 'Inicio', id: 'inicio' },
@@ -17,10 +18,14 @@ export class Navbar {
     { name: 'Nuestros Productos', id: 'productos' },
     { name: 'Nuestras Gallinas', id: 'gallinas' },
     { name: 'Tips', id: 'tips' },
-    { name: 'Contacto', id: 'contactos' }
   ];
 
   navigateTo(sectionId: string) {
     this.sectionClicked.emit(sectionId);
+    this.menuAbierto = false;
+  }
+
+  toggleMenu() {
+    this.menuAbierto = !this.menuAbierto;
   }
 }

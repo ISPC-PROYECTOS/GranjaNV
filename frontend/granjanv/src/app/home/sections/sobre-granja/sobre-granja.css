@@ -17,6 +17,12 @@
   font-family: 'Montserrat', Arial, sans-serif;
 }
 
+@media (max-width: 768px) {
+  .section-title {
+    display: none;
+  }
+}
+
 .history-card {
   height: 224px;
   display: flex;

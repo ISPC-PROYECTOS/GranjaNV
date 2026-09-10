@@ -8,3 +8,38 @@
   width: 100%;
   scroll-margin-top: 80px;
 }
+
+.home-section-toggle {
+  display: none;
+}
+
+.home-section-content {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .home-section-toggle {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border: 0;
+    border-bottom: 1px solid #c8d3c5;
+    background-color: #FBF5F3;
+    color: #333;
+    font-size: 17px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .home-section-toggle span:last-child {
+    color: #5a7c59;
+    font-size: 24px;
+  }
+
+  .home-section-content.section-closed {
+    display: none;
+  }
+}

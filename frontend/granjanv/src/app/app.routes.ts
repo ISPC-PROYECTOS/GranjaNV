@@ -6,6 +6,7 @@ import { authGuard } from './core/guards/auth-guard';
 import { PanelDeControl } from './features/dashboard/panel-administrador/panel-de-control/panel-de-control';
 import { Compras } from './features/dashboard/panel-administrador/compras/compras';
 import { NotFoundComponent } from './features/not-found/not-found';
+import { Home } from './home/home';
 
 export const routes: Routes = [
   { path: 'auth/login', component: LoginComponent },
@@ -25,6 +26,6 @@ export const routes: Routes = [
     component: RegistroUsuarioComponent,
     canActivate: [adminGuard]
   },
-  { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
+  { path: '', component: Home, pathMatch: 'full' },
   { path: '**', component: NotFoundComponent }
 ];

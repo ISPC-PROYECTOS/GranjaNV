@@ -3,8 +3,21 @@
     <div class="navbar-logo">
       <img src="logo-granja.png" alt="Logo Granja NV" class="brand-logo" />
     </div>
+
+    <button
+      class="navbar-toggle"
+      type="button"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="menuAbierto"
+      aria-controls="navbar-menu"
+      aria-label="Abrir menú de navegación"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
     
-    <ul class="navbar-menu">
+    <ul id="navbar-menu" class="navbar-menu" [class.menu-abierto]="menuAbierto">
       <li *ngFor="let section of sections" class="navbar-item">
         <button 
           class="navbar-link" 

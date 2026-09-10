@@ -2,27 +2,53 @@
   <app-navbar (sectionClicked)="scrollToSection($event)"></app-navbar>
 
   <section #inicioSection id="inicio" class="home-section">
-    <app-inicio (sectionClicked)="scrollToSection($event)"></app-inicio>
+    <button class="home-section-toggle" type="button" (click)="toggleSection('inicio')" [attr.aria-expanded]="isSectionOpen('inicio')">
+      <span>Inicio</span>
+      <span aria-hidden="true">{{ isSectionOpen('inicio') ? '−' : '+' }}</span>
+    </button>
+    <div class="home-section-content" [class.section-closed]="!isSectionOpen('inicio')">
+      <app-inicio (sectionClicked)="scrollToSection($event)"></app-inicio>
+    </div>
   </section>
 
   <section #sobreGranjaSection id="sobre-granja" class="home-section">
-    <app-sobre-granja></app-sobre-granja>
+    <button class="home-section-toggle" type="button" (click)="toggleSection('sobre-granja')" [attr.aria-expanded]="isSectionOpen('sobre-granja')">
+      <span>Sobre la Granja</span>
+      <span aria-hidden="true">{{ isSectionOpen('sobre-granja') ? '−' : '+' }}</span>
+    </button>
+    <div class="home-section-content" [class.section-closed]="!isSectionOpen('sobre-granja')">
+      <app-sobre-granja></app-sobre-granja>
+    </div>
   </section>
 
   <section #productosSection id="productos" class="home-section">
-    <app-productos></app-productos>
+    <button class="home-section-toggle" type="button" (click)="toggleSection('productos')" [attr.aria-expanded]="isSectionOpen('productos')">
+      <span>Nuestros Productos</span>
+      <span aria-hidden="true">{{ isSectionOpen('productos') ? '−' : '+' }}</span>
+    </button>
+    <div class="home-section-content" [class.section-closed]="!isSectionOpen('productos')">
+      <app-productos></app-productos>
+    </div>
   </section>
 
   <section #galinasSection id="gallinas" class="home-section">
-    <app-gallinas></app-gallinas>
+    <button class="home-section-toggle" type="button" (click)="toggleSection('gallinas')" [attr.aria-expanded]="isSectionOpen('gallinas')">
+      <span>Nuestras Gallinas</span>
+      <span aria-hidden="true">{{ isSectionOpen('gallinas') ? '−' : '+' }}</span>
+    </button>
+    <div class="home-section-content" [class.section-closed]="!isSectionOpen('gallinas')">
+      <app-gallinas></app-gallinas>
+    </div>
   </section>
 
   <section #tipsSection id="tips" class="home-section">
-    <app-tips></app-tips>
-  </section>
-
-  <section #contactosSection id="contactos" class="home-section">
-    <app-contactos></app-contactos>
+    <button class="home-section-toggle" type="button" (click)="toggleSection('tips')" [attr.aria-expanded]="isSectionOpen('tips')">
+      <span>Tips</span>
+      <span aria-hidden="true">{{ isSectionOpen('tips') ? '−' : '+' }}</span>
+    </button>
+    <div class="home-section-content" [class.section-closed]="!isSectionOpen('tips')">
+      <app-tips></app-tips>
+    </div>
   </section>
 
   <app-footer></app-footer>

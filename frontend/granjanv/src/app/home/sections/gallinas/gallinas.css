@@ -16,64 +16,65 @@
   font-family: 'Montserrat', Arial, sans-serif;
 }
 
-.gallinas-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 66px 70px;
+@media (max-width: 768px) {
+  .section-title {
+    display: none;
+  }
 }
 
-.gallina-card {
-  grid-column: span 2;
-  min-height: 272px;
-  background: #E8F0E5;
-  border-radius: 12px;
+.gallina-panoramica {
+  width: calc(100% + 64px);
+  height: 300px;
+  margin-left: -32px;
+  margin-bottom: 24px;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 0;
 }
 
-.gallina-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+.gallina-panoramica img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
 }
 
-.gallina-card:nth-child(4) {
-  grid-column: 2 / span 2;
+.gallinas-lista {
+  max-width: 900px;
+  margin: 0 auto;
 }
 
-.gallina-card:nth-child(5) {
-  grid-column: 4 / span 2;
+.gallina-item {
+  border-bottom: 1px solid #c8d3c5;
 }
 
-.gallina-image {
-  width: 80px;
-  height: 80px;
-  margin: 4px;
-  background-color: #5a7c59;
+.gallina-titulo {
+  width: 100%;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 14px;
-}
-
-.gallina-info {
-  padding: 0 20px 22px;
-  text-align: center;
-}
-
-.gallina-info h3 {
-  margin: -66px 0 104px 96px;
+  padding: 20px 8px;
+  border: 0;
+  background: transparent;
+  color: #333;
   font-size: 18px;
   font-weight: 600;
-  color: #333;
   text-align: left;
+  cursor: pointer;
 }
 
-.gallina-info p {
-  margin: 0;
-  font-size: 14px;
+.gallina-titulo:hover {
+  color: #5a7c59;
+}
+
+.gallina-titulo span:last-child {
+  color: #5a7c59;
+  font-size: 24px;
+}
+
+.gallina-descripcion {
+  padding: 0 8px 20px;
   color: #666;
+  font-size: 14px;
   line-height: 1.5;
 }
 
@@ -89,19 +90,11 @@
     font-size: 28px;
   }
 
-  .gallinas-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
+  .gallina-panoramica {
+    height: 200px;
   }
 
-  .gallina-card,
-  .gallina-card:nth-child(4),
-  .gallina-card:nth-child(5) {
-    grid-column: auto;
-  }
-
-  .gallina-info h3 {
-    margin-top: -66px;
-    margin-bottom: 104px;
+  .gallina-titulo {
+    font-size: 16px;
   }
 }
