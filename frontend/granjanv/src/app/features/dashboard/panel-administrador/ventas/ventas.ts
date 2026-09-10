@@ -60,10 +60,10 @@ export class Ventas implements OnInit {
   readonly opcionesProximosDias = signal<OpcionDiaEntrega[]>(this.generarProximosDias());
 
   readonly productos = signal<ProductoCatalogo[]>([
-    { codigo: 'BLANCO_1', nombre: 'Blanco 1', precioMaple: 4500, maples: 0 },
-    { codigo: 'BLANCO_2', nombre: 'Blanco 2', precioMaple: 4200, maples: 0 },
-    { codigo: 'COLOR_1', nombre: 'Color 1', precioMaple: 4800, maples: 0 },
-    { codigo: 'COLOR_2', nombre: 'Color 2', precioMaple: 4500, maples: 0 },
+    { codigo: 'BLANCO_1', nombre: 'Blanco N.° 1', precioMaple: 4500, maples: 0 },
+    { codigo: 'BLANCO_2', nombre: 'Blanco N.° 2', precioMaple: 4200, maples: 0 },
+    { codigo: 'COLOR_1', nombre: 'Color N.° 1', precioMaple: 4800, maples: 0 },
+    { codigo: 'COLOR_2', nombre: 'Color N.° 2', precioMaple: 4500, maples: 0 },
   ]);
 
   readonly precioTotal = computed(() =>
@@ -173,6 +173,14 @@ export class Ventas implements OnInit {
   decrementarProducto(codigo: TipoHuevo): void {
     this.productos.update((items) =>
       items.map((i) => (i.codigo === codigo && i.maples > 0 ? { ...i, maples: i.maples - 1 } : i)),
+    );
+  }
+
+  actualizarCantidadProducto(codigo: TipoHuevo, event: Event): void {
+    const valor = Number((event.target as HTMLInputElement).value);
+    const cantidad = isNaN(valor) || valor < 0 ? 0 : Math.floor(valor);
+    this.productos.update((items) =>
+      items.map((i) => (i.codigo === codigo ? { ...i, maples: cantidad } : i)),
     );
   }
 
@@ -301,6 +309,10 @@ export class Ventas implements OnInit {
     return Math.round(numero)
       .toString()
       .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
+  obtenerNombreProducto(codigo: TipoHuevo): string {
+    return this.productos().find((p) => p.codigo === codigo)?.nombre ?? codigo;
   }
 
   private generarProximosDias(): OpcionDiaEntrega[] {
