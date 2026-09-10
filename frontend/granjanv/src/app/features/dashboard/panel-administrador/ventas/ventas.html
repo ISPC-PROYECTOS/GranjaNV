@@ -46,17 +46,40 @@
                   <h3 class="pedido-cliente-nombre">
                     {{ pedido.cliente.nombre }} {{ pedido.cliente.apellido }}
                   </h3>
-                  <span class="pedido-monto-destacado" title="Monto total del pedido">
+
+                  <!-- <span class="pedido-monto-destacado" title="Monto total del pedido">
                     ${{ formatearMoneda(pedido.total) }}
-                  </span>
+                  </span> -->
+
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="pedido-monto-destacado" title="Monto total del pedido">
+                      ${{ formatearMoneda(pedido.total) }}
+                    </span>
+                    <span class="pedido-fecha-badge">
+                      {{ pedido.dia_semana_entrega.substring(0, 3) }}
+                      {{ formatearFechaDisplay(pedido.fecha_entrega) }}
+                    </span>
+                  </div>
+
                 </div>
 
-                <p class="pedido-resumen">
+                <!-- <p class="pedido-resumen">
                   {{ pedido.resumen_productos }} —
                   <strong>{{ pedido.dia_semana_entrega }}
                     {{ formatearFechaDisplay(pedido.fecha_entrega) }}</strong>
-                </p>
+                </p> -->
 
+                <div class="pedido-productos-chips">
+                  @for (item of pedido.items; track item.tipo_huevo) {
+                  <span class="chip-producto">
+                    <b>{{ item.cantidad_maples }}</b> {{ obtenerNombreProducto(item.tipo_huevo) }}
+                  </span>
+                  }
+                </div>
+
+                <!-- <p class="small text-muted mb-0 mt-1">
+                  {{ pedido.dia_semana_entrega }} {{ formatearFechaDisplay(pedido.fecha_entrega) }}
+                </p> -->
                 <p class="pedido-contacto-extra">
                   <span class="me-3"><i class="hgi-stroke hgi-location-01" aria-hidden="true"></i>
                     {{ pedido.cliente.direccion }}</span>
@@ -106,7 +129,15 @@
             }
           </article>
           } @empty {
-          <p class="text-center text-muted py-4 m-0">No hay pedidos pendientes en este rango.</p>
+          @if (isLoading()) {
+          <p class="text-center text-muted py-4 m-0">
+            Cargando pedidos...
+          </p>
+          } @else {
+          <p class="text-center text-muted py-4 m-0">
+            No hay pedidos pendientes en este rango.
+          </p>
+          }
           }
         </div>
 
@@ -242,7 +273,10 @@
                     (click)="decrementarProducto(prod.codigo)">
                     -
                   </button>
-                  <span class="contador-valor">{{ prod.maples }}</span>
+                  <!-- <span class="contador-valor">{{ prod.maples }}</span> -->
+                  <input type="number" class="contador-valor" min="0" [value]="prod.maples"
+                    (change)="actualizarCantidadProducto(prod.codigo, $event)"
+                    aria-label="Cantidad de maples de {{ prod.nombre }}" />
                   <button type="button" class="btn-step" aria-label="Sumar un maple"
                     (click)="incrementarProducto(prod.codigo)">
                     +
