@@ -30,6 +30,7 @@
   padding-right: 6px;
 }
 
+
 .pedido-card {
   background-color: var(--color-gris-claro);
   border-radius: 18px;
@@ -484,4 +485,68 @@
     font-size: 11px;
     padding: 3px 8px;
   }
+}
+
+.modal-overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 16px;
+}
+
+.modal-dialog-box {
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+
+.btn-nuevo-cliente {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: var(--color-secundario-oscuro);
+  font-family: var(--font-titulos);
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+   transition: color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-nuevo-cliente:hover {
+  color: var(--color-secundario);
+  transform: translateY(-1px);
+}
+
+
+.item-sin-cliente {
+  color: var(--color-secundario-oscuro) !important;
+  font-family: var(--font-titulos);
+  font-weight: 600;
+  background-color: var(--color-secundario-claro);
+  border-radius: 6px;
+  margin: 4px 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.item-sin-cliente i {
+  color: var(--color-secundario-oscuro);
+}
+
+.item-sin-cliente:hover,
+.item-sin-cliente:focus {
+  background-color: #ebdcd0 !important; /* Tono arena un punto más saturado para el foco */
+  color: var(--color-negro) !important;
+}
+
+.item-sin-cliente:hover i,
+.item-sin-cliente:focus i {
+  color: var(--color-negro);
 }

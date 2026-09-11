@@ -20,10 +20,11 @@ import {
 } from '../../../../shared/selector-fecha/selector-fecha';
 import { formatearFechaISO, obtenerRangoMesActual } from '../../../../core/utils/date.utils';
 import { Buscador } from '../../../../shared/buscador/buscador';
+import { CrearClienteComponent } from '../../../../shared/clientes/crear-cliente';
 
 @Component({
   selector: 'app-ventas',
-  imports: [CommonModule, FormsModule, RouterLink, SelectorFecha, Buscador],
+  imports: [CommonModule, FormsModule, RouterLink, SelectorFecha, Buscador, CrearClienteComponent],
   templateUrl: './ventas.html',
   styleUrl: './ventas.css',
 })
@@ -82,6 +83,29 @@ export class Ventas implements OnInit {
         c.nombre.toLowerCase().includes(q) || (c.apellido && c.apellido.toLowerCase().includes(q)),
     );
   });
+
+  // Señal para controlar la ventana emergente
+  readonly modalClienteAbierto = signal<boolean>(false);
+
+  abrirModalNuevoCliente(): void {
+    this.modalClienteAbierto.set(true);
+  }
+
+  cerrarModalNuevoCliente(): void {
+    this.modalClienteAbierto.set(false);
+  }
+
+  onClienteCreado(nuevoCliente: Cliente): void {
+    // 1. Agrega el nuevo cliente al listado de clientes en memoria
+    this.clientes.update((lista) => [...lista, nuevoCliente]);
+
+    // 2. Lo selecciona automáticamente en el formulario del pedido
+    this.seleccionarCliente(nuevoCliente);
+
+    // 3. Cierra el modal y notifica al usuario
+    this.modalClienteAbierto.set(false);
+    this.mostrarNotificacion(`Cliente ${nuevoCliente.nombre} creado y seleccionado.`);
+  } //fin modal
 
   ngOnInit(): void {
     this.cargarPedidosPendientes();
