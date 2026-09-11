@@ -230,7 +230,7 @@
           <div class="mb-2 position-relative">
             <div class="d-flex justify-content-between align-items-center mb-1">
               <label for="buscar-cliente" class="form-label mb-0">Cliente *</label>
-              <button type="button" class="btn btn-sm btn-link p-0 text-decoration-none text-white fw-bold" (click)="abrirModalNuevoCliente()">
+              <button type="button" class="btn btn-nuevo-cliente" (click)="abrirModalNuevoCliente()">
                 + Nuevo cliente
               </button>
             </div>
@@ -252,7 +252,7 @@
 
             @if (terminoBusquedaCliente().trim() && clientesFiltrados().length === 0 && !clienteSeleccionado()) {
               <ul class="dropdown-clientes-sugerencias shadow" role="listbox">
-                <li role="option" tabindex="0" (click)="abrirModalNuevoCliente()" class="text-primary fw-semibold">
+                <li role="option" tabindex="0" (click)="abrirModalNuevoCliente()" class="item-sin-cliente">
                   <i class="hgi-stroke hgi-user-add-01 me-1"></i> No existe "{{ terminoBusquedaCliente() }}". Registrar cliente
                 </li>
               </ul>

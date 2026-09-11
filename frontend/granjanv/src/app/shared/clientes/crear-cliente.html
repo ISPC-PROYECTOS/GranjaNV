@@ -24,12 +24,17 @@
         <input type="text" id="nombre" class="form-control" formControlName="nombre" placeholder="Ej. Juan o Almacen X">
         @if (formularioCliente.get('nombre')?.touched && formularioCliente.get('nombre')?.hasError('required')) {
           <p class="error-msg">El nombre es obligatorio.</p>
+        } @else if (formularioCliente.get('nombre')?.touched && (formularioCliente.get('nombre')?.hasError('minlength') || formularioCliente.get('nombre')?.hasError('pattern'))) {
+            <p class="error-msg">Ingresá al menos 3 letras (sin números).</p>
         }
       </div>
 
       <div class="col-md-6 mb-2">
         <label for="apellido" class="form-label">Apellido</label>
         <input type="text" id="apellido" class="form-control" formControlName="apellido" placeholder="Ej. Pérez (Opcional)">
+        @if (formularioCliente.get('apellido')?.touched && formularioCliente.get('apellido')?.hasError('pattern')) {
+            <p class="error-msg">Ingresá al menos 3 letras (sin números).</p>
+        }
       </div>
 
       <div class="col-md-6 mb-2">
@@ -37,11 +42,13 @@
         <input type="text" id="telefono" class="form-control" formControlName="telefono" placeholder="Ej. 3854123456">
         @if (formularioCliente.get('telefono')?.touched && formularioCliente.get('telefono')?.hasError('required')) {
           <p class="error-msg">El teléfono es obligatorio.</p>
+        } @else if (formularioCliente.get('telefono')?.touched && (formularioCliente.get('telefono')?.hasError('minlength') || formularioCliente.get('telefono')?.hasError('pattern'))) {
+            <p class="error-msg">Ingresá al menos 10 dígitos numéricos (sin letras ni símbolos).</p>
         }
       </div>
 
       <div class="col-md-6 mb-2">
-        <label for="email" class="form-label">Correo Electrónico</label>
+        <label for="email" class="form-label">Correo electrónico</label>
         <input type="email" id="email" class="form-control" formControlName="email" placeholder="cliente@correo.com (Opcional)">
         @if (formularioCliente.get('email')?.touched && formularioCliente.get('email')?.hasError('email')) {
           <p class="error-msg">Ingresá un correo electrónico válido.</p>
@@ -59,7 +66,7 @@
       </div>
 
       <div class="col-md-4 mb-3">
-        <label for="tipo" class="form-label">Tipo de Cliente *</label>
+        <label for="tipo" class="form-label">Tipo de cliente *</label>
         <select id="tipo" class="form-select" formControlName="tipo">
           <option value="MINORISTA">Minorista</option>
           <option value="MAYORISTA">Mayorista</option>
@@ -82,8 +89,8 @@
   @if (mostrarConfirmacion()) {
     <div class="modal-confirmacion-backdrop">
       <div class="modal-confirmacion-caja">
-        <h4>Corroborar Datos del Cliente</h4>
-        <p class="text-muted small mb-3">Verificá que la información ingresada sea correcta antes de guardar:</p>
+        <h4>Confirmar cliente</h4>
+        <p class="text-muted small mb-3">Revisar los datos antes de guardar:</p>
         
         <ul class="list-unstyled text-start small mb-3 px-2">
           <li><strong>Nombre completo:</strong> {{ formularioCliente.get('nombre')?.value }} {{ formularioCliente.get('apellido')?.value }}</li>

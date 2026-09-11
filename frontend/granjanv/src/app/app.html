@@ -1,19 +1,4 @@
 <app-navbar></app-navbar>
 
-<!-- === INICIO ZONA DE PRUEBA (BORRAR LUEGO) === -->
-<div class="p-4" style="background-color: var(--color-secundario-claro); min-height: 100vh;">
-  <button class="btn btn-guardar mb-4" (click)="mostrarTestForm = true">
-    Abrir Formulario de Cliente
-  </button>
-
-  @if (mostrarTestForm) {
-    <app-crear-cliente 
-      (clienteCreado)="capturarNuevoCliente($event)"
-      (cerrar)="ocultarFormulario()">
-    </app-crear-cliente>
-  }
-</div>
-<!-- === FIN ZONA DE PRUEBA === -->
-
 
 <router-outlet></router-outlet>

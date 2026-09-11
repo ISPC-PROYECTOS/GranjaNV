@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ClientesService } from '../../core/services/clientes.service';
 import { Cliente } from '../../core/models/cliente.model';
 
+const PATRON_TEXTO = '^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]{3,}$';
+const PATRON_TELEFONO = '^[0-9]{10,}$';
 @Component({
   selector: 'app-crear-cliente',
   standalone: true,
@@ -29,10 +31,12 @@ export class CrearClienteComponent {
   isLoading = signal<boolean>(false);
   mostrarConfirmacion = signal<boolean>(false);
 
+  
+
   formularioCliente: FormGroup = this.fb.group({
-    nombre: ['', [Validators.required]],
-    apellido: [''],
-    telefono: ['', [Validators.required]],
+    nombre: ['', [Validators.required, Validators.minLength(3), Validators.pattern(PATRON_TEXTO)]],
+    apellido: ['', [Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]{3,}$')]],
+    telefono: ['', [Validators.required, Validators.pattern(PATRON_TELEFONO), Validators.minLength(10)]],
     direccion: ['', [Validators.required, Validators.minLength(5)]],
     email: ['', [Validators.email]],
     tipo: ['MINORISTA', [Validators.required]]
