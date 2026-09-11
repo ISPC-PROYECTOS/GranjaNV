@@ -5,50 +5,56 @@
   </button>
 
   <h3 class="gestion-titulo titulo-cliente">NUEVO CLIENTE</h3>
-
+  @if (mensajeExito()) {
+  <div class="alerta-exito">
+    {{ mensajeExito() }}
+  </div>
+}
   @if (errorBackend()) {
     <div class="alerta-error">
       {{ errorBackend() }}
     </div>
   }
 
-  <form class="gestion-formulario m-0" [formGroup]="formularioCliente" (ngSubmit)="guardar()">
+  <form class="gestion-formulario m-0" [formGroup]="formularioCliente" (ngSubmit)="solicitarConfirmacion()">
     
     <div class="row g-3">
-      <!-- Nombre -->
       <div class="col-md-6 mb-2">
         <label for="nombre" class="form-label">Nombre *</label>
         <input type="text" id="nombre" class="form-control" formControlName="nombre" placeholder="Ej. Juan o Almacen X">
         @if (formularioCliente.get('nombre')?.touched && formularioCliente.get('nombre')?.hasError('required')) {
           <p class="error-msg">El nombre es obligatorio.</p>
+        } @else if (formularioCliente.get('nombre')?.touched && (formularioCliente.get('nombre')?.hasError('minlength') || formularioCliente.get('nombre')?.hasError('pattern'))) {
+            <p class="error-msg">Ingresá al menos 3 letras (sin números).</p>
         }
       </div>
 
-      <!-- Apellido -->
       <div class="col-md-6 mb-2">
         <label for="apellido" class="form-label">Apellido</label>
         <input type="text" id="apellido" class="form-control" formControlName="apellido" placeholder="Ej. Pérez (Opcional)">
+        @if (formularioCliente.get('apellido')?.touched && formularioCliente.get('apellido')?.hasError('pattern')) {
+            <p class="error-msg">Ingresá al menos 3 letras (sin números).</p>
+        }
       </div>
 
-      <!-- Teléfono -->
       <div class="col-md-6 mb-2">
         <label for="telefono" class="form-label">Teléfono *</label>
         <input type="text" id="telefono" class="form-control" formControlName="telefono" placeholder="Ej. 3854123456">
         @if (formularioCliente.get('telefono')?.touched && formularioCliente.get('telefono')?.hasError('required')) {
           <p class="error-msg">El teléfono es obligatorio.</p>
+        } @else if (formularioCliente.get('telefono')?.touched && (formularioCliente.get('telefono')?.hasError('minlength') || formularioCliente.get('telefono')?.hasError('pattern'))) {
+            <p class="error-msg">Ingresá al menos 10 dígitos numéricos (sin letras ni símbolos).</p>
         }
       </div>
 
-      <!-- Email -->
       <div class="col-md-6 mb-2">
-        <label for="email" class="form-label">Correo Electrónico</label>
+        <label for="email" class="form-label">Correo electrónico</label>
         <input type="email" id="email" class="form-control" formControlName="email" placeholder="cliente@correo.com (Opcional)">
         @if (formularioCliente.get('email')?.touched && formularioCliente.get('email')?.hasError('email')) {
           <p class="error-msg">Ingresá un correo electrónico válido.</p>
         }
       </div>
 
-      <!-- Dirección -->
       <div class="col-md-8 mb-2">
         <label for="direccion" class="form-label">Dirección *</label>
         <input type="text" id="direccion" class="form-control" formControlName="direccion" placeholder="Ej. Av. Belgrano 1234">
@@ -59,9 +65,8 @@
         }
       </div>
 
-      <!-- Tipo -->
       <div class="col-md-4 mb-3">
-        <label for="tipo" class="form-label">Tipo de Cliente *</label>
+        <label for="tipo" class="form-label">Tipo de cliente *</label>
         <select id="tipo" class="form-select" formControlName="tipo">
           <option value="MINORISTA">Minorista</option>
           <option value="MAYORISTA">Mayorista</option>
@@ -69,15 +74,43 @@
       </div>
     </div>
 
-    <!-- Botones de Acción -->
     <div class="gestion-formulario-acciones mt-3">
-      <button type="button" class="btn btn-limpiar" (click)="limpiar()" [disabled]="isLoading()">
+      <button type="button" class="btn-limpiar" (click)="limpiar()" [disabled]="isLoading()">
         Limpiar
       </button>
-      <button type="submit" class="btn btn-guardar" [disabled]="isLoading()">
+      <button type="submit" class="btn-guardar" [disabled]="isLoading()">
         {{ isLoading() ? 'Guardando...' : 'Guardar' }}
       </button>
     </div>
 
   </form>
+
+  <!-- Modal de Corroboración de Datos -->
+  @if (mostrarConfirmacion()) {
+    <div class="modal-confirmacion-backdrop">
+      <div class="modal-confirmacion-caja">
+        <h4>Confirmar cliente</h4>
+        <p class="text-muted small mb-3">Revisar los datos antes de guardar:</p>
+        
+        <ul class="list-unstyled text-start small mb-3 px-2">
+          <li><strong>Nombre completo:</strong> {{ formularioCliente.get('nombre')?.value }} {{ formularioCliente.get('apellido')?.value }}</li>
+          <li><strong>Teléfono:</strong> {{ formularioCliente.get('telefono')?.value }}</li>
+          <li><strong>Dirección:</strong> {{ formularioCliente.get('direccion')?.value }}</li>
+          <li><strong>Tipo:</strong> {{ formularioCliente.get('tipo')?.value }}</li>
+          @if (formularioCliente.get('email')?.value) {
+            <li><strong>Email:</strong> {{ formularioCliente.get('email')?.value }}</li>
+          }
+        </ul>
+
+        <div class="d-flex gap-2 justify-content-end">
+          <button type="button" class="btn btn-sm btn-limpiar" (click)="cancelarConfirmacion()" [disabled]="isLoading()">
+            Modificar
+          </button>
+          <button type="button" class="btn btn-sm btn-guardar" (click)="confirmarYGuardar()" [disabled]="isLoading()">
+            {{ isLoading() ? 'Guardando...' : 'Confirmar y Guardar' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 </div>
