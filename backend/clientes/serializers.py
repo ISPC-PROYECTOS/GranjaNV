@@ -1,6 +1,6 @@
+import re
 from rest_framework import serializers
 from .models import Cliente
-
 
 class ClienteSerializer(serializers.ModelSerializer):
     tipo_display = serializers.CharField(
@@ -35,7 +35,12 @@ class ClienteSerializer(serializers.ModelSerializer):
         if not valor_limpio:
             raise serializers.ValidationError('El nombre no puede estar vacío.')
 
-        # Verificación insensible a mayúsculas/minúsculas
+        # Valida que solo contenga letras (con tildes/ñ) y espacios
+        patron_texto = r'^[A-ZÁÉÍÓÚÑa-záéíóúñ\s]+$'
+        if not re.match(patron_texto, valor_limpio):
+            raise serializers.ValidationError('El nombre solo puede contener letras.')
+
+        # Verificación insensible a mayúsculas/minúsculas de duplicados
         queryset = Cliente.objects.filter(nombre__iexact=valor_limpio)
         if self.instance:
             queryset = queryset.exclude(pk=self.instance.pk)
@@ -45,10 +50,29 @@ class ClienteSerializer(serializers.ModelSerializer):
 
         return valor_limpio
 
+    def validate_apellido(self, value):
+        if not value:
+            return ''
+        valor_limpio = value.strip().upper()
+        patron_texto = r'^[A-ZÁÉÍÓÚÑa-záéíóúñ\s]+$'
+        if not re.match(patron_texto, valor_limpio):
+            raise serializers.ValidationError('El apellido solo puede contener letras.')
+        return valor_limpio
+
     def validate_telefono(self, value):
         valor_limpio = value.strip()
         if not valor_limpio:
             raise serializers.ValidationError('El teléfono no puede estar vacío.')
+
+        # Permite dígitos, espacios, guiones y un '+' opcional al comienzo (ej: +54 9 351 1234567)
+        patron_telefono = r'^\+?[\d\s-]+$'
+        if not re.match(patron_telefono, valor_limpio):
+            raise serializers.ValidationError('El teléfono no puede contener letras ni caracteres especiales.')
+
+        solo_numeros = re.sub(r'\D', '', valor_limpio)
+        if len(solo_numeros) < 6:
+            raise serializers.ValidationError('El teléfono debe contener al menos 6 dígitos numéricos.')
+
         return valor_limpio
 
     def validate_direccion(self, value):

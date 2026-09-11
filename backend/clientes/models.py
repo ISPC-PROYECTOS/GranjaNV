@@ -1,4 +1,6 @@
+import re
 from django.db import models
+from django.core.exceptions import ValidationError
 
 
 class Cliente(models.Model):
@@ -30,10 +32,39 @@ class Cliente(models.Model):
             return f"{self.nombre} {self.apellido}"
         return self.nombre
 
+    def clean(self):
+        super().clean()
+
+        if self.nombre:
+            nombre_limpio = self.nombre.strip()
+            if not re.match(r'^[A-ZÁÉÍÓÚÑa-záéíóúñ\s]+$', nombre_limpio):
+                raise ValidationError({
+                    'nombre': 'El nombre solo puede contener letras y espacios (sin números).'
+                })
+            
+        if self.apellido:
+            apellido_limpio = self.apellido.strip()
+            if not re.match(r'^[A-ZÁÉÍÓÚÑa-záéíóúñ\s]+$', apellido_limpio):
+                raise ValidationError({
+                    'apellido': 'El apellido solo puede contener letras y espacios.'
+                })
+
+        if self.telefono:
+            tel_limpio = self.telefono.strip()
+            if not re.match(r'^\+?[\d\s-]+$', tel_limpio):
+                raise ValidationError({
+                    'telefono': 'El teléfono no puede contener letras ni caracteres inválidos.'
+                })
+            
+            solo_numeros = re.sub(r'\D', '', tel_limpio)
+            if len(solo_numeros) < 7:
+                raise ValidationError({
+                    'telefono': 'El teléfono debe contener al menos 7 dígitos numéricos.'
+                })
+
     def save(self, *args, **kwargs):
         if self.nombre:
             self.nombre = self.nombre.strip().upper()
         if self.apellido:
             self.apellido = self.apellido.strip().upper()
         super().save(*args, **kwargs)
-
