@@ -15,12 +15,11 @@ export class CrearClienteComponent {
   private fb = inject(FormBuilder);
   private clientesService = inject(ClientesService);
 
-  // Emite los datos esenciales al componente padre (pedido en curso)
   @Output() clienteCreado = new EventEmitter<{ nombre: string, telefono: string, direccion: string, id?: number }>();
-  // Emite el evento para que el padre desmonte/oculte este componente
   @Output() cerrar = new EventEmitter<void>();
 
   errorBackend = signal<string | null>(null);
+  mensajeExito = signal<string | null>(null);
   isLoading = signal<boolean>(false);
 
   formularioCliente: FormGroup = this.fb.group({
@@ -40,23 +39,27 @@ export class CrearClienteComponent {
 
     this.isLoading.set(true);
     this.errorBackend.set(null);
+    this.mensajeExito.set(null);
 
     const nuevoCliente: Partial<Cliente> = this.formularioCliente.value;
 
     this.clientesService.crearCliente(nuevoCliente).subscribe({
       next: (clienteGuardado) => {
         this.isLoading.set(false);
+        this.mensajeExito.set('¡Cliente guardado exitosamente!');
+        
         this.clienteCreado.emit({
           id: clienteGuardado.id,
           nombre: clienteGuardado.nombre,
           telefono: clienteGuardado.telefono,
           direccion: clienteGuardado.direccion
         });
+        setTimeout(() => {
         this.cerrar.emit();
+        }, 2000);
       },
       error: (err) => {
         this.isLoading.set(false);
-        // Captura el error de validación única de DRF (o cualquier otro)
         if (err.error && err.error.nombre) {
           this.errorBackend.set(err.error.nombre[0]);
         } else {
@@ -68,9 +71,10 @@ export class CrearClienteComponent {
 
   limpiar(): void {
     this.formularioCliente.reset({
-      tipo: 'MINORISTA' // Mantiene el valor por defecto
+      tipo: 'MINORISTA'
     });
     this.errorBackend.set(null);
+    this.mensajeExito.set(null);
   }
 
   cerrarFormulario(): void {

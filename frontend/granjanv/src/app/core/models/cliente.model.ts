@@ -1,3 +1,8 @@
+export enum TipoCliente {
+  MAYORISTA = 'MAYORISTA',
+  MINORISTA = 'MINORISTA'
+}
+
 export interface Cliente {
   id?: number;
   nombre: string;
@@ -5,7 +10,7 @@ export interface Cliente {
   telefono: string;
   direccion: string;
   email: string;
-  tipo: 'MAYORISTA' | 'MINORISTA';
+  tipo: TipoCliente;
   tipo_display?: string;
   activo?: boolean;
 }
