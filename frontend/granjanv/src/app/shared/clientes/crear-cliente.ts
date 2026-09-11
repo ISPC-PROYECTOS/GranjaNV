@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, inject, signal } from '@angular/core';
+import { Component, EventEmitter,Input, Output, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ClientesService } from '../../core/services/clientes.service';
@@ -15,12 +15,19 @@ export class CrearClienteComponent {
   private fb = inject(FormBuilder);
   private clientesService = inject(ClientesService);
 
-  @Output() clienteCreado = new EventEmitter<{ nombre: string, telefono: string, direccion: string, id?: number }>();
+  @Input() set nombreInicial(valor: string) {
+    if (valor) {
+      this.formularioCliente.patchValue({ nombre: valor });
+    }
+  }
+
+  @Output() clienteCreado = new EventEmitter<Cliente>();
   @Output() cerrar = new EventEmitter<void>();
 
   errorBackend = signal<string | null>(null);
   mensajeExito = signal<string | null>(null);
   isLoading = signal<boolean>(false);
+  mostrarConfirmacion = signal<boolean>(false);
 
   formularioCliente: FormGroup = this.fb.group({
     nombre: ['', [Validators.required]],
@@ -31,43 +38,49 @@ export class CrearClienteComponent {
     tipo: ['MINORISTA', [Validators.required]]
   });
 
-  guardar(): void {
-    if (this.formularioCliente.invalid) {
-      this.formularioCliente.markAllAsTouched();
-      return;
-    }
-
-    this.isLoading.set(true);
-    this.errorBackend.set(null);
-    this.mensajeExito.set(null);
-
-    const nuevoCliente: Partial<Cliente> = this.formularioCliente.value;
-
-    this.clientesService.crearCliente(nuevoCliente).subscribe({
-      next: (clienteGuardado) => {
-        this.isLoading.set(false);
-        this.mensajeExito.set('¡Cliente guardado exitosamente!');
-        
-        this.clienteCreado.emit({
-          id: clienteGuardado.id,
-          nombre: clienteGuardado.nombre,
-          telefono: clienteGuardado.telefono,
-          direccion: clienteGuardado.direccion
-        });
-        setTimeout(() => {
-        this.cerrar.emit();
-        }, 2000);
-      },
-      error: (err) => {
-        this.isLoading.set(false);
-        if (err.error && err.error.nombre) {
-          this.errorBackend.set(err.error.nombre[0]);
-        } else {
-          this.errorBackend.set('Ocurrió un error al intentar guardar el cliente.');
-        }
-      }
-    });
+  solicitarConfirmacion(): void {
+  if (this.formularioCliente.invalid) {
+    this.formularioCliente.markAllAsTouched();
+    return;
   }
+  this.errorBackend.set(null);
+  this.mostrarConfirmacion.set(true);
+}
+
+cancelarConfirmacion(): void {
+  this.mostrarConfirmacion.set(false);
+}
+
+confirmarYGuardar(): void {
+  this.isLoading.set(true);
+  this.errorBackend.set(null);
+  this.mensajeExito.set(null);
+
+  const nuevoCliente: Partial<Cliente> = this.formularioCliente.value;
+
+  this.clientesService.crearCliente(nuevoCliente).subscribe({
+    next: (clienteGuardado) => {
+      this.isLoading.set(false);
+      this.mostrarConfirmacion.set(false);
+      this.mensajeExito.set('¡Cliente guardado exitosamente!');
+
+      this.clienteCreado.emit(clienteGuardado);
+
+      setTimeout(() => {
+        this.cerrar.emit();
+      }, 2000);
+    },
+    error: (err) => {
+      this.isLoading.set(false);
+      this.mostrarConfirmacion.set(false);
+      if (err.error && err.error.nombre) {
+        this.errorBackend.set(err.error.nombre[0]);
+      } else {
+        this.errorBackend.set('Ocurrió un error al intentar guardar el cliente.');
+      }
+    }
+  });
+}
 
   limpiar(): void {
     this.formularioCliente.reset({
@@ -75,6 +88,7 @@ export class CrearClienteComponent {
     });
     this.errorBackend.set(null);
     this.mensajeExito.set(null);
+    this.mostrarConfirmacion.set(false);
   }
 
   cerrarFormulario(): void {

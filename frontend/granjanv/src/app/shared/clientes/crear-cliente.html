@@ -16,7 +16,7 @@
     </div>
   }
 
-  <form class="gestion-formulario m-0" [formGroup]="formularioCliente" (ngSubmit)="guardar()">
+  <form class="gestion-formulario m-0" [formGroup]="formularioCliente" (ngSubmit)="solicitarConfirmacion()">
     
     <div class="row g-3">
       <div class="col-md-6 mb-2">
@@ -77,4 +77,33 @@
     </div>
 
   </form>
+
+  <!-- Modal de Corroboración de Datos -->
+  @if (mostrarConfirmacion()) {
+    <div class="modal-confirmacion-backdrop">
+      <div class="modal-confirmacion-caja">
+        <h4>Corroborar Datos del Cliente</h4>
+        <p class="text-muted small mb-3">Verificá que la información ingresada sea correcta antes de guardar:</p>
+        
+        <ul class="list-unstyled text-start small mb-3 px-2">
+          <li><strong>Nombre completo:</strong> {{ formularioCliente.get('nombre')?.value }} {{ formularioCliente.get('apellido')?.value }}</li>
+          <li><strong>Teléfono:</strong> {{ formularioCliente.get('telefono')?.value }}</li>
+          <li><strong>Dirección:</strong> {{ formularioCliente.get('direccion')?.value }}</li>
+          <li><strong>Tipo:</strong> {{ formularioCliente.get('tipo')?.value }}</li>
+          @if (formularioCliente.get('email')?.value) {
+            <li><strong>Email:</strong> {{ formularioCliente.get('email')?.value }}</li>
+          }
+        </ul>
+
+        <div class="d-flex gap-2 justify-content-end">
+          <button type="button" class="btn btn-sm btn-limpiar" (click)="cancelarConfirmacion()" [disabled]="isLoading()">
+            Modificar
+          </button>
+          <button type="button" class="btn btn-sm btn-guardar" (click)="confirmarYGuardar()" [disabled]="isLoading()">
+            {{ isLoading() ? 'Guardando...' : 'Confirmar y Guardar' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 </div>

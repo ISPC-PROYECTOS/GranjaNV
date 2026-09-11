@@ -304,3 +304,54 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+/* =================================
+   MODAL DE CONFIRMACIÓN REUTILIZABLE
+================================= */
+.modal-confirmacion-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1060;
+  padding: 16px;
+}
+
+.modal-confirmacion-caja {
+  background-color: var(--color-crema);
+  border-radius: 20px;
+  padding: 24px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+.modal-confirmacion-caja h4 {
+  font-family: var(--font-titulos);
+  font-weight: 700;
+  color: var(--color-primario-oscuro);
+  font-size: 1.15rem;
+  margin-bottom: 6px;
+}
+
+.modal-confirmacion-caja li {
+  padding: 3px 0;
+  color: var(--color-negro);
+}
+
+/* =================================
+   ALERTA DE ERROR DESTACADA
+================================= */
+.alerta-error-destacada {
+  background-color: var(--color-error-oscuro);
+  color: var(--color-blanco);
+  border-color: var(--color-error);
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

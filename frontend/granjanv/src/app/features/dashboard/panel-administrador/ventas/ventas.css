@@ -30,6 +30,7 @@
   padding-right: 6px;
 }
 
+
 .pedido-card {
   background-color: var(--color-gris-claro);
   border-radius: 18px;
@@ -484,4 +485,22 @@
     font-size: 11px;
     padding: 3px 8px;
   }
+}
+
+.modal-overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 16px;
+}
+
+.modal-dialog-box {
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
 }

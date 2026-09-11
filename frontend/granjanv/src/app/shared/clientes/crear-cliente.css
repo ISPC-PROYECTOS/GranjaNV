@@ -57,4 +57,16 @@
     top: 12px;
     right: 12px;
   }
+
+  .gestion-formulario-acciones {
+    gap: 12px;
+  }
+
+  .btn-limpiar,
+  .btn-guardar {
+    min-width: 0;
+    flex: 1;
+    font-size: 15px;
+    padding: 10px 0;
+  }
 }
