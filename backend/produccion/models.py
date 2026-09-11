@@ -14,9 +14,9 @@ class TipoHuevo(models.TextChoices):
 class Galpon(models.Model):
     numero = models.PositiveSmallIntegerField(unique=True)
     nombre = models.CharField(max_length=50)
-    capacidad_maxima = models.PositiveIntegerField
-    cantidad_actual_gallinas = models.PositiveIntegerField
-    descripcion = models.CharField(max_length=255, blank=True)
+    capacidad_maxima = models.PositiveIntegerField(default=1800)
+    cantidad_actual_gallinas = models.PositiveIntegerField(default=1800)
+    descripcion = models.CharField(max_length=255, blank=True, default="")
     activo = models.BooleanField(default=True, db_index=True)
     creado_en = models.DateTimeField(auto_now_add=True)
     actualizado_en = models.DateTimeField(auto_now=True)
