@@ -1,0 +1,183 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* Contenedor verde derecho para formularios */
+.seccion-derecha {
+  background-color: var(--color-primario);
+  border-radius: 27px;
+  padding: 24px;
+}
+
+/* Vista mobile: pildoras */
+.pildora-mobile {
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+  border-radius: 50px;
+  padding: 8px 12px;
+}
+
+.valor-pildora {
+  font-family: var(--font-titulos);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.etiqueta-pildora {
+  font-family: var(--font-textos);
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+/* Vista desktop: tarjeta diagonal */
+.tarjeta-acumulada-desktop {
+  background-color: var(--color-secundario-claro);
+  border: 2px solid var(--color-secundario);
+  border-radius: 27px;
+  min-height: 540px;
+  overflow: hidden;
+  padding: 30px;
+}
+
+/* Linea diagonal */
+.linea-diagonal {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom right,
+    transparent calc(50% - 1px),
+    var(--color-secundario) calc(50% - 1px),
+    var(--color-secundario) calc(50% + 1px),
+    transparent calc(50% + 1px)
+  );
+}
+
+/* Posicionamiento cuadrantes */
+.bloque-metrica {
+  position: absolute;
+  z-index: 1;
+}
+
+.bloque-izquierda {
+  top: 30px;
+  left: 30px;
+  width: 46%;
+}
+
+.bloque-derecha {
+  bottom: 30px;
+  right: 30px;
+  width: 44%;
+}
+
+/* Tipografias y display */
+.titulo-acumulado {
+  font-family: var(--font-titulos);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-primario);
+  letter-spacing: 0.5px;
+}
+
+.numero-display {
+  font-family: var(--font-titulos);
+  font-size: 4.8rem;
+  font-weight: 700;
+  color: var(--color-primario);
+  line-height: 0.95;
+}
+
+.subtitulo-display {
+  font-family: var(--font-titulos);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-primario);
+  letter-spacing: 1px;
+}
+
+/* Desglose de huevos */
+.lista-desglose {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: var(--color-negro);
+}
+
+.item-desglose {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.texto-calibre {
+  flex-grow: 1;
+}
+
+.indicador {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.indicador.color {
+  background-color: var(--color-secundario);
+}
+
+.indicador.blanco {
+  background-color: var(--color-blanco);
+  border: 1px solid var(--color-secundario);
+}
+
+.indicador.merma {
+  background-color: var(--color-peligro);
+}
+
+.item-desglose.rotos {
+  border-top: 1px dashed var(--color-secundario);
+  color: var(--color-peligro);
+}
+
+/* Suma de galpones */
+.contenedor-suma {
+  margin-left: auto;
+  max-width: 240px;
+}
+
+.titulo-galpones {
+  font-family: var(--font-titulos);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-primario);
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.lista-galpones {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: var(--color-negro);
+}
+
+.item-galpon {
+  display: flex;
+  align-items: baseline;
+}
+
+.puntos-guia {
+  flex-grow: 1;
+  border-bottom: 1px dotted var(--color-secundario);
+  margin: 0 6px;
+  opacity: 0.5;
+}
+
+.divisor-suma {
+  border-top: 1.5px solid var(--color-secundario);
+  width: 100%;
+}

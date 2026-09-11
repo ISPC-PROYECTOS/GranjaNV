@@ -1,6 +1,6 @@
 <main class="container-fluid gestion-pagina pb-4">
 
-  <!-- Header de navegación a Pedidos -->
+  <!-- Header de navegación con clase global -->
   <header class="d-flex justify-content-end pt-2 mb-3">
     <button 
       type="button" 
@@ -11,16 +11,104 @@
     </button>
   </header>
 
-  <!-- Grilla principal -->
+  <!-- Grilla principal de 2 columnas -->
   <section class="row g-4">
     
-    <!-- COLUMNA IZQUIERDA: Métricas acumuladas -->
-    <div class="col-12 col-lg-6 order-1 order-lg-1">
-      <app-gestion-gallinas></app-gestion-gallinas>
+    <!-- COLUMNA IZQUIERDA: Tarjeta diagonal (Desktop) / Píldoras (Mobile) -->
+    <div class="col-12 col-lg-6 order-2 order-lg-1">
+
+      <!-- Mobile: Píldoras -->
+      <div class="d-flex d-lg-none gap-2 mb-3">
+        <div class="pildora-mobile flex-fill text-center">
+          <strong class="d-block valor-pildora">283</strong>
+          <span class="etiqueta-pildora">huevos</span>
+        </div>
+        <div class="pildora-mobile flex-fill text-center">
+          <strong class="d-block valor-pildora">1379</strong>
+          <span class="etiqueta-pildora">gallinas</span>
+        </div>
+      </div>
+
+      <!-- Desktop: Tarjeta diagonal -->
+      <div class="d-none d-lg-block h-100">
+        <div class="tarjeta-acumulada-desktop position-relative h-100">
+
+          <div class="linea-diagonal"></div>
+
+          <!-- Bloque Huevos -->
+          <section class="bloque-metrica bloque-izquierda">
+            <h2 class="titulo-acumulado m-0">PRODUCCIÓN ACUMULADA</h2>
+            <span class="numero-display d-block">283</span>
+            <span class="subtitulo-display d-block mb-3">HUEVOS</span>
+
+            <ul class="lista-desglose list-unstyled m-0">
+              <li class="item-desglose">
+                <span class="indicador color"></span>
+                <span class="texto-calibre">Huevos Color Nº 1:</span>
+                <strong>110</strong>
+              </li>
+              <li class="item-desglose">
+                <span class="indicador color"></span>
+                <span class="texto-calibre">Huevos Color Nº 2:</span>
+                <strong>70</strong>
+              </li>
+              <li class="item-desglose">
+                <span class="indicador blanco"></span>
+                <span class="texto-calibre">Huevos Blancos Nº 1:</span>
+                <strong>55</strong>
+              </li>
+              <li class="item-desglose">
+                <span class="indicador blanco"></span>
+                <span class="texto-calibre">Huevos Blancos Nº 2:</span>
+                <strong>40</strong>
+              </li>
+              <li class="item-desglose rotos mt-2 pt-2">
+                <span class="indicador merma"></span>
+                <span class="texto-calibre">Huevos Rotos:</span>
+                <strong>8</strong>
+              </li>
+            </ul>
+          </section>
+
+          <!-- Bloque Galpones / Total -->
+          <section class="bloque-metrica bloque-derecha">
+            <div class="contenedor-suma">
+              <span class="titulo-galpones d-block">GALPONES</span>
+
+              <ul class="lista-galpones list-unstyled m-0">
+                <li class="item-galpon">
+                  <span>Galpón 1</span>
+                  <span class="puntos-guia"></span>
+                  <strong>460</strong>
+                </li>
+                <li class="item-galpon">
+                  <span>Galpón 2</span>
+                  <span class="puntos-guia"></span>
+                  <strong>450</strong>
+                </li>
+                <li class="item-galpon">
+                  <span>Galpón 3</span>
+                  <span class="puntos-guia"></span>
+                  <strong>469</strong>
+                </li>
+              </ul>
+
+              <div class="divisor-suma my-2"></div>
+
+              <div class="bloque-resultado-total text-end">
+                <span class="subtitulo-display d-block">TOTAL GALLINAS</span>
+                <span class="numero-display d-block">1379</span>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+
     </div>
 
-    <!-- COLUMNA DERECHA: Organismo de formularios -->
-    <div class="col-12 col-lg-6 order-2 order-lg-2">
+    <!-- COLUMNA DERECHA: Tus formularios hijos -->
+    <div class="col-12 col-lg-6 order-1 order-lg-2">
       <section class="seccion-derecha">
         <app-gestion-huevos></app-gestion-huevos>
         <app-registro-incidentes></app-registro-incidentes>
