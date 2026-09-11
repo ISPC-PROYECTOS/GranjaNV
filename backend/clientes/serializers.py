@@ -70,8 +70,8 @@ class ClienteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('El teléfono no puede contener letras ni caracteres especiales.')
 
         solo_numeros = re.sub(r'\D', '', valor_limpio)
-        if len(solo_numeros) < 6:
-            raise serializers.ValidationError('El teléfono debe contener al menos 6 dígitos numéricos.')
+        if len(solo_numeros) < 10:
+            raise serializers.ValidationError('El teléfono debe contener al menos 10 dígitos numéricos.')
 
         return valor_limpio
 
