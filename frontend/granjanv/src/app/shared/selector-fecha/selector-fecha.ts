@@ -55,4 +55,15 @@ export class SelectorFecha implements OnInit {
       });
     }
   }
+
+  restablecerFiltro(): void {
+    const rango = obtenerRangoMesActual();
+
+    this.tipoFiltro = 'mes';
+    this.mesSeleccionado = rango.fechaDesde.slice(0, 7);
+    this.fechaDesde = rango.fechaDesde;
+    this.fechaHasta = rango.fechaHasta;
+
+    this.cambioRango.emit(rango);
+  }
 }

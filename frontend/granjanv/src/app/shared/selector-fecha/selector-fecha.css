@@ -4,12 +4,20 @@
 
 .selector-fecha-caja {
   background: transparent;
+  border: 1px solid var(--color-negro);
+  border-radius: 10px;
   cursor: pointer;
-  padding: 3px 10px;
+  width: 45px;
+  height: 45px;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .selector-fecha-caja i {
-  font-size: 27px;
+  font-size: 30px;
   color: var(--color-negro);
 }
 
@@ -24,4 +32,26 @@
   font-size: 12px;
   font-weight: 600;
   color: var(--color-negro);
+}
+
+.btn-restablecer-filtro {
+  width: 100%;
+  margin-top: 12px;
+  padding: 7px 10px;
+
+  background-color: var(--color-blanco);
+  color: var(--color-primario);
+
+  border: 1px solid var(--color-primario);
+  border-radius: 8px;
+
+  font-family: var(--font-textos);
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.btn-restablecer-filtro:hover {
+  background-color: var(--color-primario-claro);
 }

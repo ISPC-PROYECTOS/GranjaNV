@@ -1,18 +1,8 @@
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
 from .models import Cliente
 
 
 class ClienteSerializer(serializers.ModelSerializer):
-    nombre = serializers.CharField(
-        max_length=120,
-        validators=[
-            UniqueValidator(
-                queryset=Cliente.objects.all(),
-                message="Ya existe un cliente registrado con este nombre.",
-            )
-        ],
-    )
     tipo_display = serializers.CharField(
         source='get_tipo_display',
         read_only=True,
@@ -39,6 +29,21 @@ class ClienteSerializer(serializers.ModelSerializer):
 
     def get_nombre_completo(self, obj):
         return f"{obj.nombre} {obj.apellido}".strip()
+
+    def validate_nombre(self, value):
+        valor_limpio = value.strip().upper()
+        if not valor_limpio:
+            raise serializers.ValidationError('El nombre no puede estar vacío.')
+
+        # Verificación insensible a mayúsculas/minúsculas
+        queryset = Cliente.objects.filter(nombre__iexact=valor_limpio)
+        if self.instance:
+            queryset = queryset.exclude(pk=self.instance.pk)
+
+        if queryset.exists():
+            raise serializers.ValidationError('Ya existe un cliente registrado con este nombre.')
+
+        return valor_limpio
 
     def validate_telefono(self, value):
         valor_limpio = value.strip()
