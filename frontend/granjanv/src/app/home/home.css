@@ -75,7 +75,9 @@
     font-size: 24px;
   }
 
+  @media (max-width: 768px) {
   .home-section-content.section-closed {
     display: none;
   }
+}
 }
