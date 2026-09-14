@@ -323,7 +323,7 @@ export class Ventas implements OnInit {
   formatearFechaDisplay(fechaIso: string): string {
     if (!fechaIso) return '';
     const [anio, mes, dia] = fechaIso.split('-');
-    return `${dia}/${mes}/${anio}`;
+    return `${dia}/${mes}/${anio.slice(-2)}`;
   }
 
   formatearMoneda(valor: number | string | null | undefined): string {

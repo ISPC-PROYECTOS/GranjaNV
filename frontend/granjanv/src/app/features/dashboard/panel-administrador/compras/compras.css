@@ -152,7 +152,7 @@
   gap: 24px;
 }
 
-.btn-limpiar,
+/* .btn-limpiar,
 .btn-guardar {
   min-width: 130px;
   font-family: var(--font-titulos);
@@ -169,7 +169,7 @@
 .btn-guardar {
   background-color: var(--color-primario);
   color: var(--color-blanco);
-}
+} */
 
 /* Ajuste específico para pantallas móviles estrechas. Prueba de linea 125/153 */
 @media (max-width: 575px) {

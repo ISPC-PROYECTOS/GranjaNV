@@ -23,7 +23,7 @@
     <div id="seccion-panel-pedidos" role="tabpanel" aria-labelledby="tab-pedidos"
       class="col-12 col-lg-6 order-2 order-lg-1" [class.d-none]="vistaMobile() !== 'pedidos'" [class.d-sm-block]="true">
       <section class="seccion-izquierda pedidos-panel">
-        <header class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <header class="cabecera-pedidos mb-3">
           <div class="titulo-pedidos">
             <span class="titulo-pedidos-superior d-none d-sm-block">PEDIDOS</span>
             <h2 class="gestion-titulo mb-0">PENDIENTES</h2>
@@ -42,44 +42,35 @@
               [attr.aria-expanded]="pedidoExpandidoId() === pedido.id" (click)="toggleExpandir(pedido.id)"
               (keydown.enter)="toggleExpandir(pedido.id)">
               <div class="pedido-info-principal">
-                <div class="d-flex align-items-center justify-content-between pe-2">
+                <div class="pedido-cabecera-principal">
                   <h3 class="pedido-cliente-nombre">
                     {{ pedido.cliente.nombre }} {{ pedido.cliente.apellido }}
                   </h3>
 
-                  <!-- <span class="pedido-monto-destacado" title="Monto total del pedido">
-                    ${{ formatearMoneda(pedido.total) }}
-                  </span> -->
-
-                  <div class="d-flex align-items-center gap-2">
-                    <span class="pedido-monto-destacado" title="Monto total del pedido">
+                  <div class="pedido-datos-principales">
+                    <span class="pedido-monto-destacado">
                       ${{ formatearMoneda(pedido.total) }}
                     </span>
+
                     <span class="pedido-fecha-badge">
                       {{ pedido.dia_semana_entrega.substring(0, 3) }}
                       {{ formatearFechaDisplay(pedido.fecha_entrega) }}
                     </span>
                   </div>
-
                 </div>
-
-                <!-- <p class="pedido-resumen">
-                  {{ pedido.resumen_productos }} —
-                  <strong>{{ pedido.dia_semana_entrega }}
-                    {{ formatearFechaDisplay(pedido.fecha_entrega) }}</strong>
-                </p> -->
-
                 <div class="pedido-productos-chips">
-                  @for (item of pedido.items; track item.tipo_huevo) {
+                  @for (item of pedido.items; track item.tipo_huevo; let i = $index) {
                   <span class="chip-producto">
-                    <b>{{ item.cantidad_maples }}</b> {{ obtenerNombreProducto(item.tipo_huevo) }}
+                    <b>{{ item.cantidad_maples }}</b>
+                    {{ obtenerNombreProducto(item.tipo_huevo) }}
                   </span>
+
+                  @if (pedido.items.length === 4 && i === 1) {
+                  <span class="salto-productos"></span>
+                  }
                   }
                 </div>
 
-                <!-- <p class="small text-muted mb-0 mt-1">
-                  {{ pedido.dia_semana_entrega }} {{ formatearFechaDisplay(pedido.fecha_entrega) }}
-                </p> -->
                 <p class="pedido-contacto-extra">
                   <span class="me-3"><i class="hgi-stroke hgi-location-01" aria-hidden="true"></i>
                     {{ pedido.cliente.direccion }}</span>
@@ -89,10 +80,17 @@
               </div>
 
               <div class="pedido-indicadores-accion">
-                <span class="indicador-circulo" [class.indicador-activo]="pedido.estado_entrega"
-                  title="{{ pedido.estado_entrega ? 'Entregado' : 'Pendiente de entrega' }}"></span>
-                <span class="indicador-circulo" [class.indicador-activo]="pedido.estado_pago"
-                  title="{{ pedido.estado_pago ? 'Pagado' : 'Pendiente de pago' }}"></span>
+                <span class="indicador-estado" [class.indicador-activo]="pedido.estado_entrega"
+                  [attr.data-tooltip]="pedido.estado_entrega ? 'Entrega realizada' : 'Entrega pendiente'"
+                  [attr.aria-label]="pedido.estado_entrega ? 'Entrega realizada' : 'Entrega pendiente'">
+                  <span class="indicador-letra">E</span>
+                </span>
+
+                <span class="indicador-estado" [class.indicador-activo]="pedido.estado_pago"
+                  [attr.data-tooltip]="pedido.estado_pago ? 'Pago realizado' : 'Pago pendiente'"
+                  [attr.aria-label]="pedido.estado_pago ? 'Pago realizado' : 'Pago pendiente'">
+                  <span class="indicador-letra">P</span>
+                </span>
                 <i class="hgi-stroke hgi-arrow-down-01 icono-chevron" [class.rotado]="pedidoExpandidoId() === pedido.id"
                   aria-hidden="true"></i>
               </div>
@@ -100,30 +98,36 @@
 
             @if (pedidoExpandidoId() === pedido.id) {
             <footer class="pedido-card-footer animate-fade-in">
-              <div class="d-flex flex-wrap gap-2 w-100 justify-content-between align-items-center">
-                <div class="d-flex gap-2">
+              <div class="acciones-pedido">
+
+                <div class="acciones-estado">
                   <button type="button" class="btn btn-estado-toggle" [class.completado]="pedido.estado_entrega"
                     (click)="toggleEntrega(pedido)">
                     <i class="hgi-stroke hgi-tick-02" aria-hidden="true"></i>
-                    {{ pedido.estado_entrega ? 'Entregado' : 'Pend. Entrega' }}
+                    {{ pedido.estado_entrega ? 'Entregado' : 'Entregué' }}
                   </button>
+
                   <button type="button" class="btn btn-estado-toggle" [class.completado]="pedido.estado_pago"
                     (click)="togglePago(pedido)">
                     <i class="hgi-stroke hgi-dollar-circle" aria-hidden="true"></i>
-                    {{ pedido.estado_pago ? 'Pagado' : 'Pend. Pago' }}
+                    {{ pedido.estado_pago ? 'Cobrado' : 'Cobré' }}
                   </button>
                 </div>
 
-                <div class="d-flex gap-2">
+                <div class="acciones-edicion">
                   <button type="button" class="btn btn-accion-item btn-eliminar" aria-label="Eliminar pedido"
                     (click)="eliminarPedido(pedido.id)">
-                    <i class="hgi-stroke hgi-delete-02" aria-hidden="true"></i> Eliminar
+                    <i class="hgi-stroke hgi-delete-02" aria-hidden="true"></i>
+                    <span class="d-none d-sm-inline">Eliminar</span>
                   </button>
+
                   <button type="button" class="btn btn-accion-item btn-editar" aria-label="Editar pedido"
                     (click)="editarPedido(pedido)">
-                    <i class="hgi-stroke hgi-pencil-edit-01" aria-hidden="true"></i> Editar
+                    <i class="hgi-stroke hgi-pencil-edit-01" aria-hidden="true"></i>
+                    <span class="d-none d-sm-inline">Editar</span>
                   </button>
                 </div>
+
               </div>
             </footer>
             }
@@ -141,15 +145,8 @@
           }
         </div>
 
-        <div class="referencias-leyenda my-2">
-          <div class="d-flex align-items-center gap-2">
-            <span class="indicador-circulo indicador-activo"></span> <span>Entregado</span>
-            <span class="indicador-circulo indicador-activo ms-3"></span> <span>Pagado</span>
-          </div>
-        </div>
-
         <!-- SECCIÓN DESPLEGABLE: PEDIDOS CERRADOS -->
-        <div class="seccion-pedidos-cerrados mt-auto pt-2 border-top">
+        <div class="seccion-pedidos-cerrados mt-auto pt-3 border-top">
           <button type="button" class="btn btn-toggle-cerrados w-100" [attr.aria-expanded]="mostrarCerrados()"
             (click)="toggleMostrarCerrados()">
             <span class="d-flex align-items-center gap-2 fw-semibold">
@@ -162,20 +159,23 @@
 
           @if (mostrarCerrados()) {
           <div class="contenedor-cerrados-expandido animate-fade-in mt-2">
-            <div class="d-flex justify-content-between align-items-center mb-2 gap-2 flex-wrap">
-              <span class="small text-muted fw-semibold">Filtros de pedidos cerrados:</span>
+            <div class="filtros-cerrados">
+              <span class="small text-muted fw-semibold">Filtros</span>
+
               <div class="d-flex align-items-center gap-2">
-                <app-selector-fecha (cambioRango)="onCambioRangoCerrados($event)"></app-selector-fecha>
-                <app-buscador (buscar)="onBuscarCerrados($event)"></app-buscador>
+                <app-selector-fecha (cambioRango)="onCambioRangoCerrados($event)">
+                </app-selector-fecha>
+
+                <app-buscador (buscar)="onBuscarCerrados($event)">
+                </app-buscador>
               </div>
             </div>
 
             <div class="pedidos-cerrados-lista">
               @for (cerrado of pedidosCerrados(); track cerrado.id) {
-              <div
-                class="pedido-card pedido-card-cerrado p-2 px-3 mb-2 d-flex justify-content-between align-items-center">
-                <div>
-                  <div class="d-flex align-items-center gap-2">
+              <div class="pedido-card pedido-card-cerrado">
+                <div class="pedido-cerrado-info">
+                  <div class="pedido-cerrado-cabecera d-flex align-items-center gap-2">
                     <strong class="text-dark">
                       {{ cerrado.cliente.nombre }} {{ cerrado.cliente.apellido }}
                     </strong>
@@ -189,7 +189,7 @@
                   </small>
                 </div>
 
-                <div class="d-flex align-items-center gap-2">
+                <div class="pedido-cerrado-acciones d-flex align-items-center gap-2">
                   <span class="pedido-monto-cerrado">${{ formatearMoneda(cerrado.total) }}</span>
                   <button type="button" class="btn btn-gasto-eliminar p-1" title="Eliminar pedido cerrado"
                     aria-label="Eliminar registro" (click)="eliminarPedido(cerrado.id)">
@@ -235,7 +235,7 @@
               </button>
             </div>
             <input id="buscar-cliente" type="text" class="form-control" placeholder="Buscar cliente..."
-             [ngModel]="terminoBusquedaCliente()" (ngModelChange)="terminoBusquedaCliente.set($event)"
+              [ngModel]="terminoBusquedaCliente()" (ngModelChange)="terminoBusquedaCliente.set($event)"
               autocomplete="off" />
 
             @if (clientesFiltrados().length > 0 && !clienteSeleccionado()) {
@@ -251,11 +251,12 @@
             }
 
             @if (terminoBusquedaCliente().trim() && clientesFiltrados().length === 0 && !clienteSeleccionado()) {
-              <ul class="dropdown-clientes-sugerencias shadow" role="listbox">
-                <li role="option" tabindex="0" (click)="abrirModalNuevoCliente()" class="item-sin-cliente">
-                  <i class="hgi-stroke hgi-user-add-01 me-1"></i> No existe "{{ terminoBusquedaCliente() }}". Registrar cliente
-                </li>
-              </ul>
+            <ul class="dropdown-clientes-sugerencias shadow" role="listbox">
+              <li role="option" tabindex="0" (click)="abrirModalNuevoCliente()" class="item-sin-cliente">
+                <i class="hgi-stroke hgi-user-add-01 me-1"></i> No existe "{{ terminoBusquedaCliente() }}". Registrar
+                cliente
+              </li>
+            </ul>
             }
           </div>
 
@@ -287,7 +288,6 @@
                     (click)="decrementarProducto(prod.codigo)">
                     -
                   </button>
-                  <!-- <span class="contador-valor">{{ prod.maples }}</span> -->
                   <input type="number" class="contador-valor" min="0" [value]="prod.maples"
                     (change)="actualizarCantidadProducto(prod.codigo, $event)"
                     aria-label="Cantidad de maples de {{ prod.nombre }}" />
@@ -346,15 +346,13 @@
   </section>
 
   <!-- MODAL EMERGENTE NUEVO CLIENTE -->
-@if (modalClienteAbierto()) {
+  @if (modalClienteAbierto()) {
   <div class="modal-overlay-backdrop">
     <div class="modal-dialog-box animate-fade-in">
-      <app-crear-cliente
-        [nombreInicial]="terminoBusquedaCliente()"
-        (clienteCreado)="onClienteCreado($event)"
+      <app-crear-cliente [nombreInicial]="terminoBusquedaCliente()" (clienteCreado)="onClienteCreado($event)"
         (cerrar)="cerrarModalNuevoCliente()">
       </app-crear-cliente>
     </div>
   </div>
-}
+  }
 </main>

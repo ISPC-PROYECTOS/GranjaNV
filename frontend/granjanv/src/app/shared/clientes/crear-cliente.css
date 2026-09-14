@@ -36,7 +36,7 @@
   transform: scale(1.1);
 }
 
-.btn-limpiar {
+/* .btn-limpiar {
   background-color: var(--color-gris-claro);
   color: var(--color-negro);
   border: none;
@@ -45,7 +45,7 @@
 .btn-limpiar:hover {
   background-color: #d8d3d0;
   color: var(--color-negro);
-}
+} */
 
 @media (max-width: 575px) {
   .contenedor-crear-cliente {
