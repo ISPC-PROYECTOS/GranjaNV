@@ -55,7 +55,7 @@
                             </button>
 
                             <button type="button" class="btn btn-gasto-eliminar" aria-label="Eliminar gasto"
-                                (click)="eliminarGasto(gasto.id)">
+                                (click)="solicitarEliminacion(gasto)">
                                 <i class="hgi-stroke hgi-delete-02"></i>
                             </button>
 
@@ -169,7 +169,7 @@
                             Limpiar
                         </button>
 
-                        <button type="submit" class="btn btn-guardar">
+                        <button type="submit" class="btn btn-guardar" [disabled]="isGuardando">
                             {{ gastoEditandoId !== null ? 'Actualizar' : 'Guardar' }}
                         </button>
 
@@ -178,4 +178,50 @@
             </section>
         </div>
     </section>
+
+    @if (mostrarConfirmacion) {
+    <div class="modal-confirmacion-backdrop">
+        <div class="modal-confirmacion-caja" role="dialog" aria-modal="true" aria-labelledby="titulo-confirmar-gasto">
+            <h4 id="titulo-confirmar-gasto">{{ gastoEditandoId !== null ? 'Confirmar actualización' : 'Confirmar gasto' }}</h4>
+            <p class="text-muted small mb-3">Revisá los datos antes de guardar:</p>
+
+            <ul class="list-unstyled text-start small mb-3 px-2">
+                <li><strong>Monto:</strong> ${{ formatearNumero(gastoPendienteGuardar?.monto) }}</li>
+                <li><strong>Categoría:</strong> {{ obtenerCategoriaLabel(gastoPendienteGuardar?.categoria) }}</li>
+                <li><strong>Descripción:</strong> {{ gastoPendienteGuardar?.descripcion }}</li>
+                <li><strong>Fecha:</strong> {{ gastoPendienteGuardar?.fecha }}</li>
+            </ul>
+
+            <div class="d-flex gap-2 justify-content-end">
+                <button type="button" class="btn btn-sm btn-limpiar" (click)="cancelarConfirmacion()" [disabled]="isGuardando">
+                    Modificar
+                </button>
+                <button type="button" class="btn btn-sm btn-guardar" (click)="confirmarYGuardar()" [disabled]="isGuardando">
+                    {{ isGuardando ? 'Guardando...' : 'Confirmar y guardar' }}
+                </button>
+            </div>
+        </div>
+    </div>
+    }
+
+    @if (mostrarConfirmacionEliminar && gastoAEliminar; as gasto) {
+    <div class="modal-confirmacion-backdrop">
+        <div class="modal-confirmacion-caja" role="dialog" aria-modal="true" aria-labelledby="titulo-eliminar-gasto">
+            <h4 id="titulo-eliminar-gasto">Eliminar gasto</h4>
+            <p class="text-muted small mb-3">¿Querés eliminar este gasto?</p>
+
+            <ul class="list-unstyled text-start small mb-3 px-2">
+                <li><strong>Monto:</strong> ${{ formatearNumero(gasto.monto) }}</li>
+                <li><strong>Categoría:</strong> {{ gasto.categoria_display || obtenerCategoriaLabel(gasto.categoria) }}</li>
+                <li><strong>Descripción:</strong> {{ gasto.descripcion }}</li>
+                <li><strong>Fecha:</strong> {{ gasto.fecha }}</li>
+            </ul>
+
+            <div class="d-flex gap-2 justify-content-end">
+                <button type="button" class="btn btn-sm btn-limpiar" (click)="cancelarEliminacion()">Cancelar</button>
+                <button type="button" class="btn btn-sm btn-eliminar" (click)="confirmarEliminacion()">Eliminar gasto</button>
+            </div>
+        </div>
+    </div>
+    }
 </main>

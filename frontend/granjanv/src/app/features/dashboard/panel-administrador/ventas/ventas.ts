@@ -49,6 +49,11 @@ export class Ventas implements OnInit {
   readonly isLoading = signal<boolean>(false);
   readonly mensajeExito = signal<string | null>(null);
   readonly errorBackend = signal<string | null>(null);
+  readonly isGuardando = signal<boolean>(false);
+  readonly mostrarConfirmacion = signal<boolean>(false);
+  readonly mostrarConfirmacionEliminar = signal<boolean>(false);
+  readonly pedidoPendienteGuardar = signal<PedidoWritePayload | null>(null);
+  readonly pedidoAEliminar = signal<PedidoRead | null>(null);
 
   readonly pedidoExpandidoId = signal<number | null>(null);
   readonly pedidoEditandoId = signal<number | null>(null);
@@ -77,6 +82,8 @@ export class Ventas implements OnInit {
   readonly cantidadTotalMaples = computed(() =>
     this.productos().reduce((acc, p) => acc + p.maples, 0),
   );
+
+  readonly productosSeleccionados = computed(() => this.productos().filter((p) => p.maples > 0));
 
   readonly clientesFiltrados = computed(() => {
     const q = this.terminoBusquedaCliente().toLowerCase().trim();
@@ -273,29 +280,52 @@ export class Ventas implements OnInit {
       items: itemsValidos,
     };
 
+    this.pedidoPendienteGuardar.set(payload);
+    this.mostrarConfirmacion.set(true);
+  }
+
+  cancelarConfirmacion(): void {
+    this.mostrarConfirmacion.set(false);
+    this.pedidoPendienteGuardar.set(null);
+  }
+
+  confirmarYGuardar(): void {
+    const payload = this.pedidoPendienteGuardar();
+    if (!payload) return;
+
     const editId = this.pedidoEditandoId();
+    this.isGuardando.set(true);
     if (editId) {
       this.pedidosService.actualizarPedido(editId, payload).subscribe({
         next: () => {
+          this.isGuardando.set(false);
+          this.cancelarConfirmacion();
           this.mostrarNotificacion('¡Pedido actualizado con éxito!');
           this.limpiar();
           this.cargarPedidosPendientes();
           this.cargarPedidosCerrados();
           this.vistaMobile.set('pedidos');
         },
-        error: (err) =>
-          this.errorBackend.set(err.error?.detail || 'Error al actualizar el pedido.'),
+        error: (err) => {
+          this.isGuardando.set(false);
+          this.errorBackend.set(err.error?.detail || 'Error al actualizar el pedido.');
+        },
       });
     } else {
       this.pedidosService.crearPedido(payload).subscribe({
         next: () => {
+          this.isGuardando.set(false);
+          this.cancelarConfirmacion();
           this.mostrarNotificacion('¡Pedido creado con éxito!');
           this.limpiar();
           this.cargarPedidosPendientes();
           this.cargarPedidosCerrados();
           this.vistaMobile.set('pedidos');
         },
-        error: (err) => this.errorBackend.set(err.error?.detail || 'Error al guardar el pedido.'),
+        error: (err) => {
+          this.isGuardando.set(false);
+          this.errorBackend.set(err.error?.detail || 'Error al guardar el pedido.');
+        },
       });
     }
   }
@@ -318,16 +348,29 @@ export class Ventas implements OnInit {
     this.vistaMobile.set('formulario');
   }
 
-  eliminarPedido(id: number): void {
-    if (confirm('¿Estás seguro de que deseas eliminar este pedido?')) {
-      this.pedidosService.eliminarPedido(id).subscribe({
-        next: () => {
-          this.mostrarNotificacion('Pedido eliminado correctamente.');
-          this.cargarPedidosPendientes();
-          this.cargarPedidosCerrados();
-        },
-      });
-    }
+  solicitarEliminacion(pedido: PedidoRead): void {
+    this.pedidoAEliminar.set(pedido);
+    this.mostrarConfirmacionEliminar.set(true);
+  }
+
+  cancelarEliminacion(): void {
+    this.mostrarConfirmacionEliminar.set(false);
+    this.pedidoAEliminar.set(null);
+  }
+
+  confirmarEliminacion(): void {
+    const pedido = this.pedidoAEliminar();
+    if (!pedido) return;
+
+    this.pedidosService.eliminarPedido(pedido.id).subscribe({
+      next: () => {
+        this.cancelarEliminacion();
+        this.mostrarNotificacion('Pedido eliminado correctamente.');
+        this.cargarPedidosPendientes();
+        this.cargarPedidosCerrados();
+      },
+      error: () => this.errorBackend.set('No se pudo eliminar el pedido.'),
+    });
   }
 
   togglePago(pedido: PedidoRead): void {
@@ -354,6 +397,7 @@ export class Ventas implements OnInit {
     this.terminoBusquedaCliente.set('');
     this.fechaEntregaSeleccionada.set(this.fechaMinima);
     this.errorBackend.set(null);
+    this.pedidoPendienteGuardar.set(null);
     this.productos.update((items) => items.map((i) => ({ ...i, maples: 0 })));
   }
 

@@ -32,6 +32,11 @@ export class Compras implements OnInit, OnDestroy {
   gastos: Gasto[] = [];
   totalGastos: number = 0;
   gastoEditandoId: number | null = null;
+  mostrarConfirmacion = false;
+  mostrarConfirmacionEliminar = false;
+  isGuardando = false;
+  gastoPendienteGuardar: Partial<Gasto> | null = null;
+  gastoAEliminar: Gasto | null = null;
 
   private buscadorSubject = new Subject<string>();
   private buscadorSub!: Subscription;
@@ -119,42 +124,71 @@ export class Compras implements OnInit, OnDestroy {
 
   guardarGasto(): void {
     if (this.formularioGastos.valid) {
-      const gasto = this.formularioGastos.value;
+      this.gastoPendienteGuardar = this.formularioGastos.value;
+      this.mostrarConfirmacion = true;
+    } else {
+      this.formularioGastos.markAllAsTouched();
+    }
+  }
 
+  cancelarConfirmacion(): void {
+    this.mostrarConfirmacion = false;
+    this.gastoPendienteGuardar = null;
+  }
+
+  confirmarYGuardar(): void {
+    const gasto = this.gastoPendienteGuardar;
+    if (!gasto) return;
+
+    this.isGuardando = true;
       if (this.gastoEditandoId !== null) {
         this.gastosService.actualizarGasto(this.gastoEditandoId, gasto).subscribe({
           next: () => {
+            this.isGuardando = false;
+            this.cancelarConfirmacion();
             this.cargarDatos();
             this.limpiarFormulario();
             this.mostrarExito('¡Gasto actualizado con éxito!');
           },
           error: (error) => {
+            this.isGuardando = false;
             console.error('Error al actualizar el gasto:', error);
           },
         });
       } else {
         this.gastosService.crearGasto(gasto).subscribe({
           next: () => {
+            this.isGuardando = false;
+            this.cancelarConfirmacion();
             this.cargarDatos();
             this.limpiarFormulario();
             this.mostrarExito('¡Gasto cargado con éxito!');
           },
           error: (error) => {
+            this.isGuardando = false;
             console.error('Error al guardar el gasto:', error);
           },
         });
       }
-    } else {
-      this.formularioGastos.markAllAsTouched();
-    }
   }
 
-  eliminarGasto(id: number): void {
-    const confirmar = window.confirm('¿Estás seguro de que querés eliminar este gasto?');
-    if (!confirmar) return;
+  solicitarEliminacion(gasto: Gasto): void {
+    this.gastoAEliminar = gasto;
+    this.mostrarConfirmacionEliminar = true;
+  }
 
-    this.gastosService.eliminarGasto(id).subscribe({
+  cancelarEliminacion(): void {
+    this.mostrarConfirmacionEliminar = false;
+    this.gastoAEliminar = null;
+  }
+
+  confirmarEliminacion(): void {
+    const gasto = this.gastoAEliminar;
+    if (!gasto) return;
+
+    this.gastosService.eliminarGasto(gasto.id).subscribe({
       next: () => {
+        this.cancelarEliminacion();
         this.cargarDatos();
       },
       error: (error) => {
@@ -187,6 +221,18 @@ export class Compras implements OnInit, OnDestroy {
       fecha: this.fechaMaxima,
     });
     this.gastoEditandoId = null;
+  }
+
+  obtenerCategoriaLabel(categoria: string | undefined): string {
+    const categorias: Record<string, string> = {
+      ALIMENTO: 'Alimento',
+      COMBUSTIBLE: 'Combustible',
+      INSUMOS: 'Insumos Veterinarios',
+      MANTENIMIENTO: 'Mantenimiento / Ferretería',
+      LIMPIEZA: 'Artículos de Limpieza',
+      OTROS: 'Otros',
+    };
+    return categorias[categoria ?? ''] ?? categoria ?? '';
   }
 
   formatearNumero(valor: number | string | null | undefined): string {

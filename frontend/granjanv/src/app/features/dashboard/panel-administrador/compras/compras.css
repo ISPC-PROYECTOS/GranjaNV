@@ -152,6 +152,26 @@
   gap: 24px;
 }
 
+.modal-confirmacion-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 16px;
+}
+
+.modal-confirmacion-caja {
+  width: 100%;
+  max-width: 460px;
+  padding: 24px;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.2);
+}
+
 /* .btn-limpiar,
 .btn-guardar {
   min-width: 130px;

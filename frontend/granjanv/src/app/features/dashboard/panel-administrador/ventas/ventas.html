@@ -116,7 +116,7 @@
 
                 <div class="acciones-edicion">
                   <button type="button" class="btn btn-accion-item btn-eliminar" aria-label="Eliminar pedido"
-                    (click)="eliminarPedido(pedido.id)">
+                    (click)="solicitarEliminacion(pedido)">
                     <i class="hgi-stroke hgi-delete-02" aria-hidden="true"></i>
                     <span class="d-none d-sm-inline">Eliminar</span>
                   </button>
@@ -191,9 +191,9 @@
 
                 <div class="pedido-cerrado-acciones d-flex align-items-center gap-2">
                   <span class="pedido-monto-cerrado">${{ formatearMoneda(cerrado.total) }}</span>
-                  <button type="button" class="btn btn-gasto-eliminar p-1" title="Eliminar pedido cerrado"
-                    aria-label="Eliminar registro" (click)="eliminarPedido(cerrado.id)">
-                    <i class="hgi-stroke hgi-delete-02 fs-6" aria-hidden="true"></i>
+                  <button type="button" class="btn btn-accion-item btn-editar p-1" title="Editar pedido cerrado"
+                    aria-label="Editar pedido" (click)="editarPedido(cerrado)">
+                    <i class="hgi-stroke hgi-pencil-edit-01 fs-6" aria-hidden="true"></i>
                   </button>
                 </div>
               </div>
@@ -357,7 +357,7 @@
           <!-- Acciones del Formulario -->
           <div class="gestion-formulario-acciones pt-2">
             <button type="button" class="btn btn-limpiar" (click)="limpiar()">Limpiar</button>
-            <button type="button" class="btn btn-guardar" (click)="guardarPedido()">
+            <button type="button" class="btn btn-guardar" (click)="guardarPedido()" [disabled]="isGuardando()">
               {{ pedidoEditandoId() ? 'Actualizar' : 'Guardar' }}
             </button>
           </div>
@@ -375,6 +375,53 @@
         (clienteGuardado)="onClienteGuardado($event)"
         (cerrar)="cerrarModalCliente()">
       </app-crear-cliente>
+    </div>
+  </div>
+  }
+
+  @if (mostrarConfirmacion()) {
+  <div class="modal-overlay-backdrop">
+    <div class="modal-confirmacion-caja animate-fade-in" role="dialog" aria-modal="true" aria-labelledby="titulo-confirmar-pedido">
+      <h4 id="titulo-confirmar-pedido">{{ pedidoEditandoId() ? 'Confirmar actualización' : 'Confirmar pedido' }}</h4>
+      <p class="text-muted small mb-3">Revisá los datos antes de guardar:</p>
+
+      <ul class="list-unstyled text-start small mb-3 px-2">
+        <li><strong>Cliente:</strong> {{ clienteSeleccionado()?.nombre }} {{ clienteSeleccionado()?.apellido }}</li>
+        <li><strong>Entrega:</strong> {{ formatearFechaDisplay(fechaEntregaSeleccionada()) }}</li>
+        <li><strong>Productos:</strong>
+          @for (producto of productosSeleccionados(); track producto.codigo) {
+            <span class="d-block">{{ producto.maples }} maple(s) de {{ producto.nombre }}</span>
+          }
+        </li>
+        <li><strong>Total:</strong> ${{ formatearMoneda(precioTotal()) }}</li>
+      </ul>
+
+      <div class="d-flex gap-2 justify-content-end">
+        <button type="button" class="btn btn-sm btn-limpiar" (click)="cancelarConfirmacion()" [disabled]="isGuardando()">
+          Modificar
+        </button>
+        <button type="button" class="btn btn-sm btn-guardar" (click)="confirmarYGuardar()" [disabled]="isGuardando()">
+          {{ isGuardando() ? 'Guardando...' : 'Confirmar y guardar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+
+  @if (mostrarConfirmacionEliminar() && pedidoAEliminar(); as pedido) {
+  <div class="modal-overlay-backdrop">
+    <div class="modal-confirmacion-caja animate-fade-in" role="dialog" aria-modal="true" aria-labelledby="titulo-eliminar-pedido">
+      <h4 id="titulo-eliminar-pedido">Eliminar pedido</h4>
+      <p class="text-muted small mb-3">¿Querés eliminar este pedido?</p>
+      <ul class="list-unstyled text-start small mb-3 px-2">
+        <li><strong>Cliente:</strong> {{ pedido.cliente.nombre }} {{ pedido.cliente.apellido }}</li>
+        <li><strong>Entrega:</strong> {{ formatearFechaDisplay(pedido.fecha_entrega) }}</li>
+        <li><strong>Total:</strong> ${{ formatearMoneda(pedido.total) }}</li>
+      </ul>
+      <div class="d-flex gap-2 justify-content-end">
+        <button type="button" class="btn btn-sm btn-limpiar" (click)="cancelarEliminacion()">Cancelar</button>
+        <button type="button" class="btn btn-sm btn-eliminar" (click)="confirmarEliminacion()">Eliminar pedido</button>
+      </div>
     </div>
   </div>
   }
