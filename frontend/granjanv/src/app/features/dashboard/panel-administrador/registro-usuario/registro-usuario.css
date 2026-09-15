@@ -1,13 +1,7 @@
 :host {
-  --btn-login-hover: #b56b46;
-  --text-muted: #dce3d9;
-  --error-color: #ff8a80;
-  --success-color: #81c784;
-
   display: block;
   min-height: calc(100vh - 70px);
   font-family: var(--font-textos);
-  background-color: var(--bg-main);
 }
 
 .registro-wrapper {
@@ -36,22 +30,6 @@
   margin-bottom: 1.5rem;
 }
 
-.btn-volver-panel {
-  background-color: var(--color-secundario);
-  color: var(--color-blanco);
-  font-family: var(--font-titulos);
-  font-weight: 600;
-  border: none;
-  border-radius: 10px;
-  padding: 8px 14px;
-  margin-bottom: 15px;
-}
-
-.btn-volver:hover {
-  color: var(--color-blanco);
-  text-decoration: underline;
-}
-
 .header h1 {
   margin: 0;
   color: var(--color-blanco);
@@ -60,97 +38,10 @@
 
 .header p {
   margin-top: 0.4rem;
-  color: var(--text-muted);
+  color: var(--color-crema);
   font-size: 0.95rem;
-}
-
-.alert-error {
-  background-color: rgba(255, 138, 128, 0.15);
-  color: var(--error-color);
-  border: 1px solid var(--error-color);
-  padding: 0.75rem 1rem;
-  border-radius: 12px;
-  font-size: 0.85rem;
-  margin-bottom: 1.25rem;
-  text-align: center;
-}
-
-.alert-success {
-  background-color: rgba(129, 199, 132, 0.15);
-  color: var(--success-color);
-  border: 1px solid var(--success-color);
-  padding: 0.75rem 1rem;
-  border-radius: 12px;
-  font-size: 0.85rem;
-  margin-bottom: 1.25rem;
-  text-align: center;
-}
-
-.form-group {
-  margin-bottom: 1.15rem;
-  display: flex;
-  flex-direction: column;
-}
-
-label {
-  font-size: 0.85rem;
-  font-weight: bold;
-  color: var(--color-blanco);
-  margin-bottom: 0.4rem;
-}
-
-input,
-.custom-select {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid #cccccc;
-  border-radius: 12px;
-  font-size: 0.95rem;
-  box-sizing: border-box;
-  outline: none;
-  transition: border-color 0.2s;
-  background-color: #ffffff;
-  color: #333333;
-}
-
-input:focus,
-.custom-select:focus {
-  border-color: var(--color-secundario);
-}
-
-input.is-invalid,
-.custom-select.is-invalid {
-  border-color: var(--error-color);
-}
-
-.error-msg {
-  color: var(--error-color);
-  font-size: 0.75rem;
-  margin-top: 0.35rem;
 }
 
 .button-group {
   margin-top: 1.5rem;
-}
-
-.btn-register {
-  width: 100%;
-  padding: 0.85rem;
-  background-color: var(--color-secundario);
-  border: 2px solid var(--color-secundario);
-  border-radius: 12px;
-  color: #ffffff;
-  font-size: 0.95rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.btn-register:hover:not(:disabled) {
-  background-color: var(--btn-login-hover);
-}
-
-.btn-register:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }

@@ -1,0 +1,22 @@
+<!-- Buscador desktop -->
+<div class="gestion-buscador d-none d-sm-flex">
+  <i class="hgi-stroke hgi-search-01" aria-hidden="true"></i>
+
+  <input type="search" class="gestion-buscador-input" placeholder="Buscar" aria-label="Buscar" [value]="termino()"
+    (input)="onBuscar($event)" />
+</div>
+
+<!-- Buscador mobile -->
+<div class="buscador-popup d-sm-none">
+  <button type="button" class="btn-buscador-popup" aria-label="Abrir buscador" [attr.aria-expanded]="abiertoMobile()"
+    (click)="toggleMobile()">
+    <i class="hgi-stroke hgi-search-01" aria-hidden="true"></i>
+  </button>
+
+  @if (abiertoMobile()) {
+  <div class="panel-buscador-popup">
+    <input type="search" class="gestion-buscador-input" placeholder="Buscar" aria-label="Buscar" [value]="termino()"
+      (input)="onBuscar($event)" />
+  </div>
+  }
+</div>
