@@ -503,7 +503,8 @@
   outline: none;
 }
 
-.btn-nuevo-cliente {
+.btn-nuevo-cliente,
+.btn-editar-cliente-inline {
   background: transparent;
   border: none;
   padding: 0;
@@ -517,7 +518,8 @@
     transform 0.1s ease;
 }
 
-.btn-nuevo-cliente:hover {
+.btn-nuevo-cliente:hover,
+.btn-editar-cliente-inline:hover {
   color: var(--color-secundario);
   transform: translateY(-1px);
 }

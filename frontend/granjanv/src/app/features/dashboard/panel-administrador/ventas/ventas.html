@@ -230,36 +230,56 @@
           <div class="mb-2 position-relative">
             <div class="d-flex justify-content-between align-items-center mb-1">
               <label for="buscar-cliente" class="form-label mb-0">Cliente *</label>
-              <button type="button" class="btn btn-nuevo-cliente" (click)="abrirModalNuevoCliente()">
-                + Nuevo cliente
-              </button>
+
+              <!-- Botones de acción agrupados al lado -->
+              <div class="d-flex align-items-center gap-2">
+                @if (clienteSeleccionado()) {
+                  <button
+                    type="button"
+                    class="btn-editar-cliente-inline"
+                    title="Modificar datos de este cliente"
+                    (click)="abrirModalEditarCliente()">
+                    <i class="hgi-stroke hgi-pencil-edit-01"></i>
+                    <span>Modificar</span>
+                  </button>
+                }
+
+                <button
+                  type="button"
+                  class="btn btn-nuevo-cliente"
+                  (click)="abrirModalNuevoCliente()">
+                  + Nuevo cliente
+                </button>
+              </div>
             </div>
-            <input id="buscar-cliente" type="text" class="form-control" placeholder="Buscar cliente..."
-              [ngModel]="terminoBusquedaCliente()" (ngModelChange)="terminoBusquedaCliente.set($event)"
+
+            <input
+              id="buscar-cliente"
+              type="text"
+              class="form-control"
+              placeholder="Buscar cliente..."
+              [ngModel]="terminoBusquedaCliente()"
+              (ngModelChange)="onEscribirCliente($event)"
               autocomplete="off" />
 
             @if (clientesFiltrados().length > 0 && !clienteSeleccionado()) {
-            <ul class="dropdown-clientes-sugerencias shadow" role="listbox">
-              @for (c of clientesFiltrados(); track c.id) {
-              <li role="option" tabindex="0" (click)="seleccionarCliente(c)" (keydown.enter)="seleccionarCliente(c)">
-                <strong>{{ c.nombre }} {{ c.apellido }}</strong> — {{ c.direccion }} ({{
-                c.telefono
-                }})
-              </li>
-              }
-            </ul>
+              <ul class="dropdown-clientes-sugerencias shadow" role="listbox">
+                @for (c of clientesFiltrados(); track c.id) {
+                  <li role="option" tabindex="0" (click)="seleccionarCliente(c)" (keydown.enter)="seleccionarCliente(c)">
+                    <strong>{{ c.nombre }} {{ c.apellido }}</strong> — {{ c.direccion }} ({{ c.telefono }})
+                  </li>
+                }
+              </ul>
             }
 
             @if (terminoBusquedaCliente().trim() && clientesFiltrados().length === 0 && !clienteSeleccionado()) {
-            <ul class="dropdown-clientes-sugerencias shadow" role="listbox">
-              <li role="option" tabindex="0" (click)="abrirModalNuevoCliente()" class="item-sin-cliente">
-                <i class="hgi-stroke hgi-user-add-01 me-1"></i> No existe "{{ terminoBusquedaCliente() }}". Registrar
-                cliente
-              </li>
-            </ul>
+              <ul class="dropdown-clientes-sugerencias shadow" role="listbox">
+                <li role="option" tabindex="0" (click)="abrirModalNuevoCliente()" class="item-sin-cliente">
+                  <i class="hgi-stroke hgi-user-add-01 me-1"></i> No existe "{{ terminoBusquedaCliente() }}". Registrar cliente
+                </li>
+              </ul>
             }
-          </div>
-
+            <!-- Datos autocompletados del cliente -->
           <div class="row g-2 mb-2">
             <div class="col-12 col-sm-6">
               <label for="contacto-cliente" class="form-label">Contacto</label>
@@ -271,6 +291,7 @@
               <input id="direccion-cliente" type="text" class="form-control campo-deshabilitado"
                 [value]="clienteSeleccionado()?.direccion || 'Se autocompleta'" readonly />
             </div>
+          </div>
           </div>
 
           <!-- Selección y Contadores de Variedades de Huevo -->
@@ -349,8 +370,10 @@
   @if (modalClienteAbierto()) {
   <div class="modal-overlay-backdrop">
     <div class="modal-dialog-box animate-fade-in">
-      <app-crear-cliente [nombreInicial]="terminoBusquedaCliente()" (clienteCreado)="onClienteCreado($event)"
-        (cerrar)="cerrarModalNuevoCliente()">
+      <app-crear-cliente [nombreInicial]="terminoBusquedaCliente()" 
+        [clienteEdicion]="clienteAEditar()"
+        (clienteGuardado)="onClienteGuardado($event)"
+        (cerrar)="cerrarModalCliente()">
       </app-crear-cliente>
     </div>
   </div>

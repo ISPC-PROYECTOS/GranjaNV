@@ -56,6 +56,9 @@ export class Ventas implements OnInit {
   readonly terminoBusquedaCliente = signal<string>('');
   readonly mostrarCerrados = signal<boolean>(false);
 
+  readonly modalClienteAbierto = signal<boolean>(false);
+  readonly clienteAEditar = signal<Cliente | null>(null);
+  
   readonly fechaMinima = formatearFechaISO(new Date());
   readonly fechaEntregaSeleccionada = signal<string>(this.fechaMinima);
   readonly opcionesProximosDias = signal<OpcionDiaEntrega[]>(this.generarProximosDias());
@@ -84,28 +87,66 @@ export class Ventas implements OnInit {
     );
   });
 
-  // Señal para controlar la ventana emergente
-  readonly modalClienteAbierto = signal<boolean>(false);
+
 
   abrirModalNuevoCliente(): void {
+    this.clienteAEditar.set(null);
     this.modalClienteAbierto.set(true);
   }
 
-  cerrarModalNuevoCliente(): void {
-    this.modalClienteAbierto.set(false);
+  abrirModalEditarCliente(): void {
+    const cliente = this.clienteSeleccionado();
+    if (!cliente) return;
+    this.clienteAEditar.set(cliente);
+    this.modalClienteAbierto.set(true);
   }
 
-  onClienteCreado(nuevoCliente: Cliente): void {
-    // 1. Agrega el nuevo cliente al listado de clientes en memoria
-    this.clientes.update((lista) => [...lista, nuevoCliente]);
-
-    // 2. Lo selecciona automáticamente en el formulario del pedido
-    this.seleccionarCliente(nuevoCliente);
-
-    // 3. Cierra el modal y notifica al usuario
+  cerrarModalCliente(): void {
     this.modalClienteAbierto.set(false);
-    this.mostrarNotificacion(`Cliente ${nuevoCliente.nombre} creado y seleccionado.`);
-  } //fin modal
+    this.clienteAEditar.set(null);
+  }
+
+  onEscribirCliente(valor: string): void {
+    this.terminoBusquedaCliente.set(valor);
+    if (this.clienteSeleccionado()) {
+      const nombreActual = `${this.clienteSeleccionado()?.nombre} ${this.clienteSeleccionado()?.apellido || ''}`.trim();
+      if (valor.trim().toLowerCase() !== nombreActual.toLowerCase()) {
+        this.clienteSeleccionado.set(null);
+      }
+    }
+  }
+
+  // 4. Selecciona el cliente y autocompleta los campos
+  seleccionarCliente(cliente: Cliente): void {
+    this.clienteSeleccionado.set(cliente);
+    const apellido = cliente.apellido ? ` ${cliente.apellido}` : '';
+    this.terminoBusquedaCliente.set(`${cliente.nombre}${apellido}`.trim());
+  }
+
+
+  onClienteGuardado(cliente: Cliente): void {
+    // Si ya existía, lo actualizamos en memoria; si no, lo agregamos a la lista
+    this.clientes.update((lista) => {
+      const index = lista.findIndex((c) => c.id === cliente.id);
+      if (index !== -1) {
+        const nuevaLista = [...lista];
+        nuevaLista[index] = cliente;
+        return nuevaLista;
+      }
+      return [...lista, cliente];
+    });
+
+    // Actualizamos el cliente seleccionado en el formulario
+    this.seleccionarCliente(cliente);
+
+    // Actualizamos los pedidos pendientes en pantalla para reflejar nuevo teléfono o dirección
+    this.pedidosPendientes.update((pedidos) =>
+      pedidos.map((p) => (p.cliente.id === cliente.id ? { ...p, cliente } : p))
+    );
+
+    this.cerrarModalCliente();
+    this.mostrarNotificacion(`Cliente ${cliente.nombre} guardado correctamente.`);
+  }
 
   ngOnInit(): void {
     this.cargarPedidosPendientes();
@@ -178,11 +219,7 @@ export class Ventas implements OnInit {
     this.mostrarCerrados.update((v) => !v);
   }
 
-  seleccionarCliente(cliente: Cliente): void {
-    this.clienteSeleccionado.set(cliente);
-    const apellido = cliente.apellido ? ` ${cliente.apellido}` : '';
-    this.terminoBusquedaCliente.set(`${cliente.nombre}${apellido}`);
-  }
+  
 
   seleccionarDiaEntrega(fechaIso: string): void {
     this.fechaEntregaSeleccionada.set(fechaIso);

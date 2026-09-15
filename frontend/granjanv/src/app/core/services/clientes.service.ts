@@ -21,4 +21,8 @@ export class ClientesService {
   crearCliente(cliente: Partial<Cliente>): Observable<Cliente> {
     return this.http.post<Cliente>(this.apiUrl, cliente);
   }
+
+  actualizarCliente(id: number, cliente: Partial<Cliente>): Observable<Cliente> {
+    return this.http.patch<Cliente>(`${this.apiUrl}${id}/`, cliente);
+  }
 }
