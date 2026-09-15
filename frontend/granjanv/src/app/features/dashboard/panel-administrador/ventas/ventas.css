@@ -573,6 +573,15 @@
   overflow-y: auto;
 }
 
+.modal-confirmacion-caja {
+  width: 100%;
+  max-width: 460px;
+  padding: 24px;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.2);
+}
+
 /* =================================
    ANIMACIONES
 ================================= */

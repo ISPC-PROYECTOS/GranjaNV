@@ -67,7 +67,8 @@ class PedidoViewSet(RangoFechaMixin, viewsets.ModelViewSet):
             Q(estado_pago=False) | Q(estado_entrega=False)
         ).count()
 
-        ventas_cobradas_total: Decimal = base_qs.filter(
+        ventas_del_periodo = self.get_queryset()
+        ventas_cobradas_total: Decimal = ventas_del_periodo.filter(
             estado_pago=True
         ).aggregate(total=Sum('total'))['total'] or Decimal('0.00')
 
