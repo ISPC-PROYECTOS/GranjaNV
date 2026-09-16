@@ -4,12 +4,44 @@
   <section class="tips-subsection recetas-section">
     <h3 class="subsection-title">Recetas</h3>
 
-    <div class="tips-grid">
-      <article class="tip-card recipe-card" *ngFor="let receta of recetas">
-        <div class="tip-icon">IMG</div>
-        <h4>{{ receta.titulo }}</h4>
-        <p>{{ receta.descripcion }}</p>
-      </article>
+    <div class="recetas-carrusel">
+      <button
+        class="carrusel-flecha carrusel-flecha-anterior"
+        type="button"
+        (click)="retrocederCarrusel()"
+        [disabled]="indiceActual === 0"
+        aria-label="Ver recetas anteriores"
+      >
+        <span aria-hidden="true">&larr;</span>
+      </button>
+
+      <div class="tips-grid">
+        @for (receta of recetasVisibles; track receta.titulo) {
+          <article class="tip-card recipe-card">
+            <div class="tip-icon">
+              @if (receta.imagen) {
+                <img [src]="receta.imagen" [alt]="receta.titulo" class="receta-img">
+              } @else {
+                IMG
+              }
+            </div>
+            <h4>{{ receta.titulo }}</h4>
+            <p>{{ receta.descripcion }}</p>
+          </article>
+        } @empty {
+          <p class="cargando-texto">Cargando recetas...</p>
+        }
+      </div>
+
+      <button
+        class="carrusel-flecha carrusel-flecha-siguiente"
+        type="button"
+        (click)="avanzarCarrusel()"
+        [disabled]="indiceActual >= indiceMaximo"
+        aria-label="Ver siguientes recetas"
+      >
+        <span aria-hidden="true">&rarr;</span>
+      </button>
     </div>
   </section>
 
