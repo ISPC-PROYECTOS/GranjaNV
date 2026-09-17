@@ -96,7 +96,7 @@
   font-size: 17px;
   font-weight: 700;
   color: var(--color-primario-oscuro);
-  background-color: rgba(103, 135, 95, 0.15);
+  background-color: color-mix(in srgb, var(--color-primario) 15%, transparent);
   padding: 2px 8px;
   border-radius: 8px;
   white-space: nowrap;
@@ -223,7 +223,7 @@
 }
 
 .pedido-card-footer {
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-top: 1px solid color-mix(in srgb, var(--color-negro) 8%, transparent);
   padding: 10px 18px;
   background-color: var(--color-primario-claro);
 }
@@ -357,7 +357,7 @@
 
 .campo-deshabilitado {
   background-color: var(--color-gris-medio) !important;
-  color: #333333;
+  color: var(--color-negro);
   cursor: not-allowed;
 }
 
@@ -464,6 +464,7 @@
   font-size: 15px;
   border: none;
   background: transparent;
+  color: var(--color-negro);
 }
 
 .contador-valor::-webkit-outer-spin-button,
@@ -478,7 +479,7 @@
 
 .dropdown-clientes-sugerencias {
   position: absolute;
-  top: 100%;
+  /* top: 100%; */
   left: 0;
   right: 0;
   background: var(--color-blanco);
@@ -542,7 +543,7 @@
 
 .item-sin-cliente:hover,
 .item-sin-cliente:focus {
-  background-color: #ebdcd0 !important;
+  /* background-color: var(--color-secundario-claro) !important; */
   color: var(--color-negro) !important;
 }
 
@@ -558,7 +559,7 @@
 .modal-overlay-backdrop {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.55);
+  background-color: color-mix(in srgb, var(--color-negro) 55%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -578,8 +579,8 @@
   max-width: 460px;
   padding: 24px;
   border-radius: 8px;
-  background: #ffffff;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.2);
+  background: var(--color-blanco);
+  box-shadow: 0 12px 36px color-mix(in srgb, var(--color-negro) 20%, transparent);
 }
 
 /* =================================
@@ -807,4 +808,49 @@
     align-items: center;
     justify-content: center;
   }
+}
+
+/* MODO OSCURO */
+
+/* PEDIDOS PENDIENTES */
+
+:host-context(body.dark-mode) .pedido-monto-destacado,
+:host-context(body.dark-mode) .btn-toggle-cerrados,
+:host-context(body.dark-mode) .badge-cerrado-fecha,
+:host-context(body.dark-mode) .pedido-monto-cerrado {
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .text-muted {
+  color: var(--color-negro) !important;
+}
+
+:host-context(body.dark-mode) .chip-producto {
+  color: var(--color-secundario);
+}
+
+:host-context(body.dark-mode) .btn-estado-toggle.completado,
+:host-context(body.dark-mode) .btn-eliminar {
+  color: var(--color-blanco);
+}
+
+/* PEDIDOS CERRADOS */
+
+:host-context(body.dark-mode) .pedido-card-cerrado .text-dark {
+  color: var(--color-negro) !important;
+}
+
+:host-context(body.dark-mode) .pedido-card-cerrado .text-muted,
+:host-context(body.dark-mode) .filtros-cerrados .text-muted {
+  color: var(--color-gris-oscuro) !important;
+}
+
+/* FORMULARIO */
+:host-context(body.dark-mode) .dropdown-clientes-sugerencias {
+  background-color: var(--color-primario-claro);
+  border: 1px solid var(--color-gris-oscuro);
+}
+
+.dropdown-clientes-sugerencias li + li {
+  border-top: 1px solid var(--color-gris-claro);
 }
