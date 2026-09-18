@@ -340,7 +340,7 @@
               }
             </div>
             <input id="fecha-entrega-manual" type="date" class="form-control" [min]="fechaMinima"
-              [ngModel]="fechaEntregaSeleccionada()" (ngModelChange)="fechaEntregaSeleccionada.set($event)" required />
+              [ngModel]="fechaEntregaSeleccionada()" (ngModelChange)="onCambioFechaManual($event)" required />
           </div>
 
           <!-- Acciones del Formulario -->

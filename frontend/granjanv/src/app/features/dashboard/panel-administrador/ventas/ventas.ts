@@ -231,12 +231,24 @@ export class Ventas implements OnInit {
   toggleMostrarCerrados(): void {
     this.mostrarCerrados.update((v) => !v);
   }
-
-  
-
   seleccionarDiaEntrega(fechaIso: string): void {
+    if (fechaIso < this.fechaMinima) {
+      this.fechaEntregaSeleccionada.set(this.fechaMinima);
+      return;
+    }
     this.fechaEntregaSeleccionada.set(fechaIso);
   }
+
+  onCambioFechaManual(valor: string): void {
+    if (valor && valor < this.fechaMinima) {
+      this.errorBackend.set('La fecha de reparto no puede ser anterior al día de hoy.');
+      this.fechaEntregaSeleccionada.set(this.fechaMinima);
+      return;
+    }
+    this.errorBackend.set(null);
+    this.fechaEntregaSeleccionada.set(valor);
+  } 
+
 
   incrementarProducto(codigo: TipoHuevo): void {
     this.productos.update((items) =>
@@ -267,6 +279,10 @@ export class Ventas implements OnInit {
 
     if (!this.fechaEntregaSeleccionada()) {
       this.errorBackend.set('La fecha de entrega programada es obligatoria.');
+      return;
+    }
+    if (this.fechaEntregaSeleccionada() < this.fechaMinima) {
+      this.errorBackend.set('No se puede programar un reparto con una fecha pasada.');
       return;
     }
 
