@@ -9,8 +9,8 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./sobre-granja.css']
 })
 export class SobreGranja implements OnInit {
-  titulo = 'Sobre la Granja';
-  descripcion = 'La historia de la Granja y orígenes';
+  titulo = 'Sobre la granja';
+  descripcion = 'La historia de la granja y sus orígenes';
 
   ngOnInit() {
     // Aquí puedes hacer llamadas al backend

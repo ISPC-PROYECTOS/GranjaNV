@@ -14,9 +14,9 @@ export class Navbar {
 
   sections = [
     { name: 'Inicio', id: 'inicio' },
-    { name: 'Sobre la Granja', id: 'sobre-granja' },
-    { name: 'Nuestros Productos', id: 'productos' },
-    { name: 'Nuestras Gallinas', id: 'gallinas' },
+    { name: 'Sobre la granja', id: 'sobre-granja' },
+    { name: 'Nuestros productos', id: 'productos' },
+    { name: 'Nuestras gallinas', id: 'gallinas' },
     { name: 'Tips', id: 'tips' },
   ];
 

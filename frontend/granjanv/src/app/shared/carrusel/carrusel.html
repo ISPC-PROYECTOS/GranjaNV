@@ -1,0 +1,27 @@
+<div class="carrusel-wrapper">
+  <button
+    class="carrusel-flecha carrusel-flecha-anterior"
+    type="button"
+    (click)="retroceder()"
+    aria-label="Ver elementos anteriores"
+  >
+    <span aria-hidden="true">&larr;</span>
+  </button>
+
+  <div class="carrusel-grid" [style.--columnas-desktop]="visibleDesktop">
+    @for (item of itemsVisibles; track $index) {
+      <ng-container
+        *ngTemplateOutlet="itemTemplate; context: { $implicit: item }"
+      ></ng-container>
+    }
+  </div>
+
+  <button
+    class="carrusel-flecha carrusel-flecha-siguiente"
+    type="button"
+    (click)="avanzar()"
+    aria-label="Ver siguientes elementos"
+  >
+    <span aria-hidden="true">&rarr;</span>
+  </button>
+</div>
