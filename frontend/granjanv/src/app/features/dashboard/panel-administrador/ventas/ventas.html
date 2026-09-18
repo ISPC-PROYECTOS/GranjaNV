@@ -37,7 +37,7 @@
         <!-- Lista de Pedidos Pendientes -->
         <div class="pedidos-lista" role="feed" aria-busy="{{ isLoading() }}">
           @for (pedido of pedidosPendientes(); track pedido.id) {
-          <article class="pedido-card">
+          <article class="pedido-card" [id]="'pedido-card-' + pedido.id">
             <header class="pedido-card-header" role="button" tabindex="0"
               [attr.aria-expanded]="pedidoExpandidoId() === pedido.id" (click)="toggleExpandir(pedido.id)"
               (keydown.enter)="toggleExpandir(pedido.id)">
@@ -191,8 +191,8 @@
 
                 <div class="pedido-cerrado-acciones d-flex align-items-center gap-2">
                   <span class="pedido-monto-cerrado">${{ formatearMoneda(cerrado.total) }}</span>
-                  <button type="button" class="btn btn-accion-item btn-editar p-1" title="Editar pedido cerrado"
-                    aria-label="Editar pedido" (click)="editarPedido(cerrado)">
+                  <button type="button" class="btn btn-accion-item btn-editar p-1" title="Modificar estado del pedido"
+                    aria-label="Modificar estado del pedido" (click)="abrirModalReabrir(cerrado)">
                     <i class="hgi-stroke hgi-pencil-edit-01 fs-6" aria-hidden="true"></i>
                   </button>
                 </div>
@@ -411,6 +411,44 @@
       <div class="d-flex gap-2 justify-content-end">
         <button type="button" class="btn btn-sm btn-limpiar" (click)="cancelarEliminacion()">Cancelar</button>
         <button type="button" class="btn btn-sm btn-eliminar" (click)="confirmarEliminacion()">Eliminar pedido</button>
+      </div>
+    </div>
+  </div>
+  }  
+  <!-- MODAL REAPERTURA DE PEDIDO CERRADO -->
+  @if (mostrarModalReabrir() && pedidoAReabrir(); as pedido) {
+  <div class="modal-overlay-backdrop">
+    <div class="modal-confirmacion-caja animate-fade-in" role="dialog" aria-modal="true" aria-labelledby="titulo-reabrir-pedido">
+      <h4 id="titulo-reabrir-pedido">Modificar estado</h4>
+      <p class="text-muted small mb-3">
+        Desmarcá una opción para regresar el pedido a <strong>Pendientes</strong>:
+      </p>
+
+      <ul class="list-unstyled text-start small mb-3 px-2">
+        <li><strong>Cliente:</strong> {{ pedido.cliente.nombre }} {{ pedido.cliente.apellido }}</li>
+        <li><strong>Entrega:</strong> {{ formatearFechaDisplay(pedido.fecha_entrega) }}</li>
+        <li><strong>Total:</strong> ${{ formatearMoneda(pedido.total) }}</li>
+      </ul>
+
+      <div class="d-flex gap-2 justify-content-center my-3">
+        <button type="button" class="btn btn-estado-toggle" [class.completado]="estadoEntregaTemp()" (click)="toggleEntregaModal()">
+          <i class="hgi-stroke hgi-tick-02" aria-hidden="true"></i>
+          {{ estadoEntregaTemp() ? 'Entregado' : 'Entregué' }}
+        </button>
+
+        <button type="button" class="btn btn-estado-toggle" [class.completado]="estadoPagoTemp()" (click)="togglePagoModal()">
+          <i class="hgi-stroke hgi-dollar-circle" aria-hidden="true"></i>
+          {{ estadoPagoTemp() ? 'Cobrado' : 'Cobré' }}
+        </button>
+      </div>
+
+      <div class="d-flex gap-2 justify-content-end mt-4">
+        <button type="button" class="btn btn-sm btn-limpiar" (click)="cancelarReabrir()" [disabled]="isGuardando()">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-sm btn-guardar" (click)="confirmarReapertura()" [disabled]="isGuardando()">
+          {{ isGuardando() ? 'Guardando...' : 'Guardar cambios' }}
+        </button>
       </div>
     </div>
   </div>
