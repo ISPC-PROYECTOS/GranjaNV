@@ -106,6 +106,14 @@
   color: #111;
 }
 
+.care-image {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  display: block;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
 .tip-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -125,7 +133,7 @@
 }
 
 .tip-card h4 {
-  margin: 0 0 12px;
+  margin: 16px 0 12px;
   font-size: 18px;
   font-weight: 600;
   font-family: 'Montserrat', Arial, sans-serif;

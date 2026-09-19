@@ -1,15 +1,21 @@
 <footer class="footer">
   <div class="footer-container">
     <!-- Sección: Sobre la Granja -->
-    <div class="footer-section">
-      <h3>{{ grupoEmpresa }}</h3>
+    <div class="footer-section" [class.section-open]="isSectionOpen('granja')">
+      <button class="footer-section-title" type="button" (click)="toggleSection('granja')" [attr.aria-expanded]="isSectionOpen('granja')">
+        <span>{{ grupoEmpresa }}</span>
+        <span aria-hidden="true">{{ isSectionOpen('granja') ? '−' : '+' }}</span>
+      </button>
       <p>{{ descripcion }}</p>
       <p class="ubicacion">📍 {{ contacto.ubicacion }}</p>
     </div>
 
     <!-- Sección: Contacto -->
-    <div class="footer-section">
-      <h3>Contacto</h3>
+    <div class="footer-section" [class.section-open]="isSectionOpen('contacto')">
+      <button class="footer-section-title" type="button" (click)="toggleSection('contacto')" [attr.aria-expanded]="isSectionOpen('contacto')">
+        <span>Contacto</span>
+        <span aria-hidden="true">{{ isSectionOpen('contacto') ? '−' : '+' }}</span>
+      </button>
       <ul class="contact-list">
         <li>📞 <a href="tel:+54011" class="contact-link">{{ contacto.telefono }}</a></li>
         <li>✉️ <a href="mailto:info@granjaNV.com" class="contact-link">{{ contacto.email }}</a></li>
@@ -17,8 +23,11 @@
     </div>
 
     <!-- Sección: Horarios -->
-    <div class="footer-section">
-      <h3>Horarios</h3>
+    <div class="footer-section" [class.section-open]="isSectionOpen('horarios')">
+      <button class="footer-section-title" type="button" (click)="toggleSection('horarios')" [attr.aria-expanded]="isSectionOpen('horarios')">
+        <span>Horarios</span>
+        <span aria-hidden="true">{{ isSectionOpen('horarios') ? '−' : '+' }}</span>
+      </button>
       <ul class="hours-list">
         <li>L-V: {{ horarios.lunes_viernes }}</li>
         <li>Sáb: {{ horarios.sabados }}</li>
@@ -27,24 +36,37 @@
     </div>
 
     <!-- Sección: Redes Sociales -->
-    <div class="footer-section">
-      <h3>Síguenos</h3>
+    <div class="footer-section social-section" [class.section-open]="isSectionOpen('redes')">
+      <button class="footer-section-title" type="button" (click)="toggleSection('redes')" [attr.aria-expanded]="isSectionOpen('redes')">
+        <span>Síguenos</span>
+        <span aria-hidden="true">{{ isSectionOpen('redes') ? '−' : '+' }}</span>
+      </button>
       <div class="social-links">
-        <a *ngFor="let red of redesSociales" href="{{ red.url }}" class="social-link" title="{{ red.nombre }}">
+        <a
+          *ngFor="let red of redesSociales"
+          [href]="red.url"
+          class="social-link"
+          [title]="red.nombre"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <img [src]="red.icono" [alt]="red.nombre">
         </a>
       </div>
     </div>
 
     <!-- Sección: Navegación -->
-    <div class="footer-section">
-      <h3>Navegación</h3>
+    <div class="footer-section" [class.section-open]="isSectionOpen('navegacion')">
+      <button class="footer-section-title" type="button" (click)="toggleSection('navegacion')" [attr.aria-expanded]="isSectionOpen('navegacion')">
+        <span>Navegación</span>
+        <span aria-hidden="true">{{ isSectionOpen('navegacion') ? '−' : '+' }}</span>
+      </button>
       <ul class="footer-menu">
-        <li><a href="#">Inicio</a></li>
-        <li><a href="#">Sobre la granja</a></li>
-        <li><a href="#">Nuestros productos</a></li>
-        <li><a href="#">Nuestras gallinas</a></li>
-        <li><a href="#">Tips</a></li>
+        <li><button type="button" (click)="navigateTo('inicio')">Inicio</button></li>
+        <li><button type="button" (click)="navigateTo('sobre-granja')">Sobre la granja</button></li>
+        <li><button type="button" (click)="navigateTo('productos')">Nuestros productos</button></li>
+        <li><button type="button" (click)="navigateTo('gallinas')">Nuestras gallinas</button></li>
+        <li><button type="button" (click)="navigateTo('tips')">Tips</button></li>
       </ul>
     </div>
   </div>

@@ -34,6 +34,7 @@
     <div class="tips-grid">
       @for (cuidado of cuidados; track cuidado.id) {
         <article class="tip-card care-card">
+          <img [src]="cuidado.imagen" [alt]="cuidado.titulo" class="care-image">
           <h4>{{ cuidado.titulo }}</h4>
           <p>{{ cuidado.descripcion }}</p>
         </article>

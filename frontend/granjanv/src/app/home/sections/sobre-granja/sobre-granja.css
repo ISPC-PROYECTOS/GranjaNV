@@ -1,5 +1,5 @@
 .sobre-granja-container {
-  min-height: 100vh;
+  min-height: auto;
   padding: 0 20px 30px;
   background-color: #FBF5F3;
   max-width: 1200px;
@@ -119,5 +119,20 @@
   .history-card {
     padding: 20px 16px;
     height: auto;
+  }
+
+  .history-card p,
+  .content-text p {
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .content-text {
+    padding: 14px;
+  }
+
+  .content-text strong {
+    font-size: 14px;
+    margin-bottom: 5px;
   }
 }

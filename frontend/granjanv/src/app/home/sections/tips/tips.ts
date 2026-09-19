@@ -26,9 +26,24 @@ export class Tips implements OnInit {
   readonly errorCarga = signal<boolean>(false);
 
   readonly cuidados = [
-    { id: 1, titulo: 'Higiene y manipulación', descripcion: 'Evitar golpes y mantener una buena higiene.' },
-    { id: 2, titulo: 'Conservación en el hogar', descripcion: 'Mantener una temperatura ideal.' },
-    { id: 3, titulo: 'Consejos de consumo', descripcion: 'Recomendaciones para disfrutar los huevos.' }
+    {
+      id: 1,
+      titulo: 'Higiene y manipulación',
+      descripcion: 'Lavá tus manos antes de manipularlos y evitá golpes o cambios bruscos que puedan dañar la cáscara.',
+      imagen: '/ImagenesHome/Higiene%20y%20manipulacion.jpg'
+    },
+    {
+      id: 2,
+      titulo: 'Conservación en el hogar',
+      descripcion: 'Guardalos en un lugar fresco y estable, preferentemente en su envase y alejados de alimentos con olores fuertes.',
+      imagen: '/ImagenesHome/Conservacion%20en%20el%20hogar.jpg'
+    },
+    {
+      id: 3,
+      titulo: 'Consejos de consumo',
+      descripcion: 'Antes de consumirlos, verificá que la cáscara esté limpia y sin grietas, y cocinalos según la preparación elegida.',
+      imagen: '/ImagenesHome/Consejos%20de%20consumo.jpg'
+    }
   ];
 
   ngOnInit(): void {
