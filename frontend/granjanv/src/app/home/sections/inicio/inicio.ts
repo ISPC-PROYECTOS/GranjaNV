@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 export class Inicio {
   @Output() sectionClicked = new EventEmitter<string>();
 
-  titulo = 'Bienvenidos a nuestra granja';
+  titulo = 'GRANJA NV';
   descripcion = 'Producción de huevos frescos y naturales';
 
   navigateTo(sectionId: string) {
