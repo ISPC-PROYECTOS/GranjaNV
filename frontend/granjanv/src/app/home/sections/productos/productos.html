@@ -1,19 +1,9 @@
 <div class="productos-container">
   <h2 class="section-title">{{ titulo }}</h2>
 
-  <div class="productos-carrusel">
-    <button
-      class="carrusel-flecha carrusel-flecha-anterior"
-      type="button"
-      (click)="retrocederCarrusel()"
-      [disabled]="indiceActual === 0"
-      aria-label="Ver productos anteriores"
-    >
-      <span aria-hidden="true">&larr;</span>
-    </button>
-
-    <div class="productos-grid">
-      <div class="producto-card" *ngFor="let producto of productosVisibles">
+  <app-carrusel [items]="productos">
+    <ng-template #itemTemplate let-producto>
+      <div class="producto-card">
         <div class="producto-image">
           <img [src]="producto.imagen" [alt]="producto.nombre">
         </div>
@@ -22,16 +12,6 @@
           <p>{{ producto.descripcion }}</p>
         </div>
       </div>
-    </div>
-
-    <button
-      class="carrusel-flecha carrusel-flecha-siguiente"
-      type="button"
-      (click)="avanzarCarrusel()"
-      [disabled]="indiceActual === indiceMaximo"
-      aria-label="Ver siguientes productos"
-    >
-      <span aria-hidden="true">&rarr;</span>
-    </button>
-  </div>
+    </ng-template>
+  </app-carrusel>
 </div>

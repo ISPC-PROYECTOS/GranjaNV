@@ -13,7 +13,7 @@
 
   <section #sobreGranjaSection id="sobre-granja" class="home-section">
     <button class="home-section-toggle" type="button" (click)="toggleSection('sobre-granja')" [attr.aria-expanded]="isSectionOpen('sobre-granja')">
-      <span>Sobre la Granja</span>
+      <span>Sobre "Granja NV"</span>
       <span aria-hidden="true">{{ isSectionOpen('sobre-granja') ? '−' : '+' }}</span>
     </button>
     <div class="home-section-content" [class.section-closed]="!isSectionOpen('sobre-granja')">
@@ -23,7 +23,7 @@
 
   <section #productosSection id="productos" class="home-section">
     <button class="home-section-toggle" type="button" (click)="toggleSection('productos')" [attr.aria-expanded]="isSectionOpen('productos')">
-      <span>Nuestros Productos</span>
+      <span>Nuestros productos</span>
       <span aria-hidden="true">{{ isSectionOpen('productos') ? '−' : '+' }}</span>
     </button>
     <div class="home-section-content" [class.section-closed]="!isSectionOpen('productos')">
@@ -33,7 +33,7 @@
 
   <section #galinasSection id="gallinas" class="home-section">
     <button class="home-section-toggle" type="button" (click)="toggleSection('gallinas')" [attr.aria-expanded]="isSectionOpen('gallinas')">
-      <span>Nuestras Gallinas</span>
+      <span>Nuestras gallinas</span>
       <span aria-hidden="true">{{ isSectionOpen('gallinas') ? '−' : '+' }}</span>
     </button>
     <div class="home-section-content" [class.section-closed]="!isSectionOpen('gallinas')">
