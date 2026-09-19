@@ -4,8 +4,12 @@
   <section class="tips-subsection recetas-section">
     <h3 class="subsection-title">Recetas</h3>
 
-    @if (recetas.length > 0) {
-      <app-carrusel [items]="recetas">
+    @if (cargando()) {
+      <p class="cargando-texto">Cargando recetas...</p>
+    } @else if (errorCarga()) {
+      <p class="cargando-texto text-danger">No se pudieron cargar las recetas en este momento.</p>
+    } @else if (recetas().length > 0) {
+      <app-carrusel [items]="recetas()">
         <ng-template #itemTemplate let-receta>
           <article class="tip-card recipe-card">
             <div class="tip-icon">
@@ -21,18 +25,19 @@
         </ng-template>
       </app-carrusel>
     } @else {
-      <p class="cargando-texto">Cargando recetas...</p>
+      <p class="cargando-texto">No hay recetas disponibles actualmente.</p>
     }
   </section>
 
   <section class="tips-subsection cuidados-section">
     <h3 class="subsection-title">Cuidados de los huevos</h3>
     <div class="tips-grid">
-      <article class="tip-card care-card" *ngFor="let cuidado of cuidados">
-        <!-- <div class="tip-icon">IMG</div> -->
-        <h4>{{ cuidado.titulo }}</h4>
-        <p>{{ cuidado.descripcion }}</p>
-      </article>
+      @for (cuidado of cuidados; track cuidado.id) {
+        <article class="tip-card care-card">
+          <h4>{{ cuidado.titulo }}</h4>
+          <p>{{ cuidado.descripcion }}</p>
+        </article>
+      }
     </div>
   </section>
 </div>
