@@ -32,6 +32,7 @@ html,
 body {
   margin: 0;
   background-color: var(--color-secundario-claro);
+  color: var(--color-negro);
 }
 
 /* =================================
@@ -354,4 +355,51 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* =================================
+   MODO OSCURO
+================================= */
+
+body.dark-mode {
+  --color-secundario-claro: #171c19;
+  --color-primario-claro: #2a3327;
+  --color-blanco: #242b26;
+  --color-negro: #f5f5f2;
+  --color-gris-claro: #526057;
+  --color-gris-medio: #444e46;
+  --color-gris-oscuro: #c4cdc5;
+  --color-crema: #171c19;
+
+  color: var(--color-negro);
+}
+
+body.dark-mode .gestion-titulo,
+body.dark-mode .metrica-titulo,
+body.dark-mode .metrica-valor,
+body.dark-mode .acceso-titulo,
+body.dark-mode .acceso-descripcion {
+  color: var(--color-negro);
+}
+
+html:has(body.dark-mode) {
+  background-color: #1f1f1f;
+}
+
+body.dark-mode .btn-guardar {
+  background-color: var(--color-primario-oscuro);
+  color: var(--color-negro);
+}
+
+body.dark-mode .alerta-error {
+  background-color: color-mix(in srgb, var(--color-error) 17%, transparent);
+  color: var(--color-negro);
+  border-color: var(--color-error);
+  font-weight: 500;
+}
+
+body.dark-mode .alerta-exito {
+  background-color: var(--color-primario-claro);
+  color: var(--color-negro);
+  border-color: var(--color-exito);
 }

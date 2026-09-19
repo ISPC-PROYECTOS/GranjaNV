@@ -37,7 +37,7 @@
         <!-- Lista de Pedidos Pendientes -->
         <div class="pedidos-lista" role="feed" aria-busy="{{ isLoading() }}">
           @for (pedido of pedidosPendientes(); track pedido.id) {
-          <article class="pedido-card">
+          <article class="pedido-card" [id]="'pedido-card-' + pedido.id">
             <header class="pedido-card-header" role="button" tabindex="0"
               [attr.aria-expanded]="pedidoExpandidoId() === pedido.id" (click)="toggleExpandir(pedido.id)"
               (keydown.enter)="toggleExpandir(pedido.id)">
@@ -191,8 +191,8 @@
 
                 <div class="pedido-cerrado-acciones d-flex align-items-center gap-2">
                   <span class="pedido-monto-cerrado">${{ formatearMoneda(cerrado.total) }}</span>
-                  <button type="button" class="btn btn-accion-item btn-editar p-1" title="Editar pedido cerrado"
-                    aria-label="Editar pedido" (click)="editarPedido(cerrado)">
+                  <button type="button" class="btn btn-accion-item btn-editar p-1" title="Modificar estado del pedido"
+                    aria-label="Modificar estado del pedido" (click)="abrirModalReabrir(cerrado)">
                     <i class="hgi-stroke hgi-pencil-edit-01 fs-6" aria-hidden="true"></i>
                   </button>
                 </div>
@@ -234,68 +234,57 @@
               <!-- Botones de acción agrupados al lado -->
               <div class="d-flex align-items-center gap-2">
                 @if (clienteSeleccionado()) {
-                  <button
-                    type="button"
-                    class="btn-editar-cliente-inline"
-                    title="Modificar datos de este cliente"
-                    (click)="abrirModalEditarCliente()">
-                    <i class="hgi-stroke hgi-pencil-edit-01"></i>
-                    <span>Modificar</span>
-                  </button>
+                <button type="button" class="btn-editar-cliente-inline" title="Modificar datos de este cliente"
+                  (click)="abrirModalEditarCliente()">
+                  <i class="hgi-stroke hgi-pencil-edit-01"></i>
+                  <span>Modificar</span>
+                </button>
                 }
 
-                <button
-                  type="button"
-                  class="btn btn-nuevo-cliente"
-                  (click)="abrirModalNuevoCliente()">
+                <button type="button" class="btn btn-nuevo-cliente" (click)="abrirModalNuevoCliente()">
                   + Nuevo cliente
                 </button>
               </div>
             </div>
 
-            <input
-              id="buscar-cliente"
-              type="text"
-              class="form-control"
-              placeholder="Buscar cliente..."
-              [ngModel]="terminoBusquedaCliente()"
-              (ngModelChange)="onEscribirCliente($event)"
-              autocomplete="off" />
+            <input id="buscar-cliente" type="text" class="form-control" placeholder="Buscar cliente..."
+              [ngModel]="terminoBusquedaCliente()" (ngModelChange)="onEscribirCliente($event)" autocomplete="off" />
 
             @if (clientesFiltrados().length > 0 && !clienteSeleccionado()) {
-              <ul class="dropdown-clientes-sugerencias shadow" role="listbox">
-                @for (c of clientesFiltrados(); track c.id) {
-                  <li role="option" tabindex="0" (click)="seleccionarCliente(c)" (keydown.enter)="seleccionarCliente(c)">
-                    <strong>{{ c.nombre }} {{ c.apellido }}</strong> — {{ c.direccion }} ({{ c.telefono }})
-                  </li>
-                }
-              </ul>
+            <ul class="dropdown-clientes-sugerencias shadow" role="listbox">
+              @for (c of clientesFiltrados(); track c.id) {
+              <li role="option" tabindex="0" (click)="seleccionarCliente(c)" (keydown.enter)="seleccionarCliente(c)">
+                <strong>{{ c.nombre }} {{ c.apellido }}</strong> — {{ c.direccion }} ({{ c.telefono }})
+              </li>
+              }
+            </ul>
             }
 
             @if (terminoBusquedaCliente().trim() && clientesFiltrados().length === 0 && !clienteSeleccionado()) {
-              <ul class="dropdown-clientes-sugerencias shadow" role="listbox">
-                <li role="option" tabindex="0" (click)="abrirModalNuevoCliente()" class="item-sin-cliente">
-                  <i class="hgi-stroke hgi-user-add-01 me-1"></i> No existe "{{ terminoBusquedaCliente() }}". Registrar cliente
-                </li>
-              </ul>
+            <ul class="dropdown-clientes-sugerencias shadow" role="listbox">
+              <li role="option" tabindex="0" (click)="abrirModalNuevoCliente()" class="item-sin-cliente">
+                <i class="hgi-stroke hgi-user-add-01 me-1"></i> No existe "{{ terminoBusquedaCliente() }}". Registrar
+                cliente
+              </li>
+            </ul>
             }
             <!-- Datos autocompletados del cliente -->
-          <div class="row g-2 mb-2">
-            <div class="col-12 col-sm-6">
-              <label for="contacto-cliente" class="form-label">Contacto</label>
-              <input id="contacto-cliente" type="text" class="form-control campo-deshabilitado"
-                [value]="clienteSeleccionado()?.telefono || 'Se autocompleta'" readonly />
+            <div class="row g-2 mb-2 mt-2">
+              <div class="col-12 col-sm-6">
+                <label for="contacto-cliente" class="form-label">Contacto</label>
+                <input id="contacto-cliente" type="text" class="form-control campo-deshabilitado"
+                  [value]="clienteSeleccionado()?.telefono || 'Se autocompleta'" readonly />
+              </div>
+              <div class="col-12 col-sm-6">
+                <label for="direccion-cliente" class="form-label">Dirección</label>
+                <input id="direccion-cliente" type="text" class="form-control campo-deshabilitado"
+                  [value]="clienteSeleccionado()?.direccion || 'Se autocompleta'" readonly />
+              </div>
             </div>
-            <div class="col-12 col-sm-6">
-              <label for="direccion-cliente" class="form-label">Dirección</label>
-              <input id="direccion-cliente" type="text" class="form-control campo-deshabilitado"
-                [value]="clienteSeleccionado()?.direccion || 'Se autocompleta'" readonly />
-            </div>
-          </div>
           </div>
 
           <!-- Selección y Contadores de Variedades de Huevo -->
-          <div class="mb-3">
+          <div class="mb-2">
             <span class="form-label d-block mb-1">Productos (Maples x 30 unidades)</span>
             <div class="productos-grid">
               @for (prod of productos(); track prod.codigo) {
@@ -323,7 +312,7 @@
           </div>
 
           <!-- Totales Calculados -->
-          <div class="row g-2 mb-3 align-items-end">
+          <div class="row g-2 mb- align-items-end">
             <div class="col-6">
               <label for="total-maples-calc" class="form-label label-totales">Total maples</label>
               <input id="total-maples-calc" type="text" class="form-control campo-deshabilitado text-center fw-bold"
@@ -351,7 +340,7 @@
               }
             </div>
             <input id="fecha-entrega-manual" type="date" class="form-control" [min]="fechaMinima"
-              [ngModel]="fechaEntregaSeleccionada()" (ngModelChange)="fechaEntregaSeleccionada.set($event)" required />
+              [ngModel]="fechaEntregaSeleccionada()" (ngModelChange)="onCambioFechaManual($event)" required />
           </div>
 
           <!-- Acciones del Formulario -->
@@ -370,10 +359,8 @@
   @if (modalClienteAbierto()) {
   <div class="modal-overlay-backdrop">
     <div class="modal-dialog-box animate-fade-in">
-      <app-crear-cliente [nombreInicial]="terminoBusquedaCliente()" 
-        [clienteEdicion]="clienteAEditar()"
-        (clienteGuardado)="onClienteGuardado($event)"
-        (cerrar)="cerrarModalCliente()">
+      <app-crear-cliente [nombreInicial]="terminoBusquedaCliente()" [clienteEdicion]="clienteAEditar()"
+        (clienteGuardado)="onClienteGuardado($event)" (cerrar)="cerrarModalCliente()">
       </app-crear-cliente>
     </div>
   </div>
@@ -381,7 +368,8 @@
 
   @if (mostrarConfirmacion()) {
   <div class="modal-overlay-backdrop">
-    <div class="modal-confirmacion-caja animate-fade-in" role="dialog" aria-modal="true" aria-labelledby="titulo-confirmar-pedido">
+    <div class="modal-confirmacion-caja animate-fade-in" role="dialog" aria-modal="true"
+      aria-labelledby="titulo-confirmar-pedido">
       <h4 id="titulo-confirmar-pedido">{{ pedidoEditandoId() ? 'Confirmar actualización' : 'Confirmar pedido' }}</h4>
       <p class="text-muted small mb-3">Revisá los datos antes de guardar:</p>
 
@@ -390,14 +378,15 @@
         <li><strong>Entrega:</strong> {{ formatearFechaDisplay(fechaEntregaSeleccionada()) }}</li>
         <li><strong>Productos:</strong>
           @for (producto of productosSeleccionados(); track producto.codigo) {
-            <span class="d-block">{{ producto.maples }} maple(s) de {{ producto.nombre }}</span>
+          <span class="d-block">{{ producto.maples }} maple(s) de {{ producto.nombre }}</span>
           }
         </li>
         <li><strong>Total:</strong> ${{ formatearMoneda(precioTotal()) }}</li>
       </ul>
 
       <div class="d-flex gap-2 justify-content-end">
-        <button type="button" class="btn btn-sm btn-limpiar" (click)="cancelarConfirmacion()" [disabled]="isGuardando()">
+        <button type="button" class="btn btn-sm btn-limpiar" (click)="cancelarConfirmacion()"
+          [disabled]="isGuardando()">
           Modificar
         </button>
         <button type="button" class="btn btn-sm btn-guardar" (click)="confirmarYGuardar()" [disabled]="isGuardando()">
@@ -410,7 +399,8 @@
 
   @if (mostrarConfirmacionEliminar() && pedidoAEliminar(); as pedido) {
   <div class="modal-overlay-backdrop">
-    <div class="modal-confirmacion-caja animate-fade-in" role="dialog" aria-modal="true" aria-labelledby="titulo-eliminar-pedido">
+    <div class="modal-confirmacion-caja animate-fade-in" role="dialog" aria-modal="true"
+      aria-labelledby="titulo-eliminar-pedido">
       <h4 id="titulo-eliminar-pedido">Eliminar pedido</h4>
       <p class="text-muted small mb-3">¿Querés eliminar este pedido?</p>
       <ul class="list-unstyled text-start small mb-3 px-2">
@@ -421,6 +411,44 @@
       <div class="d-flex gap-2 justify-content-end">
         <button type="button" class="btn btn-sm btn-limpiar" (click)="cancelarEliminacion()">Cancelar</button>
         <button type="button" class="btn btn-sm btn-eliminar" (click)="confirmarEliminacion()">Eliminar pedido</button>
+      </div>
+    </div>
+  </div>
+  }  
+  <!-- MODAL REAPERTURA DE PEDIDO CERRADO -->
+  @if (mostrarModalReabrir() && pedidoAReabrir(); as pedido) {
+  <div class="modal-overlay-backdrop">
+    <div class="modal-confirmacion-caja animate-fade-in" role="dialog" aria-modal="true" aria-labelledby="titulo-reabrir-pedido">
+      <h4 id="titulo-reabrir-pedido">Modificar estado</h4>
+      <p class="text-muted small mb-3">
+        Desmarcá una opción para regresar el pedido a <strong>Pendientes</strong>:
+      </p>
+
+      <ul class="list-unstyled text-start small mb-3 px-2">
+        <li><strong>Cliente:</strong> {{ pedido.cliente.nombre }} {{ pedido.cliente.apellido }}</li>
+        <li><strong>Entrega:</strong> {{ formatearFechaDisplay(pedido.fecha_entrega) }}</li>
+        <li><strong>Total:</strong> ${{ formatearMoneda(pedido.total) }}</li>
+      </ul>
+
+      <div class="d-flex gap-2 justify-content-center my-3">
+        <button type="button" class="btn btn-estado-toggle" [class.completado]="estadoEntregaTemp()" (click)="toggleEntregaModal()">
+          <i class="hgi-stroke hgi-tick-02" aria-hidden="true"></i>
+          {{ estadoEntregaTemp() ? 'Entregado' : 'Entregué' }}
+        </button>
+
+        <button type="button" class="btn btn-estado-toggle" [class.completado]="estadoPagoTemp()" (click)="togglePagoModal()">
+          <i class="hgi-stroke hgi-dollar-circle" aria-hidden="true"></i>
+          {{ estadoPagoTemp() ? 'Cobrado' : 'Cobré' }}
+        </button>
+      </div>
+
+      <div class="d-flex gap-2 justify-content-end mt-4">
+        <button type="button" class="btn btn-sm btn-limpiar" (click)="cancelarReabrir()" [disabled]="isGuardando()">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-sm btn-guardar" (click)="confirmarReapertura()" [disabled]="isGuardando()">
+          {{ isGuardando() ? 'Guardando...' : 'Guardar cambios' }}
+        </button>
       </div>
     </div>
   </div>

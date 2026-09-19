@@ -17,6 +17,7 @@
   border: none;
   outline: none;
   background-color: transparent;
+  color: var(--color-negro);
   font-family: var(--font-titulos);
   font-size: 16px;
   font-weight: 600;
@@ -74,4 +75,11 @@
     padding: 7px 10px;
     background-color: var(--color-blanco);
   }
+}
+
+/* MODO OSCURO */
+
+:host-context(body.dark-mode) .gestion-buscador-input::-webkit-search-cancel-button {
+  filter: grayscale(1) invert(1);
+  opacity: 1;
 }

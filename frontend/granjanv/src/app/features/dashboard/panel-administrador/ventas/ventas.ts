@@ -55,6 +55,12 @@ export class Ventas implements OnInit {
   readonly pedidoPendienteGuardar = signal<PedidoWritePayload | null>(null);
   readonly pedidoAEliminar = signal<PedidoRead | null>(null);
 
+// MODAL REAPERTURA / ESTADO DE CERRADOS
+  readonly mostrarModalReabrir = signal<boolean>(false);
+  readonly pedidoAReabrir = signal<PedidoRead | null>(null);
+  readonly estadoEntregaTemp = signal<boolean>(true);
+  readonly estadoPagoTemp = signal<boolean>(true);
+
   readonly pedidoExpandidoId = signal<number | null>(null);
   readonly pedidoEditandoId = signal<number | null>(null);
   readonly clienteSeleccionado = signal<Cliente | null>(null);
@@ -225,12 +231,24 @@ export class Ventas implements OnInit {
   toggleMostrarCerrados(): void {
     this.mostrarCerrados.update((v) => !v);
   }
-
-  
-
   seleccionarDiaEntrega(fechaIso: string): void {
+    if (fechaIso < this.fechaMinima) {
+      this.fechaEntregaSeleccionada.set(this.fechaMinima);
+      return;
+    }
     this.fechaEntregaSeleccionada.set(fechaIso);
   }
+
+  onCambioFechaManual(valor: string): void {
+    if (valor && valor < this.fechaMinima) {
+      this.errorBackend.set('La fecha de reparto no puede ser anterior al día de hoy.');
+      this.fechaEntregaSeleccionada.set(this.fechaMinima);
+      return;
+    }
+    this.errorBackend.set(null);
+    this.fechaEntregaSeleccionada.set(valor);
+  } 
+
 
   incrementarProducto(codigo: TipoHuevo): void {
     this.productos.update((items) =>
@@ -261,6 +279,10 @@ export class Ventas implements OnInit {
 
     if (!this.fechaEntregaSeleccionada()) {
       this.errorBackend.set('La fecha de entrega programada es obligatoria.');
+      return;
+    }
+    if (this.fechaEntregaSeleccionada() < this.fechaMinima) {
+      this.errorBackend.set('No se puede programar un reparto con una fecha pasada.');
       return;
     }
 
@@ -371,6 +393,92 @@ export class Ventas implements OnInit {
       },
       error: () => this.errorBackend.set('No se pudo eliminar el pedido.'),
     });
+  }
+
+  // GESTIÓN REAPERTURA DE PEDIDOS CERRADOS
+  abrirModalReabrir(pedido: PedidoRead): void {
+    this.pedidoAReabrir.set(pedido);
+    this.estadoEntregaTemp.set(pedido.estado_entrega);
+    this.estadoPagoTemp.set(pedido.estado_pago);
+    this.mostrarModalReabrir.set(true);
+  }
+
+  cancelarReabrir(): void {
+    this.mostrarModalReabrir.set(false);
+    this.pedidoAReabrir.set(null);
+  }
+
+  toggleEntregaModal(): void {
+    this.estadoEntregaTemp.update((v) => !v);
+  }
+
+  togglePagoModal(): void {
+    this.estadoPagoTemp.update((v) => !v);
+  }
+
+  confirmarReapertura(): void {
+    const pedido = this.pedidoAReabrir();
+    if (!pedido) return;
+
+    const cambioEntrega = this.estadoEntregaTemp() !== pedido.estado_entrega;
+    const cambioPago = this.estadoPagoTemp() !== pedido.estado_pago;
+
+    if (!cambioEntrega && !cambioPago) {
+      this.cancelarReabrir();
+      return;
+    }
+
+    this.isGuardando.set(true);
+
+    const actualizarYNotificar = () => {
+      this.isGuardando.set(false);
+      const reabiertoId = pedido.id;
+      this.cancelarReabrir();
+      this.mostrarNotificacion('Estado actualizado. El pedido volvió a pendientes.');
+      this.cargarPedidosPendientes();
+      this.cargarPedidosCerrados();
+
+      // Desplazamiento y expansión automática hacia el pedido en pendientes
+      setTimeout(() => {
+        this.pedidoExpandidoId.set(reabiertoId);
+        const elemento = document.getElementById(`pedido-card-${reabiertoId}`);
+        elemento?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
+    };
+
+    if (cambioEntrega && cambioPago) {
+      this.pedidosService.toggleEntrega(pedido.id).subscribe({
+        next: () => {
+          this.pedidosService.togglePago(pedido.id).subscribe({
+            next: () => actualizarYNotificar(),
+            error: () => {
+              this.isGuardando.set(false);
+              this.errorBackend.set('Error al actualizar el estado de cobro.');
+            }
+          });
+        },
+        error: () => {
+          this.isGuardando.set(false);
+          this.errorBackend.set('Error al actualizar el estado de entrega.');
+        }
+      });
+    } else if (cambioEntrega) {
+      this.pedidosService.toggleEntrega(pedido.id).subscribe({
+        next: () => actualizarYNotificar(),
+        error: () => {
+          this.isGuardando.set(false);
+          this.errorBackend.set('Error al actualizar el estado de entrega.');
+        }
+      });
+    } else if (cambioPago) {
+      this.pedidosService.togglePago(pedido.id).subscribe({
+        next: () => actualizarYNotificar(),
+        error: () => {
+          this.isGuardando.set(false);
+          this.errorBackend.set('Error al actualizar el estado de cobro.');
+        }
+      });
+    }
   }
 
   togglePago(pedido: PedidoRead): void {
