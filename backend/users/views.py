@@ -1,3 +1,7 @@
+import logging
+from smtplib import SMTPException
+from django.conf import settings
+
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -9,7 +13,9 @@ from django.core.mail import send_mail
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
 
+logger = logging.getLogger(__name__)
 
 class LoginView(TokenObtainPairView):
     """
@@ -37,21 +43,30 @@ class RequestOTPView(APIView):
         try:
             user = Usuario.objects.get(email=email)
             otp = user.generate_otp()
+
             send_mail(
-                "Código de Recuperación OTP",
-                f"Tu código de verificación es: {otp}",
-                "noreply@granjanv.com",
-                [email],
+                subject="Código de Recuperación OTP - Granja NV",
+                message=(
+                    f"Hola {user.nombre},\n\n"
+                    f"Tu código de recuperación para el sistema de Granja NV es: {otp}\n\n"
+                    "Este código expirará en 10 minutos. Si no solicitaste este cambio, ignorá este mensaje."
+                ),
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[email],
                 fail_silently=False,
             )
         except Usuario.DoesNotExist:
-            pass  # Previene la enumeración de usuarios
+            # Prevención de enumeración de usuarios
+            pass
+        except SMTPException as exc:
+            logger.error(f"Fallo al enviar correo OTP a {email}: {str(exc)}")
+        except Exception as exc:
+            logger.error(f"Error inesperado en servicio de correo: {str(exc)}")
 
         return Response(
             {"message": "Si el correo está registrado, recibirás un OTP."},
             status=status.HTTP_200_OK,
         )
-
 
 class ResetPasswordOTPView(APIView):
     permission_classes = [AllowAny]
