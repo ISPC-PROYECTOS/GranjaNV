@@ -1,26 +1,31 @@
 import logging
 from smtplib import SMTPException
-from django.conf import settings
 
-from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from django.conf import settings
+from django.core.mail import send_mail
+from rest_framework import generics, status
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import Usuario
 from .permissions import IsAdminRole
-from .serializers import CustomTokenObtainPairSerializer, RegistroUsuarioSerializer, RequestOTPSerializer, ResetPasswordOTPSerializer
-from django.core.mail import send_mail
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
+from .serializers import (
+    CustomTokenObtainPairSerializer,
+    RegistroUsuarioSerializer,
+    RequestOTPSerializer,
+    ResetPasswordOTPSerializer,
+)
 
 logger = logging.getLogger(__name__)
+
 
 class LoginView(TokenObtainPairView):
     """
     Endpoint público de Login. Recibe 'email' y 'password'.
     """
+
     serializer_class = CustomTokenObtainPairSerializer
 
 
@@ -28,9 +33,11 @@ class RegistroUsuarioView(generics.CreateAPIView):
     """
     Endpoint de Registro. Protegido: Requiere JWT válido y rol 'Administrador'.
     """
+
     queryset = Usuario.objects.all()
     serializer_class = RegistroUsuarioSerializer
     permission_classes = [IsAuthenticated, IsAdminRole]
+
 
 class RequestOTPView(APIView):
     permission_classes = [AllowAny]
@@ -59,14 +66,15 @@ class RequestOTPView(APIView):
             # Prevención de enumeración de usuarios
             pass
         except SMTPException as exc:
-            logger.error(f"Fallo al enviar correo OTP a {email}: {str(exc)}")
+            logger.error(f"Fallo al enviar correo OTP a {email}: {exc!s}")
         except Exception as exc:
-            logger.error(f"Error inesperado en servicio de correo: {str(exc)}")
+            logger.error(f"Error inesperado en servicio de correo: {exc!s}")
 
         return Response(
             {"message": "Si el correo está registrado, recibirás un OTP."},
             status=status.HTTP_200_OK,
         )
+
 
 class ResetPasswordOTPView(APIView):
     permission_classes = [AllowAny]
