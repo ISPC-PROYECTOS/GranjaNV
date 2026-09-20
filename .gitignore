@@ -5,6 +5,8 @@ backend/.venv/
 .venv/
 ENV/
 env/
+backend/venv/
+venv/
 
 # ==========================================
 # Python & Django
@@ -38,5 +40,5 @@ npm-debug.log*
 .idea/
 .DS_Store
 Thumbs.db
-
+FETCH_HEAD
 repomix-output.xml

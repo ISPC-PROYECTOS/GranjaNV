@@ -1,9 +1,555 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+
+import { PedidosService } from '../../../../core/services/pedidos.service';
+import { ClientesService } from '../../../../core/services/clientes.service';
+import { Cliente } from '../../../../core/models/cliente.model';
+import {
+  PedidoRead,
+  ProductoCatalogo,
+  TipoHuevo,
+  PedidoWritePayload,
+  ItemPedidoWrite,
+  OpcionDiaEntrega,
+} from '../../../../core/models/pedido.model';
+import {
+  SelectorFecha,
+  RangoFechaSeleccionado,
+} from '../../../../shared/selector-fecha/selector-fecha';
+import { formatearFechaISO, obtenerRangoMesActual } from '../../../../core/utils/date.utils';
+import { Buscador } from '../../../../shared/buscador/buscador';
+import { CrearClienteComponent } from '../../../../shared/clientes/crear-cliente';
 
 @Component({
   selector: 'app-ventas',
-  imports: [],
+  imports: [CommonModule, FormsModule, RouterLink, SelectorFecha, Buscador, CrearClienteComponent],
   templateUrl: './ventas.html',
   styleUrl: './ventas.css',
 })
-export class Ventas {}
+export class Ventas implements OnInit {
+  private readonly pedidosService = inject(PedidosService);
+  private readonly clientesService = inject(ClientesService);
+
+  readonly vistaMobile = signal<'pedidos' | 'formulario'>('formulario');
+
+  // Estados de datos
+  readonly pedidosPendientes = signal<PedidoRead[]>([]);
+  readonly pedidosCerrados = signal<PedidoRead[]>([]);
+  readonly clientes = signal<Cliente[]>([]);
+
+  // Filtros independientes
+  readonly busquedaPendientes = signal<string>('');
+  readonly rangoPendientes = signal<RangoFechaSeleccionado>(obtenerRangoMesActual());
+
+  readonly busquedaCerrados = signal<string>('');
+  readonly rangoCerrados = signal<RangoFechaSeleccionado>(obtenerRangoMesActual());
+
+  readonly isLoading = signal<boolean>(false);
+  readonly mensajeExito = signal<string | null>(null);
+  readonly errorBackend = signal<string | null>(null);
+  readonly isGuardando = signal<boolean>(false);
+  readonly mostrarConfirmacion = signal<boolean>(false);
+  readonly mostrarConfirmacionEliminar = signal<boolean>(false);
+  readonly pedidoPendienteGuardar = signal<PedidoWritePayload | null>(null);
+  readonly pedidoAEliminar = signal<PedidoRead | null>(null);
+
+// MODAL REAPERTURA / ESTADO DE CERRADOS
+  readonly mostrarModalReabrir = signal<boolean>(false);
+  readonly pedidoAReabrir = signal<PedidoRead | null>(null);
+  readonly estadoEntregaTemp = signal<boolean>(true);
+  readonly estadoPagoTemp = signal<boolean>(true);
+
+  readonly pedidoExpandidoId = signal<number | null>(null);
+  readonly pedidoEditandoId = signal<number | null>(null);
+  readonly clienteSeleccionado = signal<Cliente | null>(null);
+  readonly terminoBusquedaCliente = signal<string>('');
+  readonly mostrarCerrados = signal<boolean>(false);
+
+  readonly modalClienteAbierto = signal<boolean>(false);
+  readonly clienteAEditar = signal<Cliente | null>(null);
+  
+  readonly fechaMinima = formatearFechaISO(new Date());
+  readonly fechaEntregaSeleccionada = signal<string>(this.fechaMinima);
+  readonly opcionesProximosDias = signal<OpcionDiaEntrega[]>(this.generarProximosDias());
+
+  readonly productos = signal<ProductoCatalogo[]>([
+    { codigo: 'BLANCO_1', nombre: 'Blanco N.° 1', precioMaple: 4500, maples: 0 },
+    { codigo: 'BLANCO_2', nombre: 'Blanco N.° 2', precioMaple: 4200, maples: 0 },
+    { codigo: 'COLOR_1', nombre: 'Color N.° 1', precioMaple: 4800, maples: 0 },
+    { codigo: 'COLOR_2', nombre: 'Color N.° 2', precioMaple: 4500, maples: 0 },
+  ]);
+
+  readonly precioTotal = computed(() =>
+    this.productos().reduce((acc, p) => acc + p.maples * p.precioMaple, 0),
+  );
+
+  readonly cantidadTotalMaples = computed(() =>
+    this.productos().reduce((acc, p) => acc + p.maples, 0),
+  );
+
+  readonly productosSeleccionados = computed(() => this.productos().filter((p) => p.maples > 0));
+
+  readonly clientesFiltrados = computed(() => {
+    const q = this.terminoBusquedaCliente().toLowerCase().trim();
+    if (!q) return [];
+    return this.clientes().filter(
+      (c) =>
+        c.nombre.toLowerCase().includes(q) || (c.apellido && c.apellido.toLowerCase().includes(q)),
+    );
+  });
+
+
+
+  abrirModalNuevoCliente(): void {
+    this.clienteAEditar.set(null);
+    this.modalClienteAbierto.set(true);
+  }
+
+  abrirModalEditarCliente(): void {
+    const cliente = this.clienteSeleccionado();
+    if (!cliente) return;
+    this.clienteAEditar.set(cliente);
+    this.modalClienteAbierto.set(true);
+  }
+
+  cerrarModalCliente(): void {
+    this.modalClienteAbierto.set(false);
+    this.clienteAEditar.set(null);
+  }
+
+  onEscribirCliente(valor: string): void {
+    this.terminoBusquedaCliente.set(valor);
+    if (this.clienteSeleccionado()) {
+      const nombreActual = `${this.clienteSeleccionado()?.nombre} ${this.clienteSeleccionado()?.apellido || ''}`.trim();
+      if (valor.trim().toLowerCase() !== nombreActual.toLowerCase()) {
+        this.clienteSeleccionado.set(null);
+      }
+    }
+  }
+
+  // 4. Selecciona el cliente y autocompleta los campos
+  seleccionarCliente(cliente: Cliente): void {
+    this.clienteSeleccionado.set(cliente);
+    const apellido = cliente.apellido ? ` ${cliente.apellido}` : '';
+    this.terminoBusquedaCliente.set(`${cliente.nombre}${apellido}`.trim());
+  }
+
+
+  onClienteGuardado(cliente: Cliente): void {
+    // Si ya existía, lo actualizamos en memoria; si no, lo agregamos a la lista
+    this.clientes.update((lista) => {
+      const index = lista.findIndex((c) => c.id === cliente.id);
+      if (index !== -1) {
+        const nuevaLista = [...lista];
+        nuevaLista[index] = cliente;
+        return nuevaLista;
+      }
+      return [...lista, cliente];
+    });
+
+    // Actualizamos el cliente seleccionado en el formulario
+    this.seleccionarCliente(cliente);
+
+    // Actualizamos los pedidos pendientes en pantalla para reflejar nuevo teléfono o dirección
+    this.pedidosPendientes.update((pedidos) =>
+      pedidos.map((p) => (p.cliente.id === cliente.id ? { ...p, cliente } : p))
+    );
+
+    this.cerrarModalCliente();
+    this.mostrarNotificacion(`Cliente ${cliente.nombre} guardado correctamente.`);
+  }
+
+  ngOnInit(): void {
+    this.cargarPedidosPendientes();
+    this.cargarPedidosCerrados();
+    this.cargarClientes();
+  }
+
+  cargarPedidosPendientes(): void {
+    this.isLoading.set(true);
+    this.pedidosService
+      .obtenerPedidos({
+        search: this.busquedaPendientes(),
+        fechaDesde: this.rangoPendientes().fechaDesde,
+        fechaHasta: this.rangoPendientes().fechaHasta,
+        pendientes: true,
+      })
+      .subscribe({
+        next: (pedidos) => {
+          this.pedidosPendientes.set(pedidos);
+          this.isLoading.set(false);
+        },
+        error: () => this.isLoading.set(false),
+      });
+  }
+
+  cargarPedidosCerrados(): void {
+    this.pedidosService
+      .obtenerPedidos({
+        search: this.busquedaCerrados(),
+        fechaDesde: this.rangoCerrados().fechaDesde,
+        fechaHasta: this.rangoCerrados().fechaHasta,
+        cerrados: true,
+      })
+      .subscribe({
+        next: (pedidos) => this.pedidosCerrados.set(pedidos),
+      });
+  }
+
+  cargarClientes(): void {
+    this.clientesService.obtenerClientes().subscribe({
+      next: (data) => this.clientes.set(data),
+    });
+  }
+
+  onBuscarPendientes(valor: string): void {
+    this.busquedaPendientes.set(valor);
+    this.cargarPedidosPendientes();
+  }
+
+  onCambioRangoPendientes(rango: RangoFechaSeleccionado): void {
+    this.rangoPendientes.set(rango);
+    this.cargarPedidosPendientes();
+  }
+
+  onBuscarCerrados(valor: string): void {
+    this.busquedaCerrados.set(valor);
+    this.cargarPedidosCerrados();
+  }
+
+  onCambioRangoCerrados(rango: RangoFechaSeleccionado): void {
+    this.rangoCerrados.set(rango);
+    this.cargarPedidosCerrados();
+  }
+
+  toggleExpandir(id: number): void {
+    this.pedidoExpandidoId.update((prev) => (prev === id ? null : id));
+  }
+
+  toggleMostrarCerrados(): void {
+    this.mostrarCerrados.update((v) => !v);
+  }
+  seleccionarDiaEntrega(fechaIso: string): void {
+    if (fechaIso < this.fechaMinima) {
+      this.fechaEntregaSeleccionada.set(this.fechaMinima);
+      return;
+    }
+    this.fechaEntregaSeleccionada.set(fechaIso);
+  }
+
+  onCambioFechaManual(valor: string): void {
+    if (valor && valor < this.fechaMinima) {
+      this.errorBackend.set('La fecha de reparto no puede ser anterior al día de hoy.');
+      this.fechaEntregaSeleccionada.set(this.fechaMinima);
+      return;
+    }
+    this.errorBackend.set(null);
+    this.fechaEntregaSeleccionada.set(valor);
+  } 
+
+
+  incrementarProducto(codigo: TipoHuevo): void {
+    this.productos.update((items) =>
+      items.map((i) => (i.codigo === codigo ? { ...i, maples: i.maples + 1 } : i)),
+    );
+  }
+
+  decrementarProducto(codigo: TipoHuevo): void {
+    this.productos.update((items) =>
+      items.map((i) => (i.codigo === codigo && i.maples > 0 ? { ...i, maples: i.maples - 1 } : i)),
+    );
+  }
+
+  actualizarCantidadProducto(codigo: TipoHuevo, event: Event): void {
+    const valor = Number((event.target as HTMLInputElement).value);
+    const cantidad = isNaN(valor) || valor < 0 ? 0 : Math.floor(valor);
+    this.productos.update((items) =>
+      items.map((i) => (i.codigo === codigo ? { ...i, maples: cantidad } : i)),
+    );
+  }
+
+  guardarPedido(): void {
+    const cliente = this.clienteSeleccionado();
+    if (!cliente?.id) {
+      this.errorBackend.set('Seleccioná un cliente válido de la lista.');
+      return;
+    }
+
+    if (!this.fechaEntregaSeleccionada()) {
+      this.errorBackend.set('La fecha de entrega programada es obligatoria.');
+      return;
+    }
+    if (this.fechaEntregaSeleccionada() < this.fechaMinima) {
+      this.errorBackend.set('No se puede programar un reparto con una fecha pasada.');
+      return;
+    }
+
+    const itemsValidos: ItemPedidoWrite[] = this.productos()
+      .filter((p) => p.maples > 0)
+      .map((p) => ({ tipo_huevo: p.codigo, cantidad_maples: p.maples }));
+
+    if (itemsValidos.length === 0) {
+      this.errorBackend.set('Agregá al menos un maple al pedido.');
+      return;
+    }
+
+    this.errorBackend.set(null);
+    const payload: PedidoWritePayload = {
+      cliente: cliente.id,
+      fecha_entrega: this.fechaEntregaSeleccionada(),
+      items: itemsValidos,
+    };
+
+    this.pedidoPendienteGuardar.set(payload);
+    this.mostrarConfirmacion.set(true);
+  }
+
+  cancelarConfirmacion(): void {
+    this.mostrarConfirmacion.set(false);
+    this.pedidoPendienteGuardar.set(null);
+  }
+
+  confirmarYGuardar(): void {
+    const payload = this.pedidoPendienteGuardar();
+    if (!payload) return;
+
+    const editId = this.pedidoEditandoId();
+    this.isGuardando.set(true);
+    if (editId) {
+      this.pedidosService.actualizarPedido(editId, payload).subscribe({
+        next: () => {
+          this.isGuardando.set(false);
+          this.cancelarConfirmacion();
+          this.mostrarNotificacion('¡Pedido actualizado con éxito!');
+          this.limpiar();
+          this.cargarPedidosPendientes();
+          this.cargarPedidosCerrados();
+          this.vistaMobile.set('pedidos');
+        },
+        error: (err) => {
+          this.isGuardando.set(false);
+          this.errorBackend.set(err.error?.detail || 'Error al actualizar el pedido.');
+        },
+      });
+    } else {
+      this.pedidosService.crearPedido(payload).subscribe({
+        next: () => {
+          this.isGuardando.set(false);
+          this.cancelarConfirmacion();
+          this.mostrarNotificacion('¡Pedido creado con éxito!');
+          this.limpiar();
+          this.cargarPedidosPendientes();
+          this.cargarPedidosCerrados();
+          this.vistaMobile.set('pedidos');
+        },
+        error: (err) => {
+          this.isGuardando.set(false);
+          this.errorBackend.set(err.error?.detail || 'Error al guardar el pedido.');
+        },
+      });
+    }
+  }
+
+  editarPedido(pedido: PedidoRead): void {
+    this.pedidoEditandoId.set(pedido.id);
+    this.clienteSeleccionado.set(pedido.cliente);
+    this.terminoBusquedaCliente.set(
+      `${pedido.cliente.nombre} ${pedido.cliente.apellido || ''}`.trim(),
+    );
+    this.fechaEntregaSeleccionada.set(pedido.fecha_entrega);
+
+    this.productos.update((catalogo) =>
+      catalogo.map((item) => {
+        const encontrado = pedido.items.find((i) => i.tipo_huevo === item.codigo);
+        return { ...item, maples: encontrado ? encontrado.cantidad_maples : 0 };
+      }),
+    );
+
+    this.vistaMobile.set('formulario');
+  }
+
+  solicitarEliminacion(pedido: PedidoRead): void {
+    this.pedidoAEliminar.set(pedido);
+    this.mostrarConfirmacionEliminar.set(true);
+  }
+
+  cancelarEliminacion(): void {
+    this.mostrarConfirmacionEliminar.set(false);
+    this.pedidoAEliminar.set(null);
+  }
+
+  confirmarEliminacion(): void {
+    const pedido = this.pedidoAEliminar();
+    if (!pedido) return;
+
+    this.pedidosService.eliminarPedido(pedido.id).subscribe({
+      next: () => {
+        this.cancelarEliminacion();
+        this.mostrarNotificacion('Pedido eliminado correctamente.');
+        this.cargarPedidosPendientes();
+        this.cargarPedidosCerrados();
+      },
+      error: () => this.errorBackend.set('No se pudo eliminar el pedido.'),
+    });
+  }
+
+  // GESTIÓN REAPERTURA DE PEDIDOS CERRADOS
+  abrirModalReabrir(pedido: PedidoRead): void {
+    this.pedidoAReabrir.set(pedido);
+    this.estadoEntregaTemp.set(pedido.estado_entrega);
+    this.estadoPagoTemp.set(pedido.estado_pago);
+    this.mostrarModalReabrir.set(true);
+  }
+
+  cancelarReabrir(): void {
+    this.mostrarModalReabrir.set(false);
+    this.pedidoAReabrir.set(null);
+  }
+
+  toggleEntregaModal(): void {
+    this.estadoEntregaTemp.update((v) => !v);
+  }
+
+  togglePagoModal(): void {
+    this.estadoPagoTemp.update((v) => !v);
+  }
+
+  confirmarReapertura(): void {
+    const pedido = this.pedidoAReabrir();
+    if (!pedido) return;
+
+    const cambioEntrega = this.estadoEntregaTemp() !== pedido.estado_entrega;
+    const cambioPago = this.estadoPagoTemp() !== pedido.estado_pago;
+
+    if (!cambioEntrega && !cambioPago) {
+      this.cancelarReabrir();
+      return;
+    }
+
+    this.isGuardando.set(true);
+
+    const actualizarYNotificar = () => {
+      this.isGuardando.set(false);
+      const reabiertoId = pedido.id;
+      this.cancelarReabrir();
+      this.mostrarNotificacion('Estado actualizado. El pedido volvió a pendientes.');
+      this.cargarPedidosPendientes();
+      this.cargarPedidosCerrados();
+
+      // Desplazamiento y expansión automática hacia el pedido en pendientes
+      setTimeout(() => {
+        this.pedidoExpandidoId.set(reabiertoId);
+        const elemento = document.getElementById(`pedido-card-${reabiertoId}`);
+        elemento?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
+    };
+
+    if (cambioEntrega && cambioPago) {
+      this.pedidosService.toggleEntrega(pedido.id).subscribe({
+        next: () => {
+          this.pedidosService.togglePago(pedido.id).subscribe({
+            next: () => actualizarYNotificar(),
+            error: () => {
+              this.isGuardando.set(false);
+              this.errorBackend.set('Error al actualizar el estado de cobro.');
+            }
+          });
+        },
+        error: () => {
+          this.isGuardando.set(false);
+          this.errorBackend.set('Error al actualizar el estado de entrega.');
+        }
+      });
+    } else if (cambioEntrega) {
+      this.pedidosService.toggleEntrega(pedido.id).subscribe({
+        next: () => actualizarYNotificar(),
+        error: () => {
+          this.isGuardando.set(false);
+          this.errorBackend.set('Error al actualizar el estado de entrega.');
+        }
+      });
+    } else if (cambioPago) {
+      this.pedidosService.togglePago(pedido.id).subscribe({
+        next: () => actualizarYNotificar(),
+        error: () => {
+          this.isGuardando.set(false);
+          this.errorBackend.set('Error al actualizar el estado de cobro.');
+        }
+      });
+    }
+  }
+
+  togglePago(pedido: PedidoRead): void {
+    this.pedidosService.togglePago(pedido.id).subscribe({
+      next: () => {
+        this.cargarPedidosPendientes();
+        this.cargarPedidosCerrados();
+      },
+    });
+  }
+
+  toggleEntrega(pedido: PedidoRead): void {
+    this.pedidosService.toggleEntrega(pedido.id).subscribe({
+      next: () => {
+        this.cargarPedidosPendientes();
+        this.cargarPedidosCerrados();
+      },
+    });
+  }
+
+  limpiar(): void {
+    this.pedidoEditandoId.set(null);
+    this.clienteSeleccionado.set(null);
+    this.terminoBusquedaCliente.set('');
+    this.fechaEntregaSeleccionada.set(this.fechaMinima);
+    this.errorBackend.set(null);
+    this.pedidoPendienteGuardar.set(null);
+    this.productos.update((items) => items.map((i) => ({ ...i, maples: 0 })));
+  }
+
+  formatearFechaDisplay(fechaIso: string): string {
+    if (!fechaIso) return '';
+    const [anio, mes, dia] = fechaIso.split('-');
+    return `${dia}/${mes}/${anio.slice(-2)}`;
+  }
+
+  formatearMoneda(valor: number | string | null | undefined): string {
+    if (valor === null || valor === undefined || valor === '') return '0';
+    const numero = typeof valor === 'string' ? parseFloat(valor) : valor;
+    if (isNaN(numero)) return '0';
+    return Math.round(numero)
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
+  obtenerNombreProducto(codigo: TipoHuevo): string {
+    return this.productos().find((p) => p.codigo === codigo)?.nombre ?? codigo;
+  }
+
+  private generarProximosDias(): OpcionDiaEntrega[] {
+    const lista: OpcionDiaEntrega[] = [];
+    const dias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    const base = new Date();
+
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(base);
+      d.setDate(base.getDate() + i);
+      const iso = formatearFechaISO(d);
+      const diaNom = dias[d.getDay()];
+      const diaNum = String(d.getDate()).padStart(2, '0');
+      const mesNum = String(d.getMonth() + 1).padStart(2, '0');
+      lista.push({
+        fechaIso: iso,
+        etiqueta: `${diaNom} ${diaNum}/${mesNum}`,
+      });
+    }
+    return lista;
+  }
+
+  private mostrarNotificacion(msg: string): void {
+    this.mensajeExito.set(msg);
+    setTimeout(() => this.mensajeExito.set(null), 3000);
+  }
+}

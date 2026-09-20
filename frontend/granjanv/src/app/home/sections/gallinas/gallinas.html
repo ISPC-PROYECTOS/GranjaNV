@@ -1,0 +1,28 @@
+<div class="gallinas-container">
+  <h2 class="section-title">{{ titulo }}</h2>
+
+  <div class="gallina-panoramica">
+    <img
+      src="/ImagenesHome/NuestrasGallinas.jpg"
+      alt="Gallinas de la granja"
+    >
+  </div>
+
+  <div class="gallinas-lista">
+    <div class="gallina-item" *ngFor="let gallina of gallinas; let indice = index">
+      <button
+        type="button"
+        class="gallina-titulo"
+        (click)="toggleDescripcion(indice)"
+        [attr.aria-expanded]="indiceAbierto === indice"
+      >
+        <span>{{ gallina.nombre }}</span>
+        <span aria-hidden="true">{{ indiceAbierto === indice ? '−' : '+' }}</span>
+      </button>
+
+      <div class="gallina-descripcion" *ngIf="indiceAbierto === indice">
+        {{ gallina.descripcion }}
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,15 +1,14 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/auth';
 import { RegistroUsuarioComponent } from './features/dashboard/panel-administrador/registro-usuario/registro-usuario';
-import { adminGuard } from './core/guards/admin-guard';
-import { authGuard } from './core/guards/auth-guard';
 import { PanelDeControl } from './features/dashboard/panel-administrador/panel-de-control/panel-de-control';
 import { Compras } from './features/dashboard/panel-administrador/compras/compras';
 import { NotFoundComponent } from './features/not-found/not-found';
+import { Home } from './home/home';
+import { adminGuard } from './core/guards/admin-guard';
 
 export const routes: Routes = [
   { path: 'auth/login', component: LoginComponent },
-
   { 
     path: 'dashboard/admin/panel-de-control', 
     component: PanelDeControl,
@@ -25,6 +24,14 @@ export const routes: Routes = [
     component: RegistroUsuarioComponent,
     canActivate: [adminGuard]
   },
-  { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
+  {
+    path: 'dashboard/admin/ventas',
+    loadComponent: () =>
+      import('./features/dashboard/panel-administrador/ventas/ventas').then(
+        (m) => m.Ventas
+      ),
+    canActivate: [adminGuard]
+  },
+  { path: '', component: Home, pathMatch: 'full' },
   { path: '**', component: NotFoundComponent }
 ];

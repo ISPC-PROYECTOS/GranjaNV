@@ -1,0 +1,72 @@
+.contenedor-crear-cliente {
+  background-color: var(--color-primario);
+  border: none;
+  border-radius: 27px;
+  padding: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.titulo-cliente {
+  color: var(--color-blanco);
+  margin-bottom: 37px;
+}
+
+.btn-cerrar-x {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  background: transparent;
+  border: none;
+  font-size: 26px;
+  font-weight: bold;
+  color: var(--color-blanco);
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.btn-cerrar-x:hover {
+  color: var(--color-error);
+  transform: scale(1.1);
+}
+
+/* .btn-limpiar {
+  background-color: var(--color-gris-claro);
+  color: var(--color-negro);
+  border: none;
+}
+
+.btn-limpiar:hover {
+  background-color: #d8d3d0;
+  color: var(--color-negro);
+} */
+
+@media (max-width: 575px) {
+  .contenedor-crear-cliente {
+    padding: 16px;
+    border-radius: 20px;
+  }
+  
+  .btn-cerrar-x {
+    top: 12px;
+    right: 12px;
+  }
+
+  .gestion-formulario-acciones {
+    gap: 12px;
+  }
+
+  .btn-limpiar,
+  .btn-guardar {
+    min-width: 0;
+    flex: 1;
+    font-size: 15px;
+    padding: 10px 0;
+  }
+}

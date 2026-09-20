@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Produccion } from './produccion';
+import { SelectorFecha } from './selector-fecha';
 
-describe('Produccion', () => {
-  let component: Produccion;
-  let fixture: ComponentFixture<Produccion>;
+describe('SelectorFecha', () => {
+  let component: SelectorFecha;
+  let fixture: ComponentFixture<SelectorFecha>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Produccion],
+      imports: [SelectorFecha],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Produccion);
+    fixture = TestBed.createComponent(SelectorFecha);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

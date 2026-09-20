@@ -1,76 +1,4 @@
-/* PÁGINA */
-
-.finanzas {
-  background-color: var(--color-secundario-claro);
-  min-height: calc(100vh - 70px);
-  padding: 3px 32px;
-}
-
-.btn-volver-panel {
-  background-color: var(--color-secundario);
-  color: var(--color-blanco);
-  font-family: var(--font-titulos);
-  font-weight: 600;
-  border: none;
-  border-radius: 10px;
-  padding: 8px 14px;
-  margin-bottom: 15px;
-}
-
-/* BOTONES SWITCHES MOBILE */
-
-.finanzas-tabs {
-  display: flex;
-  gap: 12px;
-  background-color: var(--color-blanco);
-  border-radius: 12px;
-  padding: 7px;
-  margin-bottom: 12px;
-}
-
-.finanzas-tab {
-  flex: 1;
-  background-color: #c9d5c6;
-  color: var(--color-blanco);
-  border: none;
-  border-radius: 10px;
-  padding: 14px 8px;
-  font-family: var(--font-textos);
-  font-size: 17px;
-}
-
-.finanzas-tab-activo {
-  background-color: var(--color-primario);
-  box-shadow: 3px 3px 3px rgba(201, 126, 87, 0.45);
-}
-
-/* CONTENEDOR PRINCIPAL */
-
-.seccion-gastos,
-.seccion-cargar-gasto {
-  height: 100%;
-}
-
-.seccion-finanzas {
-  background-color: var(--color-primario-claro);
-  border-radius: 37px;
-  box-shadow: 0 4px 4px var(--color-primario);
-  padding: 24px;
-  margin-left: 0;
-  margin-right: 0;
-}
-
 /* GASTOS */
-
-.seccion-gastos {
-  background-color: var(--color-blanco);
-  border: 1px solid var(--color-gris-oscuro);
-  border-radius: 27px;
-  min-height: 100%;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-}
 
 .gastos-encabezado {
   display: flex;
@@ -78,6 +6,7 @@
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 24px;
+  flex-wrap: wrap;
 }
 
 .gastos-titulo {
@@ -193,16 +122,7 @@
 
 /* CARGAR GASTO */
 
-.seccion-cargar-gasto {
-  background-color: var(--color-primario);
-  border-radius: 27px;
-  padding: 24px;
-}
-
 .cargar-gasto-titulo {
-  font-family: var(--font-titulos);
-  font-size: 30px;
-  font-weight: 600;
   color: var(--color-blanco);
   margin-bottom: 37px;
 }
@@ -232,7 +152,27 @@
   gap: 24px;
 }
 
-.btn-limpiar,
+.modal-confirmacion-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 16px;
+}
+
+.modal-confirmacion-caja {
+  width: 100%;
+  max-width: 460px;
+  padding: 24px;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.2);
+}
+
+/* .btn-limpiar,
 .btn-guardar {
   min-width: 130px;
   font-family: var(--font-titulos);
@@ -249,27 +189,43 @@
 .btn-guardar {
   background-color: var(--color-primario);
   color: var(--color-blanco);
-}
+} */
 
 /* Ajuste específico para pantallas móviles estrechas. Prueba de linea 125/153 */
 @media (max-width: 575px) {
-  .finanzas {
+  .gestion-pagina {
     padding: 5px 14px;
   }
 
-  .seccion-finanzas {
+  .gestion-seccion {
     padding: 14px;
     padding-top: 3px;
     border-radius: 20px;
   }
 
-  .seccion-cargar-gasto {
+  .seccion-derecha {
     padding-top: 3px;
   }
 
-  .seccion-gastos {
+  .seccion-izquierda {
     padding: 15px;
     border-radius: 20px;
+  }
+
+  .gastos-encabezado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: nowrap;
+  }
+
+  .gastos-encabezado > div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
   }
 
   .gasto-item {
@@ -308,21 +264,7 @@
     padding: 6px;
   }
 
-  .gastos-buscador {
-    padding: 5px 8px;
-    gap: 4px;
-  }
-
-  .gastos-buscador-input {
-    width: 75px;
-    font-size: 16px;
-  }
-
-  .gastos-buscador i {
-    font-size: 22px;
-  }
-
-  .formulario-gasto-acciones {
+  .gestion-formulario-acciones {
     gap: 12px;
   }
 
@@ -339,5 +281,5 @@
     margin-right: auto;
     padding: 6px;
     font-size: 14px;
-}
+  }
 }

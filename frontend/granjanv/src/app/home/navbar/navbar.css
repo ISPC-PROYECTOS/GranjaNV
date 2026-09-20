@@ -1,0 +1,113 @@
+.navbar {
+  background-color: #FBF5F3;
+  padding: 8px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar-container {
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.brand-logo {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.navbar-menu {
+  display: flex;
+  margin-left: auto;
+  gap: 6px;
+  list-style: none;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.navbar-toggle {
+  display: none;
+}
+
+.navbar-item {
+  margin: 0;
+}
+
+.navbar-link {
+  background-color: #4E6647;
+  border: none;
+  border-radius: 20px;
+  color: #f5f5f5;
+  cursor: pointer;
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-size: 14px;
+  padding: 4px 8px;
+  transition: background-color 0.2s ease;
+}
+
+.navbar-link:hover {
+  background-color: #3f5b3f;
+}
+
+@media (max-width: 768px) {
+  .navbar-container {
+    position: relative;
+    justify-content: space-between;
+  }
+
+  .navbar-toggle {
+    display: flex;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .navbar-toggle span {
+    width: 24px;
+    height: 2px;
+    display: block;
+    background-color: #4E6647;
+  }
+
+  .navbar-menu {
+    display: none;
+    position: absolute;
+    top: 58px;
+    left: 20px;
+    right: 20px;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    padding: 12px;
+    background-color: #FBF5F3;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+
+  .navbar-menu.menu-abierto {
+    display: flex;
+  }
+
+  .navbar-link {
+    width: 100%;
+    font-size: 12px;
+    padding: 9px 7px;
+  }
+}
