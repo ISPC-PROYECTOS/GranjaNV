@@ -1,0 +1,120 @@
+<div class="home-container">
+  <app-navbar (sectionClicked)="scrollToSection($event)" />
+
+  <!-- Inicio -->
+  <section #inicioSection id="inicio" class="home-section">
+    <button
+      class="home-section-toggle"
+      type="button"
+      (click)="toggleSection('inicio')"
+      [attr.aria-expanded]="isSectionOpen('inicio')"
+      aria-controls="contenido-inicio"
+    >
+      <span>Inicio</span>
+      <span aria-hidden="true">{{ isSectionOpen('inicio') ? '−' : '+' }}</span>
+    </button>
+    <div
+      id="contenido-inicio"
+      class="home-section-content"
+      [class.section-closed]="!isSectionOpen('inicio')"
+    >
+      <app-inicio (sectionClicked)="scrollToSection($event)" />
+    </div>
+  </section>
+
+  <!-- Sobre la Granja -->
+  <section #sobreGranjaSection id="sobre-granja" class="home-section">
+    <button
+      class="home-section-toggle"
+      type="button"
+      (click)="toggleSection('sobre-granja')"
+      [attr.aria-expanded]="isSectionOpen('sobre-granja')"
+      aria-controls="contenido-sobre-granja"
+    >
+      <span>Sobre "Granja NV"</span>
+      <span aria-hidden="true">{{ isSectionOpen('sobre-granja') ? '−' : '+' }}</span>
+    </button>
+    <div
+      id="contenido-sobre-granja"
+      class="home-section-content"
+      [class.section-closed]="!isSectionOpen('sobre-granja')"
+    >
+      <app-sobre-granja />
+    </div>
+  </section>
+
+  <!-- Productos -->
+  <section #productosSection id="productos" class="home-section">
+    <button
+      class="home-section-toggle"
+      type="button"
+      (click)="toggleSection('productos')"
+      [attr.aria-expanded]="isSectionOpen('productos')"
+      aria-controls="contenido-productos"
+    >
+      <span>Nuestros productos</span>
+      <span aria-hidden="true">{{ isSectionOpen('productos') ? '−' : '+' }}</span>
+    </button>
+    <div
+      id="contenido-productos"
+      class="home-section-content"
+      [class.section-closed]="!isSectionOpen('productos')"
+    >
+      <app-productos />
+    </div>
+  </section>
+
+  <!-- Gallinas -->
+  <section #gallinasSection id="gallinas" class="home-section">
+    <button
+      class="home-section-toggle"
+      type="button"
+      (click)="toggleSection('gallinas')"
+      [attr.aria-expanded]="isSectionOpen('gallinas')"
+      aria-controls="contenido-gallinas"
+    >
+      <span>Nuestras gallinas</span>
+      <span aria-hidden="true">{{ isSectionOpen('gallinas') ? '−' : '+' }}</span>
+    </button>
+    <div
+      id="contenido-gallinas"
+      class="home-section-content"
+      [class.section-closed]="!isSectionOpen('gallinas')"
+    >
+      <app-gallinas />
+    </div>
+  </section>
+
+  <!-- Tips -->
+  <section #tipsSection id="tips" class="home-section">
+    <button
+      class="home-section-toggle"
+      type="button"
+      (click)="toggleSection('tips')"
+      [attr.aria-expanded]="isSectionOpen('tips')"
+      aria-controls="contenido-tips"
+    >
+      <span>Tips</span>
+      <span aria-hidden="true">{{ isSectionOpen('tips') ? '−' : '+' }}</span>
+    </button>
+    <div
+      id="contenido-tips"
+      class="home-section-content"
+      [class.section-closed]="!isSectionOpen('tips')"
+    >
+      <app-tips />
+    </div>
+  </section>
+
+  <app-footer (sectionClicked)="scrollToSection($event)" />
+
+  <a
+    class="whatsapp-flotante"
+    href="https://wa.me/5493855169337?text=Hola%20Granja%20NV,%20quiero%20hacer%20una%20consulta"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Contactar por WhatsApp"
+  >
+    <img src="/ImagenesHome/whatsapp.svg" alt="WhatsApp" />
+  </a>
+</div>

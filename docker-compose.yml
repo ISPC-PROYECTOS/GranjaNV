@@ -16,6 +16,14 @@ services:
       - DB_PORT=23890
       - DB_SSLMODE=require
       - CORS_ALLOWED_ORIGINS=http://localhost,http://localhost:80,http://localhost:4200,http://127.0.0.1:4200
+      # ... variables existentes de DB y Django ...
+      - DJANGO_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+      - EMAIL_HOST=smtp.gmail.com
+      - EMAIL_PORT=587
+      - EMAIL_USE_TLS=True
+      - EMAIL_HOST_USER=recuperacion.granjanv@gmail.com
+      - EMAIL_HOST_PASSWORD=xgtohxlxjbjmvqru
+      - DEFAULT_FROM_EMAIL=Granja NV <recuperacion.granjanv@gmail.com>
     ports:
       - "8000:8000"
 

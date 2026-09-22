@@ -49,6 +49,17 @@ export class Ventas implements OnInit {
   readonly isLoading = signal<boolean>(false);
   readonly mensajeExito = signal<string | null>(null);
   readonly errorBackend = signal<string | null>(null);
+  readonly isGuardando = signal<boolean>(false);
+  readonly mostrarConfirmacion = signal<boolean>(false);
+  readonly mostrarConfirmacionEliminar = signal<boolean>(false);
+  readonly pedidoPendienteGuardar = signal<PedidoWritePayload | null>(null);
+  readonly pedidoAEliminar = signal<PedidoRead | null>(null);
+
+// MODAL REAPERTURA / ESTADO DE CERRADOS
+  readonly mostrarModalReabrir = signal<boolean>(false);
+  readonly pedidoAReabrir = signal<PedidoRead | null>(null);
+  readonly estadoEntregaTemp = signal<boolean>(true);
+  readonly estadoPagoTemp = signal<boolean>(true);
 
   readonly pedidoExpandidoId = signal<number | null>(null);
   readonly pedidoEditandoId = signal<number | null>(null);
@@ -56,6 +67,9 @@ export class Ventas implements OnInit {
   readonly terminoBusquedaCliente = signal<string>('');
   readonly mostrarCerrados = signal<boolean>(false);
 
+  readonly modalClienteAbierto = signal<boolean>(false);
+  readonly clienteAEditar = signal<Cliente | null>(null);
+  
   readonly fechaMinima = formatearFechaISO(new Date());
   readonly fechaEntregaSeleccionada = signal<string>(this.fechaMinima);
   readonly opcionesProximosDias = signal<OpcionDiaEntrega[]>(this.generarProximosDias());
@@ -75,6 +89,8 @@ export class Ventas implements OnInit {
     this.productos().reduce((acc, p) => acc + p.maples, 0),
   );
 
+  readonly productosSeleccionados = computed(() => this.productos().filter((p) => p.maples > 0));
+
   readonly clientesFiltrados = computed(() => {
     const q = this.terminoBusquedaCliente().toLowerCase().trim();
     if (!q) return [];
@@ -84,28 +100,66 @@ export class Ventas implements OnInit {
     );
   });
 
-  // Señal para controlar la ventana emergente
-  readonly modalClienteAbierto = signal<boolean>(false);
+
 
   abrirModalNuevoCliente(): void {
+    this.clienteAEditar.set(null);
     this.modalClienteAbierto.set(true);
   }
 
-  cerrarModalNuevoCliente(): void {
-    this.modalClienteAbierto.set(false);
+  abrirModalEditarCliente(): void {
+    const cliente = this.clienteSeleccionado();
+    if (!cliente) return;
+    this.clienteAEditar.set(cliente);
+    this.modalClienteAbierto.set(true);
   }
 
-  onClienteCreado(nuevoCliente: Cliente): void {
-    // 1. Agrega el nuevo cliente al listado de clientes en memoria
-    this.clientes.update((lista) => [...lista, nuevoCliente]);
-
-    // 2. Lo selecciona automáticamente en el formulario del pedido
-    this.seleccionarCliente(nuevoCliente);
-
-    // 3. Cierra el modal y notifica al usuario
+  cerrarModalCliente(): void {
     this.modalClienteAbierto.set(false);
-    this.mostrarNotificacion(`Cliente ${nuevoCliente.nombre} creado y seleccionado.`);
-  } //fin modal
+    this.clienteAEditar.set(null);
+  }
+
+  onEscribirCliente(valor: string): void {
+    this.terminoBusquedaCliente.set(valor);
+    if (this.clienteSeleccionado()) {
+      const nombreActual = `${this.clienteSeleccionado()?.nombre} ${this.clienteSeleccionado()?.apellido || ''}`.trim();
+      if (valor.trim().toLowerCase() !== nombreActual.toLowerCase()) {
+        this.clienteSeleccionado.set(null);
+      }
+    }
+  }
+
+  // 4. Selecciona el cliente y autocompleta los campos
+  seleccionarCliente(cliente: Cliente): void {
+    this.clienteSeleccionado.set(cliente);
+    const apellido = cliente.apellido ? ` ${cliente.apellido}` : '';
+    this.terminoBusquedaCliente.set(`${cliente.nombre}${apellido}`.trim());
+  }
+
+
+  onClienteGuardado(cliente: Cliente): void {
+    // Si ya existía, lo actualizamos en memoria; si no, lo agregamos a la lista
+    this.clientes.update((lista) => {
+      const index = lista.findIndex((c) => c.id === cliente.id);
+      if (index !== -1) {
+        const nuevaLista = [...lista];
+        nuevaLista[index] = cliente;
+        return nuevaLista;
+      }
+      return [...lista, cliente];
+    });
+
+    // Actualizamos el cliente seleccionado en el formulario
+    this.seleccionarCliente(cliente);
+
+    // Actualizamos los pedidos pendientes en pantalla para reflejar nuevo teléfono o dirección
+    this.pedidosPendientes.update((pedidos) =>
+      pedidos.map((p) => (p.cliente.id === cliente.id ? { ...p, cliente } : p))
+    );
+
+    this.cerrarModalCliente();
+    this.mostrarNotificacion(`Cliente ${cliente.nombre} guardado correctamente.`);
+  }
 
   ngOnInit(): void {
     this.cargarPedidosPendientes();
@@ -177,16 +231,24 @@ export class Ventas implements OnInit {
   toggleMostrarCerrados(): void {
     this.mostrarCerrados.update((v) => !v);
   }
-
-  seleccionarCliente(cliente: Cliente): void {
-    this.clienteSeleccionado.set(cliente);
-    const apellido = cliente.apellido ? ` ${cliente.apellido}` : '';
-    this.terminoBusquedaCliente.set(`${cliente.nombre}${apellido}`);
-  }
-
   seleccionarDiaEntrega(fechaIso: string): void {
+    if (fechaIso < this.fechaMinima) {
+      this.fechaEntregaSeleccionada.set(this.fechaMinima);
+      return;
+    }
     this.fechaEntregaSeleccionada.set(fechaIso);
   }
+
+  onCambioFechaManual(valor: string): void {
+    if (valor && valor < this.fechaMinima) {
+      this.errorBackend.set('La fecha de reparto no puede ser anterior al día de hoy.');
+      this.fechaEntregaSeleccionada.set(this.fechaMinima);
+      return;
+    }
+    this.errorBackend.set(null);
+    this.fechaEntregaSeleccionada.set(valor);
+  } 
+
 
   incrementarProducto(codigo: TipoHuevo): void {
     this.productos.update((items) =>
@@ -219,6 +281,10 @@ export class Ventas implements OnInit {
       this.errorBackend.set('La fecha de entrega programada es obligatoria.');
       return;
     }
+    if (this.fechaEntregaSeleccionada() < this.fechaMinima) {
+      this.errorBackend.set('No se puede programar un reparto con una fecha pasada.');
+      return;
+    }
 
     const itemsValidos: ItemPedidoWrite[] = this.productos()
       .filter((p) => p.maples > 0)
@@ -236,29 +302,52 @@ export class Ventas implements OnInit {
       items: itemsValidos,
     };
 
+    this.pedidoPendienteGuardar.set(payload);
+    this.mostrarConfirmacion.set(true);
+  }
+
+  cancelarConfirmacion(): void {
+    this.mostrarConfirmacion.set(false);
+    this.pedidoPendienteGuardar.set(null);
+  }
+
+  confirmarYGuardar(): void {
+    const payload = this.pedidoPendienteGuardar();
+    if (!payload) return;
+
     const editId = this.pedidoEditandoId();
+    this.isGuardando.set(true);
     if (editId) {
       this.pedidosService.actualizarPedido(editId, payload).subscribe({
         next: () => {
+          this.isGuardando.set(false);
+          this.cancelarConfirmacion();
           this.mostrarNotificacion('¡Pedido actualizado con éxito!');
           this.limpiar();
           this.cargarPedidosPendientes();
           this.cargarPedidosCerrados();
           this.vistaMobile.set('pedidos');
         },
-        error: (err) =>
-          this.errorBackend.set(err.error?.detail || 'Error al actualizar el pedido.'),
+        error: (err) => {
+          this.isGuardando.set(false);
+          this.errorBackend.set(err.error?.detail || 'Error al actualizar el pedido.');
+        },
       });
     } else {
       this.pedidosService.crearPedido(payload).subscribe({
         next: () => {
+          this.isGuardando.set(false);
+          this.cancelarConfirmacion();
           this.mostrarNotificacion('¡Pedido creado con éxito!');
           this.limpiar();
           this.cargarPedidosPendientes();
           this.cargarPedidosCerrados();
           this.vistaMobile.set('pedidos');
         },
-        error: (err) => this.errorBackend.set(err.error?.detail || 'Error al guardar el pedido.'),
+        error: (err) => {
+          this.isGuardando.set(false);
+          this.errorBackend.set(err.error?.detail || 'Error al guardar el pedido.');
+        },
       });
     }
   }
@@ -281,14 +370,113 @@ export class Ventas implements OnInit {
     this.vistaMobile.set('formulario');
   }
 
-  eliminarPedido(id: number): void {
-    if (confirm('¿Estás seguro de que deseas eliminar este pedido?')) {
-      this.pedidosService.eliminarPedido(id).subscribe({
+  solicitarEliminacion(pedido: PedidoRead): void {
+    this.pedidoAEliminar.set(pedido);
+    this.mostrarConfirmacionEliminar.set(true);
+  }
+
+  cancelarEliminacion(): void {
+    this.mostrarConfirmacionEliminar.set(false);
+    this.pedidoAEliminar.set(null);
+  }
+
+  confirmarEliminacion(): void {
+    const pedido = this.pedidoAEliminar();
+    if (!pedido) return;
+
+    this.pedidosService.eliminarPedido(pedido.id).subscribe({
+      next: () => {
+        this.cancelarEliminacion();
+        this.mostrarNotificacion('Pedido eliminado correctamente.');
+        this.cargarPedidosPendientes();
+        this.cargarPedidosCerrados();
+      },
+      error: () => this.errorBackend.set('No se pudo eliminar el pedido.'),
+    });
+  }
+
+  // GESTIÓN REAPERTURA DE PEDIDOS CERRADOS
+  abrirModalReabrir(pedido: PedidoRead): void {
+    this.pedidoAReabrir.set(pedido);
+    this.estadoEntregaTemp.set(pedido.estado_entrega);
+    this.estadoPagoTemp.set(pedido.estado_pago);
+    this.mostrarModalReabrir.set(true);
+  }
+
+  cancelarReabrir(): void {
+    this.mostrarModalReabrir.set(false);
+    this.pedidoAReabrir.set(null);
+  }
+
+  toggleEntregaModal(): void {
+    this.estadoEntregaTemp.update((v) => !v);
+  }
+
+  togglePagoModal(): void {
+    this.estadoPagoTemp.update((v) => !v);
+  }
+
+  confirmarReapertura(): void {
+    const pedido = this.pedidoAReabrir();
+    if (!pedido) return;
+
+    const cambioEntrega = this.estadoEntregaTemp() !== pedido.estado_entrega;
+    const cambioPago = this.estadoPagoTemp() !== pedido.estado_pago;
+
+    if (!cambioEntrega && !cambioPago) {
+      this.cancelarReabrir();
+      return;
+    }
+
+    this.isGuardando.set(true);
+
+    const actualizarYNotificar = () => {
+      this.isGuardando.set(false);
+      const reabiertoId = pedido.id;
+      this.cancelarReabrir();
+      this.mostrarNotificacion('Estado actualizado. El pedido volvió a pendientes.');
+      this.cargarPedidosPendientes();
+      this.cargarPedidosCerrados();
+
+      // Desplazamiento y expansión automática hacia el pedido en pendientes
+      setTimeout(() => {
+        this.pedidoExpandidoId.set(reabiertoId);
+        const elemento = document.getElementById(`pedido-card-${reabiertoId}`);
+        elemento?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
+    };
+
+    if (cambioEntrega && cambioPago) {
+      this.pedidosService.toggleEntrega(pedido.id).subscribe({
         next: () => {
-          this.mostrarNotificacion('Pedido eliminado correctamente.');
-          this.cargarPedidosPendientes();
-          this.cargarPedidosCerrados();
+          this.pedidosService.togglePago(pedido.id).subscribe({
+            next: () => actualizarYNotificar(),
+            error: () => {
+              this.isGuardando.set(false);
+              this.errorBackend.set('Error al actualizar el estado de cobro.');
+            }
+          });
         },
+        error: () => {
+          this.isGuardando.set(false);
+          this.errorBackend.set('Error al actualizar el estado de entrega.');
+        }
+      });
+    } else if (cambioEntrega) {
+      this.pedidosService.toggleEntrega(pedido.id).subscribe({
+        next: () => actualizarYNotificar(),
+        error: () => {
+          this.isGuardando.set(false);
+          this.errorBackend.set('Error al actualizar el estado de entrega.');
+        }
+      });
+    } else if (cambioPago) {
+      this.pedidosService.togglePago(pedido.id).subscribe({
+        next: () => actualizarYNotificar(),
+        error: () => {
+          this.isGuardando.set(false);
+          this.errorBackend.set('Error al actualizar el estado de cobro.');
+        }
       });
     }
   }
@@ -317,13 +505,14 @@ export class Ventas implements OnInit {
     this.terminoBusquedaCliente.set('');
     this.fechaEntregaSeleccionada.set(this.fechaMinima);
     this.errorBackend.set(null);
+    this.pedidoPendienteGuardar.set(null);
     this.productos.update((items) => items.map((i) => ({ ...i, maples: 0 })));
   }
 
   formatearFechaDisplay(fechaIso: string): string {
     if (!fechaIso) return '';
     const [anio, mes, dia] = fechaIso.split('-');
-    return `${dia}/${mes}/${anio}`;
+    return `${dia}/${mes}/${anio.slice(-2)}`;
   }
 
   formatearMoneda(valor: number | string | null | undefined): string {

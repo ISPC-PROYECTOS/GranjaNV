@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Gastos } from '../../../../core/services/gastos';
 import { PedidosService } from '../../../../core/services/pedidos.service';
+import { obtenerRangoMesActual } from '../../../../core/utils/date.utils';
 
 export interface MetricaDashboard {
   titulo: string;
@@ -61,7 +62,9 @@ export class PanelDeControl implements OnInit {
   }
 
   cargarMetricasDashboard(): void {
-    this.gastosService.obtenerTotalGastos().subscribe({
+    const rangoMesActual = obtenerRangoMesActual();
+
+    this.gastosService.obtenerTotalGastos(rangoMesActual).subscribe({
       next: (respuesta) => {
         this.totalCompras.set(Number(respuesta.total) || 0);
       },
@@ -70,7 +73,7 @@ export class PanelDeControl implements OnInit {
       },
     });
 
-    this.pedidosService.obtenerMetricas().subscribe({
+    this.pedidosService.obtenerMetricas(rangoMesActual).subscribe({
       next: (data) => {
         this.pedidosPendientesCount.set(data.pedidos_pendientes);
         this.totalVentasCobradas.set(Number(data.total_ventas_cobradas) || 0);

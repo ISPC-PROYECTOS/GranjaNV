@@ -40,5 +40,5 @@ npm-debug.log*
 .idea/
 .DS_Store
 Thumbs.db
-
+FETCH_HEAD
 repomix-output.xml

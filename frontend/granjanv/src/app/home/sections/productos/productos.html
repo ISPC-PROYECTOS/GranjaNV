@@ -1,0 +1,17 @@
+<div class="productos-container">
+  <h2 class="section-title">{{ titulo }}</h2>
+
+  <app-carrusel [items]="productos">
+    <ng-template #itemTemplate let-producto>
+      <div class="producto-card">
+        <div class="producto-image">
+          <img [src]="producto.imagen" [alt]="producto.nombre">
+        </div>
+        <div class="producto-info">
+          <h3>{{ producto.nombre }}</h3>
+          <p>{{ producto.descripcion }}</p>
+        </div>
+      </div>
+    </ng-template>
+  </app-carrusel>
+</div>

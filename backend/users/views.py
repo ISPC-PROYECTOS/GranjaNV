@@ -1,20 +1,31 @@
-from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated, AllowAny
+import logging
+from smtplib import SMTPException
+
+from django.conf import settings
+from django.core.mail import send_mail
+from rest_framework import generics, status
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import Usuario
 from .permissions import IsAdminRole
-from .serializers import CustomTokenObtainPairSerializer, RegistroUsuarioSerializer, RequestOTPSerializer, ResetPasswordOTPSerializer
-from django.core.mail import send_mail
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from .serializers import (
+    CustomTokenObtainPairSerializer,
+    RegistroUsuarioSerializer,
+    RequestOTPSerializer,
+    ResetPasswordOTPSerializer,
+)
+
+logger = logging.getLogger(__name__)
 
 
 class LoginView(TokenObtainPairView):
     """
     Endpoint público de Login. Recibe 'email' y 'password'.
     """
+
     serializer_class = CustomTokenObtainPairSerializer
 
 
@@ -22,9 +33,11 @@ class RegistroUsuarioView(generics.CreateAPIView):
     """
     Endpoint de Registro. Protegido: Requiere JWT válido y rol 'Administrador'.
     """
+
     queryset = Usuario.objects.all()
     serializer_class = RegistroUsuarioSerializer
     permission_classes = [IsAuthenticated, IsAdminRole]
+
 
 class RequestOTPView(APIView):
     permission_classes = [AllowAny]
@@ -37,15 +50,25 @@ class RequestOTPView(APIView):
         try:
             user = Usuario.objects.get(email=email)
             otp = user.generate_otp()
+
             send_mail(
-                "Código de Recuperación OTP",
-                f"Tu código de verificación es: {otp}",
-                "noreply@granjanv.com",
-                [email],
+                subject="Código de Recuperación OTP - Granja NV",
+                message=(
+                    f"Hola {user.nombre},\n\n"
+                    f"Tu código de recuperación para el sistema de Granja NV es: {otp}\n\n"
+                    "Este código expirará en 10 minutos. Si no solicitaste este cambio, ignorá este mensaje."
+                ),
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[email],
                 fail_silently=False,
             )
         except Usuario.DoesNotExist:
-            pass  # Previene la enumeración de usuarios
+            # Prevención de enumeración de usuarios
+            pass
+        except SMTPException as exc:
+            logger.error(f"Fallo al enviar correo OTP a {email}: {exc!s}")
+        except Exception as exc:
+            logger.error(f"Error inesperado en servicio de correo: {exc!s}")
 
         return Response(
             {"message": "Si el correo está registrado, recibirás un OTP."},

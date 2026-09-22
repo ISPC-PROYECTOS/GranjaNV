@@ -18,14 +18,31 @@ export class CrearClienteComponent {
   private clientesService = inject(ClientesService);
 
   @Input() set nombreInicial(valor: string) {
-    if (valor) {
+    if (valor && !this.clienteId()) {
       this.formularioCliente.patchValue({ nombre: valor });
     }
   }
 
-  @Output() clienteCreado = new EventEmitter<Cliente>();
+  @Input() set clienteEdicion(cliente: Cliente | null) {
+    if (cliente) {
+      this.clienteId.set(cliente.id ?? null);
+      this.formularioCliente.patchValue({
+        nombre: cliente.nombre,
+        apellido: cliente.apellido || '',
+        telefono: cliente.telefono,
+        direccion: cliente.direccion,
+        email: cliente.email || '',
+        tipo: cliente.tipo
+      });
+    } else {
+      this.clienteId.set(null);
+    }
+  }
+
+  @Output() clienteGuardado = new EventEmitter<Cliente>();
   @Output() cerrar = new EventEmitter<void>();
 
+  clienteId = signal<number | null>(null);
   errorBackend = signal<string | null>(null);
   mensajeExito = signal<string | null>(null);
   isLoading = signal<boolean>(false);
@@ -60,15 +77,22 @@ confirmarYGuardar(): void {
   this.errorBackend.set(null);
   this.mensajeExito.set(null);
 
-  const nuevoCliente: Partial<Cliente> = this.formularioCliente.value;
+  const datosCliente: Partial<Cliente> = this.formularioCliente.value;
+    const id = this.clienteId();
 
-  this.clientesService.crearCliente(nuevoCliente).subscribe({
-    next: (clienteGuardado) => {
-      this.isLoading.set(false);
-      this.mostrarConfirmacion.set(false);
-      this.mensajeExito.set('¡Cliente guardado exitosamente!');
+    const operacion$ = id
+      ? this.clientesService.actualizarCliente(id, datosCliente)
+      : this.clientesService.crearCliente(datosCliente);
 
-      this.clienteCreado.emit(clienteGuardado);
+    operacion$.subscribe({
+      next: (clienteResultado) => {
+        this.isLoading.set(false);
+        this.mostrarConfirmacion.set(false);
+        this.mensajeExito.set(
+          id ? '¡Cliente actualizado exitosamente!' : '¡Cliente guardado exitosamente!'
+        );
+
+        this.clienteGuardado.emit(clienteResultado);
 
       setTimeout(() => {
         this.cerrar.emit();

@@ -22,7 +22,7 @@ El desarrollo se realiza bajo metodologías ágiles (**Scrum**) abarcando los Sp
 * **Backend:** [Django 6.0](https://www.djangoproject.com/) + [Django REST Framework (DRF)](https://www.django-rest-framework.org/) + [Gunicorn](https://gunicorn.org/).
 * **Servidor Web / Proxy:** [Nginx](https://nginx.org/).
 * **Autenticación:** JWT vía `djangorestframework-simplejwt`.
-* **Base de Datos:** PostgreSQL en la nube (Aiven.io).
+* **Base de Datos:** PostgreSQL en la nube (Aiven.io) para el core del sistema transaccional y MongoDB Atlas para contenidos dinámicos de la landing.
 * **Contenedores:** Docker & Docker Compose.
 
 ---
@@ -105,13 +105,12 @@ El flujo de trabajo se basa en aislamiento por desarrollador e integración cont
 * `dev`: Rama central de integración donde confluyen los módulos validados del equipo.
 * **Ramas Personales (`hebepereyra`, `Victoria`, `jorge`, `LautiR2D2`, `mariela`):** Cada desarrollador implementa sus asignaciones de forma aislada.
 
-```text
 [ Rama Personal ] ---> (Validación x2 integrantes) ---> [ dev ]
                                                            |
                                                 (Testeo final x3 integrantes)
                                                            |
                                                            v
-                                    [ main ] ---> Release Tag (v0.1.0-alpha.1)
+                                    [ main ] ---> Release Tag (v0.3.0-alpha.3)
 ```
 
 ---

@@ -1,0 +1,51 @@
+.carrusel-wrapper {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.carrusel-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--columnas-desktop, 3), minmax(0, 1fr));
+  gap: 24px;
+}
+
+.carrusel-flecha {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background-color: transparent;
+  color: #5a7c59;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carrusel-flecha:hover {
+  color: #4a6449;
+  transform: scale(1.08);
+}
+
+@media (max-width: 768px) {
+  .carrusel-wrapper {
+    grid-template-columns: 36px minmax(0, 1fr) 36px;
+    gap: 8px;
+  }
+
+  .carrusel-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .carrusel-flecha {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+}

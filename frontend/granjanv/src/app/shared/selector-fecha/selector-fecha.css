@@ -26,6 +26,7 @@
   border-radius: 12px;
   border: 1px solid var(--color-gris-claro);
   font-family: var(--font-textos);
+  background-color: var(--color-blanco);
 }
 
 .panel-filtro-fechas label {
@@ -40,8 +41,7 @@
   padding: 7px 10px;
 
   background-color: var(--color-blanco);
-  color: var(--color-primario);
-
+  color: var(--color-negro);
   border: 1px solid var(--color-primario);
   border-radius: 8px;
 

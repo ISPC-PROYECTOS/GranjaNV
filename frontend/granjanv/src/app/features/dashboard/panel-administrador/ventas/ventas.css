@@ -1,4 +1,7 @@
-/* LISTA DE PEDIDOS PENDIENTES */
+/* =================================
+   PEDIDOS PENDIENTES
+================================= */
+
 .titulo-pedidos {
   display: flex;
   flex-direction: column;
@@ -14,7 +17,7 @@
 }
 
 .pedidos-panel {
-  height: 735px; /* probá alrededor de este valor */
+  height: 735px;
   display: flex;
   flex-direction: column;
 }
@@ -22,17 +25,19 @@
 .pedidos-lista {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   flex: 1;
   min-height: 0;
-  /* max-height: 420px; */
   overflow-y: auto;
-  padding-right: 6px;
+  background-color: var(--color-gris-claro);
+  padding: 6px;
+  border-radius: 16px;
+  margin-bottom: 8px;
 }
 
-
 .pedido-card {
-  background-color: var(--color-gris-claro);
+  background-color: var(--color-blanco);
+  border: 2px solid var(--color-gris-medio);
   border-radius: 18px;
   overflow: hidden;
   transition: box-shadow 0.2s ease;
@@ -57,6 +62,27 @@
   min-width: 0;
 }
 
+.pedido-cabecera-principal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 8px;
+}
+
+.cabecera-pedidos {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pedido-datos-principales {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .pedido-cliente-nombre {
   font-family: var(--font-titulos);
   font-size: 18px;
@@ -70,27 +96,20 @@
   font-size: 17px;
   font-weight: 700;
   color: var(--color-primario-oscuro);
-  background-color: rgba(103, 135, 95, 0.15);
+  background-color: color-mix(in srgb, var(--color-primario) 15%, transparent);
   padding: 2px 8px;
   border-radius: 8px;
   white-space: nowrap;
 }
 
 .pedido-fecha-badge {
-  /* background-color: var(--color-gris-medio); */
   color: var(--color-negro);
-  font-size: 15px;
-  font-weight: 500;
-  padding: 2px 8px;
+  font-family: var(--font-textos);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 2px 4px;
   border-radius: 8px;
   white-space: nowrap;
-}
-
-.pedido-resumen {
-  font-family: var(--font-textos);
-  font-size: 14px;
-  color: #333333;
-  margin: 3px 0 0 0;
 }
 
 .pedido-contacto-extra {
@@ -102,8 +121,9 @@
 .pedido-productos-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 3px;
   margin: 6px 0 0 0;
+  max-width: 360px;
 }
 
 .chip-producto {
@@ -111,14 +131,22 @@
   color: var(--color-secundario-oscuro);
   font-size: 12px;
   font-weight: 600;
-  padding: 3px 10px;
-  border-radius: 20px;
+  padding: 4px 8px;
+  border-radius: 12px;
   white-space: nowrap;
+  width: 100px;
+  box-sizing: border-box;
 }
 
 .chip-producto b {
   font-size: 15px;
   font-weight: 700;
+}
+
+.salto-productos {
+  flex-basis: 100%;
+  width: 0;
+  height: 0;
 }
 
 .pedido-indicadores-accion {
@@ -128,18 +156,61 @@
   flex-shrink: 0;
 }
 
-.indicador-circulo {
-  width: 14px;
-  height: 14px;
+.indicador-estado {
+  position: relative;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   border: 2px solid var(--color-gris-oscuro);
   background-color: var(--color-blanco);
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: help;
 }
 
-.indicador-circulo.indicador-activo {
+.indicador-letra {
+  font-family: var(--font-titulos);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--color-gris-oscuro);
+  line-height: 1;
+}
+
+.indicador-estado.indicador-activo {
   background-color: var(--color-primario);
   border-color: var(--color-primario);
+}
+
+.indicador-estado.indicador-activo .indicador-letra {
+  color: var(--color-blanco);
+}
+
+.indicador-estado::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color-negro);
+  color: var(--color-blanco);
+  font-family: var(--font-textos);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 20;
+}
+
+.indicador-estado:hover::after {
+  opacity: 1;
+  visibility: visible;
 }
 
 .icono-chevron {
@@ -152,9 +223,9 @@
 }
 
 .pedido-card-footer {
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-top: 1px solid color-mix(in srgb, var(--color-negro) 8%, transparent);
   padding: 10px 18px;
-  background-color: var(--color-gris-medio);
+  background-color: var(--color-primario-claro);
 }
 
 .btn-estado-toggle {
@@ -191,15 +262,10 @@
   color: var(--color-blanco);
 }
 
-.referencias-leyenda {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 13px;
-  color: var(--color-gris-oscuro);
-}
+/* =================================
+   PEDIDOS CERRADOS
+================================= */
 
-/* PEDIDOS CERRADOS DESPLEGABLES */
 .btn-toggle-cerrados {
   display: flex;
   justify-content: space-between;
@@ -217,15 +283,37 @@
   padding: 10px;
 }
 
+.filtros-cerrados {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
 .pedidos-cerrados-lista {
   max-height: 180px;
   overflow-y: auto;
 }
 
+.pedido-cerrado-info {
+  flex: 1;
+  min-width: 0;
+  padding-right: 12px;
+}
+
 .pedido-card-cerrado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+
   background-color: var(--color-blanco);
   border-radius: 10px;
   border-left: 4px solid var(--color-primario);
+
+  padding: 8px 16px;
+  margin-bottom: 8px;
 }
 
 .badge-cerrado-fecha {
@@ -250,47 +338,35 @@
   color: var(--color-error-oscuro);
 }
 
-/* FORMULARIO Y PRODUCTOS */
+.acciones-pedido {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.acciones-estado,
+.acciones-edicion {
+  display: flex;
+  gap: 8px;
+}
+
+/* =================================
+   FORMULARIO DE PEDIDO
+================================= */
+
 .campo-deshabilitado {
   background-color: var(--color-gris-medio) !important;
-  color: #333333;
+  color: var(--color-negro);
   cursor: not-allowed;
 }
 
-/* Alineación vertical estricta para etiquetas de totales */
 .label-totales {
   min-height: 40px;
   display: flex;
   align-items: flex-end;
   margin-bottom: 0.5rem;
   line-height: 1.2;
-}
-
-.dropdown-clientes-sugerencias {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: var(--color-blanco);
-  border-radius: 10px;
-  list-style: none;
-  padding: 6px 0;
-  margin: 2px 0 0 0;
-  z-index: 100;
-  max-height: 160px;
-  overflow-y: auto;
-}
-
-.dropdown-clientes-sugerencias li {
-  padding: 6px 14px;
-  cursor: pointer;
-  font-size: 13px;
-}
-
-.dropdown-clientes-sugerencias li:hover,
-.dropdown-clientes-sugerencias li:focus {
-  background-color: var(--color-primario-claro);
-  outline: none;
 }
 
 .dias-entrega-chips {
@@ -311,9 +387,9 @@
   background-color: var(--color-blanco);
   border: 1px solid var(--color-gris-oscuro);
   border-radius: 20px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  padding: 4px 10px;
+  padding: 4px 8px;
   white-space: nowrap;
   color: var(--color-negro);
   transition: all 0.15s ease;
@@ -388,6 +464,7 @@
   font-size: 15px;
   border: none;
   background: transparent;
+  color: var(--color-negro);
 }
 
 .contador-valor::-webkit-outer-spin-button,
@@ -395,6 +472,120 @@
   -webkit-appearance: none;
   margin: 0;
 }
+
+/* =================================
+   CLIENTES Y AUTOCOMPLETADO
+================================= */
+
+.dropdown-clientes-sugerencias {
+  position: absolute;
+  /* top: 100%; */
+  left: 0;
+  right: 0;
+  background: var(--color-blanco);
+  border-radius: 10px;
+  list-style: none;
+  padding: 6px 0;
+  margin: 2px 0 0 0;
+  z-index: 100;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.dropdown-clientes-sugerencias li {
+  padding: 6px 14px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.dropdown-clientes-sugerencias li:hover,
+.dropdown-clientes-sugerencias li:focus {
+  background-color: var(--color-primario-claro);
+  outline: none;
+}
+
+.btn-nuevo-cliente,
+.btn-editar-cliente-inline {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: var(--color-secundario-oscuro);
+  font-family: var(--font-titulos);
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    transform 0.1s ease;
+}
+
+.btn-nuevo-cliente:hover,
+.btn-editar-cliente-inline:hover {
+  color: var(--color-secundario);
+  transform: translateY(-1px);
+}
+
+.item-sin-cliente {
+  color: var(--color-secundario-oscuro) !important;
+  font-family: var(--font-titulos);
+  font-weight: 600;
+  background-color: var(--color-secundario-claro);
+  border-radius: 6px;
+  margin: 4px 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.item-sin-cliente i {
+  color: var(--color-secundario-oscuro);
+}
+
+.item-sin-cliente:hover,
+.item-sin-cliente:focus {
+  /* background-color: var(--color-secundario-claro) !important; */
+  color: var(--color-negro) !important;
+}
+
+.item-sin-cliente:hover i,
+.item-sin-cliente:focus i {
+  color: var(--color-negro);
+}
+
+/* =================================
+   MODAL NUEVO CLIENTE
+================================= */
+
+.modal-overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: color-mix(in srgb, var(--color-negro) 55%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 16px;
+}
+
+.modal-dialog-box {
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-confirmacion-caja {
+  width: 100%;
+  max-width: 460px;
+  padding: 24px;
+  border-radius: 8px;
+  background: var(--color-blanco);
+  box-shadow: 0 12px 36px color-mix(in srgb, var(--color-negro) 20%, transparent);
+}
+
+/* =================================
+   ANIMACIONES
+================================= */
 
 .animate-fade-in {
   animation: fadeIn 0.18s ease-out forwards;
@@ -405,6 +596,7 @@
     opacity: 0;
     transform: translateY(-4px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -412,10 +604,20 @@
 }
 
 /* =================================
-   AJUSTES RESPONSIVOS MOBILE (< 576px)
-   Alineación y corrección de desbordes
+   RESPONSIVE MOBILE (< 576px)
 ================================= */
+
 @media (max-width: 575px) {
+  .pedido-cabecera-principal {
+    display: block !important;
+    padding-right: 0 !important;
+  }
+
+  .pedido-datos-principales {
+    margin-top: 3px;
+    justify-content: flex-start;
+  }
+
   .gestion-pagina {
     padding: 5px 14px;
   }
@@ -443,7 +645,6 @@
     border-radius: 16px;
   }
 
-  /* Corrige el desborde horizontal del botón Guardar */
   .gestion-formulario-acciones {
     gap: 12px;
     width: 100%;
@@ -466,6 +667,12 @@
 
   .pedido-card-header {
     padding: 10px 12px;
+    flex-wrap: wrap;
+  }
+
+  .pedido-info-principal {
+    flex-basis: 100%;
+    width: 100%;
   }
 
   .pedido-cliente-nombre {
@@ -474,6 +681,34 @@
 
   .pedido-monto-destacado {
     font-size: 14px;
+  }
+
+  .pedido-indicadores-accion {
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 2px;
+  }
+
+  .pedido-productos-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    max-width: none;
+    margin-top: 6px;
+  }
+
+  .chip-producto {
+    width: auto;
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+
+  .chip-producto b {
+    font-size: 12px;
+  }
+
+  .salto-productos {
+    display: none;
   }
 
   .label-totales {
@@ -485,68 +720,137 @@
     font-size: 11px;
     padding: 3px 8px;
   }
+
+  /* PEDIDOS CERRADOS - MOBILE */
+
+  .pedido-card-cerrado {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .pedido-cerrado-info {
+    width: 100%;
+    padding-right: 0;
+  }
+
+  .pedido-cerrado-cabecera {
+    justify-content: space-between;
+    align-items: flex-start !important;
+  }
+
+  .pedido-cerrado-acciones {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .pedido-cerrado-info strong {
+    font-size: 14px;
+    line-height: 1.2;
+  }
+
+  .badge-cerrado-fecha {
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  .pedido-monto-cerrado {
+    font-size: 14px;
+  }
+
+  .cabecera-pedidos {
+    flex-wrap: nowrap;
+  }
+
+  .cabecera-pedidos .gestion-titulo {
+    font-size: 22px;
+    white-space: nowrap;
+  }
+
+  .cabecera-pedidos > div:last-child {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 6px;
+  }
+
+  /* .filtros-cerrados {
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  } */
+
+  .acciones-pedido {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+  }
+
+  .acciones-estado,
+  .acciones-edicion {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .acciones-estado .btn-estado-toggle {
+    width: 100%;
+    min-height: 42px;
+  }
+
+  .acciones-edicion .btn-accion-item {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
-.modal-overlay-backdrop {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.55);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1050;
-  padding: 16px;
+/* MODO OSCURO */
+
+/* PEDIDOS PENDIENTES */
+
+:host-context(body.dark-mode) .pedido-monto-destacado,
+:host-context(body.dark-mode) .btn-toggle-cerrados,
+:host-context(body.dark-mode) .badge-cerrado-fecha,
+:host-context(body.dark-mode) .pedido-monto-cerrado {
+  color: var(--color-negro);
 }
 
-.modal-dialog-box {
-  width: 100%;
-  max-width: 800px;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-
-.btn-nuevo-cliente {
-  background: transparent;
-  border: none;
-  padding: 0;
-  color: var(--color-secundario-oscuro);
-  font-family: var(--font-titulos);
-  font-weight: 700;
-  font-size: 14px;
-  cursor: pointer;
-   transition: color 0.2s ease, transform 0.1s ease;
-}
-
-.btn-nuevo-cliente:hover {
-  color: var(--color-secundario);
-  transform: translateY(-1px);
-}
-
-
-.item-sin-cliente {
-  color: var(--color-secundario-oscuro) !important;
-  font-family: var(--font-titulos);
-  font-weight: 600;
-  background-color: var(--color-secundario-claro);
-  border-radius: 6px;
-  margin: 4px 6px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.item-sin-cliente i {
-  color: var(--color-secundario-oscuro);
-}
-
-.item-sin-cliente:hover,
-.item-sin-cliente:focus {
-  background-color: #ebdcd0 !important; /* Tono arena un punto más saturado para el foco */
+:host-context(body.dark-mode) .text-muted {
   color: var(--color-negro) !important;
 }
 
-.item-sin-cliente:hover i,
-.item-sin-cliente:focus i {
-  color: var(--color-negro);
+:host-context(body.dark-mode) .chip-producto {
+  color: var(--color-secundario);
+}
+
+:host-context(body.dark-mode) .btn-estado-toggle.completado,
+:host-context(body.dark-mode) .btn-eliminar {
+  color: var(--color-blanco);
+}
+
+/* PEDIDOS CERRADOS */
+
+:host-context(body.dark-mode) .pedido-card-cerrado .text-dark {
+  color: var(--color-negro) !important;
+}
+
+:host-context(body.dark-mode) .pedido-card-cerrado .text-muted,
+:host-context(body.dark-mode) .filtros-cerrados .text-muted {
+  color: var(--color-gris-oscuro) !important;
+}
+
+/* FORMULARIO */
+:host-context(body.dark-mode) .dropdown-clientes-sugerencias {
+  background-color: var(--color-primario-claro);
+  border: 1px solid var(--color-gris-oscuro);
+}
+
+.dropdown-clientes-sugerencias li + li {
+  border-top: 1px solid var(--color-gris-claro);
 }

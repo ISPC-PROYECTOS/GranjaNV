@@ -1,4 +1,12 @@
-import { Component, OnInit, ElementRef, HostListener, inject, signal, computed } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  HostListener,
+  inject,
+  signal,
+  computed,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/services/auth-service';
@@ -10,7 +18,7 @@ import { WeatherData } from '../../core/models/weather';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './navbar.html',
-  styleUrl: './navbar.css'
+  styleUrl: './navbar.css',
 })
 export class NavbarComponent implements OnInit {
   private router = inject(Router);
@@ -18,13 +26,17 @@ export class NavbarComponent implements OnInit {
   private weatherService = inject(WeatherService);
   private elementRef = inject(ElementRef);
 
+  modoOscuro = signal<boolean>(false);
+
   usuarioInicial = computed(() => {
     const u = this.authService.currentUser();
     if (!u) return 'U';
 
-    return (u.nombre && u.apellido) 
-      ? `${u.nombre[0]}${u.apellido[0]}`.toUpperCase() 
-      : (u.email ? u.email[0].toUpperCase() : 'U');
+    return u.nombre && u.apellido
+      ? `${u.nombre[0]}${u.apellido[0]}`.toUpperCase()
+      : u.email
+        ? u.email[0].toUpperCase()
+        : 'U';
   });
 
   fechaActual = signal<string>('');
@@ -46,15 +58,15 @@ export class NavbarComponent implements OnInit {
       },
       error: () => {
         this.cargandoClima.set(false);
-      }
+      },
     });
   }
 
   private obtenerFechaFormateada(): void {
-    const opciones: Intl.DateTimeFormatOptions = { 
-      weekday: 'long', 
-      day: 'numeric', 
-      month: 'long' 
+    const opciones: Intl.DateTimeFormatOptions = {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
     };
     const hoy = new Date().toLocaleDateString('es-ES', opciones);
     this.fechaActual.set(hoy.charAt(0).toUpperCase() + hoy.slice(1));
@@ -69,13 +81,24 @@ export class NavbarComponent implements OnInit {
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const targetElement = event.target as HTMLElement;
-    if (!this.elementRef.nativeElement.querySelector('.weather-widget-container')?.contains(targetElement)) {
+    if (
+      !this.elementRef.nativeElement
+        .querySelector('.weather-widget-container')
+        ?.contains(targetElement)
+    ) {
       this.detallesAbiertos.set(false);
     }
   }
 
   esVistaLogin(): boolean {
     return this.router.url.includes('/auth/login');
+  }
+
+  toggleModoOscuro(): void {
+    this.modoOscuro.update((valor) => !valor);
+
+    document.body.classList.toggle('dark-mode', this.modoOscuro());
+    localStorage.setItem('modoOscuro', String(this.modoOscuro()));
   }
 
   cerrarSesion(): void {

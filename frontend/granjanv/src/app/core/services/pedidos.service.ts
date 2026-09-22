@@ -37,8 +37,9 @@ export class PedidosService {
     return params;
   }
 
-  obtenerMetricas(): Observable<MetricasDashboardResponse> {
-    return this.http.get<MetricasDashboardResponse>(`${this.apiUrl}metricas/`);
+  obtenerMetricas(filtros?: FiltroPedidos): Observable<MetricasDashboardResponse> {
+    const params = this.armarParams(filtros);
+    return this.http.get<MetricasDashboardResponse>(`${this.apiUrl}metricas/`, { params });
   }
 
   obtenerPedidos(filtros?: FiltroPedidos): Observable<PedidoRead[]> {
