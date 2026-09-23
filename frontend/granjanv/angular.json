@@ -26,7 +26,8 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "public/fonts/hgi-stroke-rounded.css"
             ]
           },
           "configurations": {
