@@ -1,4 +1,104 @@
-<!-- Componente reservado para futura logica de aves (ej. movimientos de lote) -->
-<div class="d-none">
-  <p>Modulo gestion-gallinas pendiente de definicion de requerimientos.</p>
+<div class="contenedor-gestion-gallinas mt-4">
+  <!-- Título idéntico a PRODUCCIÓN DIARIA de Figma -->
+  <h3 class="gestion-subtitulo text-white mb-2">GESTIÓN DE GALLINAS</h3>
+
+  <!-- Acordeón estilo tarjeta de Figma -->
+  <div class="acordeon-gallinas">
+    <button
+      type="button"
+      class="btn-acordeon-header"
+      [attr.aria-expanded]="desplegado()"
+      (click)="toggleDesplegable()"
+    >
+      <div class="header-textos">
+        <span class="header-titulo">Movimientos</span>
+        <span class="header-subtexto">Completar para registrar altas, bajas o incidentes</span>
+      </div>
+      <i
+        class="hgi-stroke hgi-arrow-down-01 icono-chevron"
+        [class.rotado]="desplegado()"
+        aria-hidden="true"
+      ></i>
+    </button>
+
+    @if (desplegado()) {
+      <form class="gestion-formulario m-0 p-3 animate-fade-in">
+        <div class="row g-2 mb-3">
+          <!-- Galpón -->
+          <div class="col-12 col-sm-6">
+            <label for="mov-galpon" class="form-label">Galpón *</label>
+            <select id="mov-galpon" class="form-select">
+              <option value="" disabled selected>Seleccionar galpón</option>
+              <option value="1">Galpón 1</option>
+              <option value="2">Galpón 2</option>
+              <option value="3">Galpón 3</option>
+            </select>
+          </div>
+
+          <!-- Tipo de Movimiento -->
+          <div class="col-12 col-sm-6">
+            <label for="mov-tipo" class="form-label">Tipo de movimiento *</label>
+            <select
+              id="mov-tipo"
+              class="form-select"
+              [ngModel]="tipoMovimiento()"
+              (ngModelChange)="cambiarTipo($event)"
+              name="tipoMovimiento"
+            >
+              <option value="SALIDA">Salida (baja / mortalidad)</option>
+              <option value="INGRESO">Ingreso (alta / lote)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <!-- Motivo específico -->
+          <div class="col-12 col-sm-6">
+            <label for="mov-motivo" class="form-label">Motivo *</label>
+            <select id="mov-motivo" class="form-select">
+              @if (tipoMovimiento() === 'SALIDA') {
+                <option value="MUERTE" selected>Mortalidad / Muerte</option>
+                <option value="VENTA">Venta</option>
+                <option value="REHABILITACION">Rehabilitación / Aislamiento</option>
+                <option value="OTRO">Otro motivo</option>
+              } @else {
+                <option value="COMPRA" selected>Compra / Incorporación</option>
+                <option value="RECUPERADA">Recuperadas</option>
+                <option value="OTRO">Otro ingreso</option>
+              }
+            </select>
+          </div>
+
+          <!-- Cantidad de gallinas -->
+          <div class="col-12 col-sm-6">
+            <label for="mov-cantidad" class="form-label">Cantidad de aves *</label>
+            <input
+              id="mov-cantidad"
+              type="number"
+              class="form-control"
+              placeholder="0"
+              min="1"
+            />
+          </div>
+        </div>
+
+        <!-- Detalle o Causa -->
+        <div class="mb-3">
+          <label for="mov-desc" class="form-label">Causa o detalle del incidente</label>
+          <input
+            id="mov-desc"
+            type="text"
+            class="form-control"
+            placeholder="Ej. Golpe de calor, predación, etc."
+          />
+        </div>
+
+        <!-- Acciones -->
+        <div class="gestion-formulario-acciones pt-2">
+          <button type="button" class="btn btn-limpiar" (click)="toggleDesplegable()">Cancelar</button>
+          <button type="submit" class="btn btn-guardar">Registrar</button>
+        </div>
+      </form>
+    }
+  </div>
 </div>
