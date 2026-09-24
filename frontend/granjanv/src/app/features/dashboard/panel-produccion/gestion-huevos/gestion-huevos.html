@@ -1,47 +1,100 @@
-<!-- Título principal -->
 <h2 class="gestion-titulo text-white mb-2">PRODUCCIÓN DIARIA</h2>
 
-<!-- Formulario sobre tarjeta beige -->
 <form class="gestion-formulario m-0 p-3">
 
+  <!-- Galpón -->
   <div class="mb-3">
-    <label for="prod-galpon" class="form-label">Galpón</label>
+    <label for="prod-galpon" class="form-label">Galpón *</label>
     <select id="prod-galpon" class="form-select">
-      <option value="" disabled selected>Seleccionar</option>
+      <option value="" disabled selected>Seleccionar galpón</option>
       <option value="1">Galpón 1</option>
       <option value="2">Galpón 2</option>
       <option value="3">Galpón 3</option>
     </select>
   </div>
 
+  <!-- Grilla de categorías de maples -->
   <div class="mb-3">
-    <label for="prod-tipo" class="form-label">Tipo</label>
-    <select id="prod-tipo" class="form-select">
-      <option value="" disabled selected>Seleccionar</option>
-      <option value="BLANCO">Blanco</option>
-      <option value="COLOR">Color</option>
-    </select>
+    <span class="form-label d-block mb-2">Maples recolectados</span>
+    <div class="productos-grid">
+
+      <div class="producto-fila">
+        <div class="producto-nombre">
+          <span>Color N.° 1</span>
+        </div>
+        <div class="producto-contador">
+          <button type="button" class="btn-step" aria-label="Restar">-</button>
+          <input type="number" class="contador-valor" value="0" min="0" readonly />
+          <button type="button" class="btn-step" aria-label="Sumar">+</button>
+        </div>
+      </div>
+
+      <div class="producto-fila">
+        <div class="producto-nombre">
+          <span>Color N.° 2</span>
+        </div>
+        <div class="producto-contador">
+          <button type="button" class="btn-step" aria-label="Restar">-</button>
+          <input type="number" class="contador-valor" value="0" min="0" readonly />
+          <button type="button" class="btn-step" aria-label="Sumar">+</button>
+        </div>
+      </div>
+
+      <div class="producto-fila">
+        <div class="producto-nombre">
+          <span>Blanco N.° 1</span>
+        </div>
+        <div class="producto-contador">
+          <button type="button" class="btn-step" aria-label="Restar">-</button>
+          <input type="number" class="contador-valor" value="0" min="0" readonly />
+          <button type="button" class="btn-step" aria-label="Sumar">+</button>
+        </div>
+      </div>
+
+      <div class="producto-fila">
+        <div class="producto-nombre">
+          <span>Blanco N.° 2</span>
+        </div>
+        <div class="producto-contador">
+          <button type="button" class="btn-step" aria-label="Restar">-</button>
+          <input type="number" class="contador-valor" value="0" min="0" readonly />
+          <button type="button" class="btn-step" aria-label="Sumar">+</button>
+        </div>
+      </div>
+
+      <div class="producto-fila">
+        <div class="producto-nombre">
+          <span>Mixto</span>
+        </div>
+        <div class="producto-contador">
+          <button type="button" class="btn-step" aria-label="Restar">-</button>
+          <input type="number" class="contador-valor" value="0" min="0" readonly />
+          <button type="button" class="btn-step" aria-label="Sumar">+</button>
+        </div>
+      </div>
+
+    </div>
   </div>
 
+  <!-- Huevos rotos (Merma) -->
   <div class="mb-3">
-    <label for="prod-numero" class="form-label">Número</label>
-    <select id="prod-numero" class="form-select">
-      <option value="" disabled selected>Seleccionar</option>
-      <option value="1">N° 1</option>
-      <option value="2">N° 2</option>
-    </select>
+    <label for="prod-rotos" class="form-label">Huevos rotos (Merma en unidades)</label>
+    <input id="prod-rotos" type="number" class="form-control" placeholder="0" min="0" />
   </div>
 
+  <!-- Total maples calculado -->
   <div class="mb-3">
-    <label for="prod-cantidad" class="form-label">Cantidad de maples</label>
-    <input id="prod-cantidad" type="number" class="form-control" placeholder="0" min="0">
+    <label for="total-maples" class="form-label mb-1">Total maples a ingresar a stock</label>
+    <input
+      id="total-maples"
+      type="text"
+      class="form-control campo-deshabilitado text-center fw-bold"
+      value="0"
+      readonly
+    />
   </div>
 
-  <div class="mb-3">
-    <label for="prod-rotos" class="form-label">Cantidad huevos rotos</label>
-    <input id="prod-rotos" type="number" class="form-control" placeholder="0" min="0">
-  </div>
-
+  <!-- Acciones -->
   <div class="gestion-formulario-acciones pt-2">
     <button type="button" class="btn btn-limpiar">Limpiar</button>
     <button type="submit" class="btn btn-guardar">Guardar</button>
