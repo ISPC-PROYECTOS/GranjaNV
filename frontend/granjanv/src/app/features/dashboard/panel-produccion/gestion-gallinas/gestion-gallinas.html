@@ -1,8 +1,6 @@
 <div class="contenedor-gestion-gallinas mt-4">
-  <!-- Título idéntico a PRODUCCIÓN DIARIA de Figma -->
   <h3 class="gestion-subtitulo text-white mb-2">GESTIÓN DE GALLINAS</h3>
 
-  <!-- Acordeón estilo tarjeta de Figma -->
   <div class="acordeon-gallinas">
     <button
       type="button"
@@ -22,83 +20,179 @@
     </button>
 
     @if (desplegado()) {
-      <form class="gestion-formulario m-0 p-3 animate-fade-in">
-        <div class="row g-2 mb-3">
-          <!-- Galpón -->
-          <div class="col-12 col-sm-6">
-            <label for="mov-galpon" class="form-label">Galpón *</label>
-            <select id="mov-galpon" class="form-select">
-              <option value="" disabled selected>Seleccionar galpón</option>
-              <option value="1">Galpón 1</option>
-              <option value="2">Galpón 2</option>
-              <option value="3">Galpón 3</option>
-            </select>
+      <div class="p-3 animate-fade-in">
+        <!-- Alertas de feedback -->
+        @if (mensajeExito()) {
+          <div class="alerta-exito" role="alert">
+            {{ mensajeExito() }}
+          </div>
+        }
+
+        @if (errorMensaje()) {
+          <div class="alerta-error" role="alert">
+            {{ errorMensaje() }}
+          </div>
+        }
+
+        <form class="gestion-formulario m-0 p-3" (ngSubmit)="solicitarGuardado()">
+          <div class="row g-2 mb-3">
+            <!-- Galpón -->
+            <div class="col-12 col-sm-6">
+              <label for="mov-galpon" class="form-label">Galpón *</label>
+              <select
+                id="mov-galpon"
+                class="form-select"
+                [ngModel]="galponSeleccionado()"
+                (ngModelChange)="galponSeleccionado.set($event)"
+                name="galponMovimiento"
+              >
+                @for (galpon of galpones(); track galpon.id) {
+                  <option [value]="galpon.id">
+                    {{ galpon.nombre }}{{ galpon.activo ? ' (Activo)' : '' }}
+                  </option>
+                }
+              </select>
+            </div>
+
+            <!-- Tipo de Movimiento -->
+            <div class="col-12 col-sm-6">
+              <label for="mov-tipo" class="form-label">Tipo de movimiento *</label>
+              <select
+                id="mov-tipo"
+                class="form-select"
+                [ngModel]="tipoMovimiento()"
+                (ngModelChange)="cambiarTipo($event)"
+                name="tipoMovimiento"
+              >
+                <option value="SALIDA">Salida (baja / mortalidad)</option>
+                <option value="INGRESO">Ingreso (alta / lote)</option>
+              </select>
+            </div>
           </div>
 
-          <!-- Tipo de Movimiento -->
-          <div class="col-12 col-sm-6">
-            <label for="mov-tipo" class="form-label">Tipo de movimiento *</label>
-            <select
-              id="mov-tipo"
-              class="form-select"
-              [ngModel]="tipoMovimiento()"
-              (ngModelChange)="cambiarTipo($event)"
-              name="tipoMovimiento"
-            >
-              <option value="SALIDA">Salida (baja / mortalidad)</option>
-              <option value="INGRESO">Ingreso (alta / lote)</option>
-            </select>
-          </div>
-        </div>
+          <div class="row g-2 mb-3">
+            <!-- Motivo específico según el tipo seleccionado -->
+            <div class="col-12 col-sm-6">
+              <label for="mov-motivo" class="form-label">Motivo *</label>
+              <select
+                id="mov-motivo"
+                class="form-select"
+                [ngModel]="motivoMovimiento()"
+                (ngModelChange)="motivoMovimiento.set($event)"
+                name="motivoMovimiento"
+              >
+                @if (tipoMovimiento() === 'SALIDA') {
+                  <option value="MUERTE">Mortalidad / Muerte</option>
+                  <option value="VENTA">Venta</option>
+                  <option value="REHABILITACION">Rehabilitación / Aislamiento</option>
+                  <option value="OTRO">Otro motivo</option>
+                } @else {
+                  <option value="COMPRA">Compra / Incorporación</option>
+                  <option value="RECUPERADA">Recuperadas</option>
+                  <option value="OTRO">Otro ingreso</option>
+                }
+              </select>
+            </div>
 
-        <div class="row g-2 mb-3">
-          <!-- Motivo específico -->
-          <div class="col-12 col-sm-6">
-            <label for="mov-motivo" class="form-label">Motivo *</label>
-            <select id="mov-motivo" class="form-select">
-              @if (tipoMovimiento() === 'SALIDA') {
-                <option value="MUERTE" selected>Mortalidad / Muerte</option>
-                <option value="VENTA">Venta</option>
-                <option value="REHABILITACION">Rehabilitación / Aislamiento</option>
-                <option value="OTRO">Otro motivo</option>
-              } @else {
-                <option value="COMPRA" selected>Compra / Incorporación</option>
-                <option value="RECUPERADA">Recuperadas</option>
-                <option value="OTRO">Otro ingreso</option>
-              }
-            </select>
+            <!-- Cantidad de aves -->
+            <div class="col-12 col-sm-6">
+              <label for="mov-cantidad" class="form-label">Cantidad de aves *</label>
+              <input
+                id="mov-cantidad"
+                type="number"
+                class="form-control"
+                placeholder="0"
+                min="1"
+                [ngModel]="cantidadAves()"
+                (ngModelChange)="cantidadAves.set($event)"
+                name="cantidadAves"
+              />
+            </div>
           </div>
 
-          <!-- Cantidad de gallinas -->
-          <div class="col-12 col-sm-6">
-            <label for="mov-cantidad" class="form-label">Cantidad de aves *</label>
+          <!-- Detalle o Causa -->
+          <div class="mb-3">
+            <label for="mov-desc" class="form-label">Causa o detalle del incidente</label>
             <input
-              id="mov-cantidad"
-              type="number"
+              id="mov-desc"
+              type="text"
               class="form-control"
-              placeholder="0"
-              min="1"
+              placeholder="Ej. Incidente térmico, predación, lote nuevo, etc."
+              [ngModel]="descripcionIncidente()"
+              (ngModelChange)="descripcionIncidente.set($event)"
+              name="descripcionIncidente"
             />
           </div>
-        </div>
 
-        <!-- Detalle o Causa -->
-        <div class="mb-3">
-          <label for="mov-desc" class="form-label">Causa o detalle del incidente</label>
-          <input
-            id="mov-desc"
-            type="text"
-            class="form-control"
-            placeholder="Ej. Golpe de calor, predación, etc."
-          />
-        </div>
-
-        <!-- Acciones -->
-        <div class="gestion-formulario-acciones pt-2">
-          <button type="button" class="btn btn-limpiar" (click)="toggleDesplegable()">Cancelar</button>
-          <button type="submit" class="btn btn-guardar">Registrar</button>
-        </div>
-      </form>
+          <!-- Acciones -->
+          <div class="gestion-formulario-acciones pt-2">
+            <button type="button" class="btn btn-limpiar" (click)="limpiar()">Limpiar</button>
+            <button type="submit" class="btn btn-guardar" [disabled]="isGuardando()">
+              {{ isGuardando() ? 'Guardando...' : 'Registrar' }}
+            </button>
+          </div>
+        </form>
+      </div>
     }
   </div>
 </div>
+
+<!-- Modal de confirmación de movimiento de gallinas -->
+@if (mostrarConfirmacion()) {
+  <div class="modal-confirmacion-backdrop">
+    <div
+      class="modal-confirmacion-caja animate-fade-in"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-confirmar-movimiento"
+    >
+      <h4 id="titulo-confirmar-movimiento">Confirmar movimiento de aves</h4>
+      <p class="text-muted small mb-3">Revisá los datos antes de registrar:</p>
+
+      <ul class="list-unstyled text-start small mb-3 px-2">
+        <li>
+          <strong>Galpón:</strong>
+          {{ obtenerNombreGalpon(galponSeleccionado()) }}
+        </li>
+        <li><strong>Fecha:</strong> {{ payloadPendiente()?.fecha }}</li>
+        <li>
+          <strong>Tipo:</strong>
+          {{ payloadPendiente()?.tipo_movimiento === 'INGRESO' ? 'Ingreso (Alta)' : 'Salida (Baja)' }}
+        </li>
+        <li>
+          <strong>Motivo:</strong>
+          {{ obtenerTextoMotivo(payloadPendiente()?.motivo_movimiento) }}
+        </li>
+        <li>
+          <strong>Cantidad de aves:</strong>
+          {{ payloadPendiente()?.cantidad_gallinas }}
+        </li>
+        @if (payloadPendiente()?.descripcion_movimiento) {
+          <li>
+            <strong>Detalle:</strong>
+            {{ payloadPendiente()?.descripcion_movimiento }}
+          </li>
+        }
+      </ul>
+
+      <div class="d-flex gap-2 justify-content-end">
+        <button
+          type="button"
+          class="btn btn-sm btn-limpiar"
+          (click)="cancelarConfirmacion()"
+          [disabled]="isGuardando()"
+        >
+          Modificar
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm btn-guardar"
+          (click)="confirmarYGuardar()"
+          [disabled]="isGuardando()"
+        >
+          {{ isGuardando() ? 'Guardando...' : 'Confirmar y Guardar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

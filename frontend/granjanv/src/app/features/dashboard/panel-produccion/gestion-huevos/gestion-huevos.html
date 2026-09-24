@@ -1,85 +1,90 @@
 <h2 class="gestion-titulo text-white mb-2">PRODUCCIÓN DIARIA</h2>
 
-<form class="gestion-formulario m-0 p-3">
+<!-- Mensajes de feedback con estilos globales -->
+@if (mensajeExito()) {
+  <div class="alerta-exito" role="alert">
+    {{ mensajeExito() }}
+  </div>
+}
 
-  <!-- Galpón -->
+@if (errorMensaje()) {
+  <div class="alerta-error" role="alert">
+    {{ errorMensaje() }}
+  </div>
+}
+
+<form class="gestion-formulario m-0 p-3" (ngSubmit)="solicitarGuardado()">
+
+  <!-- Selector de Galpón -->
   <div class="mb-3">
     <label for="prod-galpon" class="form-label">Galpón *</label>
-    <select id="prod-galpon" class="form-select">
-      <option value="" disabled selected>Seleccionar galpón</option>
-      <option value="1">Galpón 1</option>
-      <option value="2">Galpón 2</option>
-      <option value="3">Galpón 3</option>
+    <select
+      id="prod-galpon"
+      class="form-select"
+      [ngModel]="galponSeleccionado()"
+      (ngModelChange)="galponSeleccionado.set($event)"
+      name="galpon"
+    >
+      @for (galpon of galpones(); track galpon.id) {
+        <option [value]="galpon.id">
+          {{ galpon.nombre }}{{ galpon.activo ? ' (Activo)' : '' }}
+        </option>
+      }
     </select>
   </div>
 
   <!-- Grilla de categorías de maples -->
   <div class="mb-3">
-    <span class="form-label d-block mb-2">Maples recolectados</span>
+    <span class="form-label d-block mb-2">Maples recolectados *</span>
     <div class="productos-grid">
-
-      <div class="producto-fila">
-        <div class="producto-nombre">
-          <span>Color N.° 1</span>
+      @for (item of itemsMaples(); track item.codigo) {
+        <div class="producto-fila">
+          <div class="producto-nombre">
+            <span>{{ item.etiqueta }}</span>
+          </div>
+          <div class="producto-contador">
+            <button
+              type="button"
+              class="btn-step"
+              aria-label="Restar un maple"
+              (click)="decrementar(item.codigo)"
+            >
+              -
+            </button>
+            <input
+              type="number"
+              class="contador-valor"
+              min="0"
+              [value]="item.cantidad"
+              (change)="actualizarCantidad(item.codigo, $event)"
+              [attr.aria-label]="'Cantidad de maples ' + item.etiqueta"
+            />
+            <button
+              type="button"
+              class="btn-step"
+              aria-label="Sumar un maple"
+              (click)="incrementar(item.codigo)"
+            >
+              +
+            </button>
+          </div>
         </div>
-        <div class="producto-contador">
-          <button type="button" class="btn-step" aria-label="Restar">-</button>
-          <input type="number" class="contador-valor" value="0" min="0" readonly />
-          <button type="button" class="btn-step" aria-label="Sumar">+</button>
-        </div>
-      </div>
-
-      <div class="producto-fila">
-        <div class="producto-nombre">
-          <span>Color N.° 2</span>
-        </div>
-        <div class="producto-contador">
-          <button type="button" class="btn-step" aria-label="Restar">-</button>
-          <input type="number" class="contador-valor" value="0" min="0" readonly />
-          <button type="button" class="btn-step" aria-label="Sumar">+</button>
-        </div>
-      </div>
-
-      <div class="producto-fila">
-        <div class="producto-nombre">
-          <span>Blanco N.° 1</span>
-        </div>
-        <div class="producto-contador">
-          <button type="button" class="btn-step" aria-label="Restar">-</button>
-          <input type="number" class="contador-valor" value="0" min="0" readonly />
-          <button type="button" class="btn-step" aria-label="Sumar">+</button>
-        </div>
-      </div>
-
-      <div class="producto-fila">
-        <div class="producto-nombre">
-          <span>Blanco N.° 2</span>
-        </div>
-        <div class="producto-contador">
-          <button type="button" class="btn-step" aria-label="Restar">-</button>
-          <input type="number" class="contador-valor" value="0" min="0" readonly />
-          <button type="button" class="btn-step" aria-label="Sumar">+</button>
-        </div>
-      </div>
-
-      <div class="producto-fila">
-        <div class="producto-nombre">
-          <span>Mixto</span>
-        </div>
-        <div class="producto-contador">
-          <button type="button" class="btn-step" aria-label="Restar">-</button>
-          <input type="number" class="contador-valor" value="0" min="0" readonly />
-          <button type="button" class="btn-step" aria-label="Sumar">+</button>
-        </div>
-      </div>
-
+      }
     </div>
   </div>
 
   <!-- Huevos rotos (Merma) -->
   <div class="mb-3">
     <label for="prod-rotos" class="form-label">Huevos rotos (Merma en unidades)</label>
-    <input id="prod-rotos" type="number" class="form-control" placeholder="0" min="0" />
+    <input
+      id="prod-rotos"
+      type="number"
+      class="form-control"
+      placeholder="0"
+      min="0"
+      [value]="huevosRotos()"
+      (input)="actualizarHuevosRotos($event)"
+    />
   </div>
 
   <!-- Total maples calculado -->
@@ -89,15 +94,69 @@
       id="total-maples"
       type="text"
       class="form-control campo-deshabilitado text-center fw-bold"
-      value="0"
+      [value]="totalMaples()"
       readonly
     />
   </div>
 
   <!-- Acciones -->
   <div class="gestion-formulario-acciones pt-2">
-    <button type="button" class="btn btn-limpiar">Limpiar</button>
-    <button type="submit" class="btn btn-guardar">Guardar</button>
+    <button type="button" class="btn btn-limpiar" (click)="limpiar()">Limpiar</button>
+    <button type="submit" class="btn btn-guardar" [disabled]="isGuardando()">
+      {{ isGuardando() ? 'Guardando...' : 'Guardar' }}
+    </button>
   </div>
 
 </form>
+
+<!-- Modal de confirmación de producción diaria -->
+@if (mostrarConfirmacion()) {
+  <div class="modal-confirmacion-backdrop">
+    <div
+      class="modal-confirmacion-caja animate-fade-in"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-confirmar-produccion"
+    >
+      <h4 id="titulo-confirmar-produccion">Confirmar producción diaria</h4>
+      <p class="text-muted small mb-3">Revisá los datos antes de ingresar a stock:</p>
+
+      <ul class="list-unstyled text-start small mb-3 px-2">
+        <li>
+          <strong>Galpón:</strong>
+          {{ obtenerNombreGalpon(galponSeleccionado()) }}
+        </li>
+        <li><strong>Fecha:</strong> {{ payloadPendiente()?.fecha }}</li>
+        <li>
+          <strong>Maples a ingresar:</strong>
+          @for (item of payloadPendiente()?.items; track item.tipo_huevo) {
+            <span class="d-block ms-2">
+              • {{ item.cantidad_maples }} maple(s) de {{ item.tipo_huevo }}
+            </span>
+          }
+        </li>
+        <li><strong>Total maples:</strong> {{ payloadPendiente()?.total_maples }}</li>
+        <li><strong>Huevos rotos (merma):</strong> {{ payloadPendiente()?.huevos_rotos }} u.</li>
+      </ul>
+
+      <div class="d-flex gap-2 justify-content-end">
+        <button
+          type="button"
+          class="btn btn-sm btn-limpiar"
+          (click)="cancelarConfirmacion()"
+          [disabled]="isGuardando()"
+        >
+          Modificar
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm btn-guardar"
+          (click)="confirmarYGuardar()"
+          [disabled]="isGuardando()"
+        >
+          {{ isGuardando() ? 'Guardando...' : 'Confirmar y Guardar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
