@@ -45,3 +45,29 @@
 .button-group {
   margin-top: 1.5rem;
 }
+
+/* MODO OSCURO */
+
+:host-context(body.dark-mode) .header h1,
+:host-context(body.dark-mode) .header p,
+:host-context(body.dark-mode) .form-group label {
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .form-group input,
+:host-context(body.dark-mode) .form-group select {
+  background-color: var(--color-negro);
+  color: var(--color-blanco);
+}
+
+:host-context(body.dark-mode) .form-group input::placeholder {
+  color: var(--color-gris-claro);
+}
+
+:host-context(body.dark-mode) .btn-formulario {
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .error-msg {
+  color: var(--color-negro);
+}

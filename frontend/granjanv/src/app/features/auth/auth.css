@@ -129,3 +129,28 @@
     display: none;
   }
 }
+
+/* MODO OSCURO */
+
+:host-context(body.dark-mode) .header h1,
+:host-context(body.dark-mode) .header p,
+:host-context(body.dark-mode) .form-group label {
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .form-group input {
+  background-color: var(--color-negro);
+  color: var(--color-blanco);
+}
+
+:host-context(body.dark-mode) .form-group input::placeholder {
+  color: var(--color-gris-oscuro);
+}
+
+:host-context(body.dark-mode) .btn-recovery {
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .btn-formulario {
+  color: var(--color-negro);
+}

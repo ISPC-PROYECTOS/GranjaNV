@@ -45,6 +45,11 @@ export class NavbarComponent implements OnInit {
   detallesAbiertos = signal<boolean>(false);
 
   ngOnInit(): void {
+    const modoGuardado = localStorage.getItem('modoOscuro') === 'true';
+
+    this.modoOscuro.set(modoGuardado);
+    document.body.classList.toggle('dark-mode', modoGuardado);
+
     this.obtenerFechaFormateada();
     this.cargarDatosClima();
   }
