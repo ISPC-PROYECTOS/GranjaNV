@@ -251,13 +251,11 @@
               [ngModel]="terminoBusquedaCliente()" (ngModelChange)="onEscribirCliente($event)" autocomplete="off" />
 
             @if (clientesFiltrados().length > 0 && !clienteSeleccionado()) {
-            <ul class="dropdown-clientes-sugerencias shadow" role="listbox">
-              @for (c of clientesFiltrados(); track c.id) {
-              <li role="option" tabindex="0" (click)="seleccionarCliente(c)" (keydown.enter)="seleccionarCliente(c)">
-                <strong>{{ c.nombre }} {{ c.apellido }}</strong> — {{ c.direccion }} ({{ c.telefono }})
-              </li>
-              }
-            </ul>
+              <app-cliente-sugerencias 
+                [clientes]="clientesFiltrados()" 
+                (seleccionar)="seleccionarCliente($any($event))" 
+              />
+            
             }
 
             @if (terminoBusquedaCliente().trim() && clientesFiltrados().length === 0 && !clienteSeleccionado()) {

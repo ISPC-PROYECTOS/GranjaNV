@@ -21,10 +21,12 @@ import {
 import { formatearFechaISO, obtenerRangoMesActual } from '../../../../core/utils/date.utils';
 import { Buscador } from '../../../../shared/buscador/buscador';
 import { CrearClienteComponent } from '../../../../shared/clientes/crear-cliente';
+import { ClienteSugerenciasComponent } from '../../../../shared/clientes-sugerencias/clientes-sugerencias';
 
 @Component({
   selector: 'app-ventas',
-  imports: [CommonModule, FormsModule, RouterLink, SelectorFecha, Buscador, CrearClienteComponent],
+  imports: [CommonModule, FormsModule, RouterLink, SelectorFecha, Buscador, CrearClienteComponent,
+            ClienteSugerenciasComponent],
   templateUrl: './ventas.html',
   styleUrl: './ventas.css',
 })
