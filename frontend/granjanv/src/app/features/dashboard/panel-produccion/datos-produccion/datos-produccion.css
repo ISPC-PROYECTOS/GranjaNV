@@ -1,0 +1,190 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.datos-produccion-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Carrusel contenedor */
+:host app-carrusel,
+:host ::ng-deep .carrusel-wrapper {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+:host ::ng-deep .carrusel-grid {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Tarjeta principal DATOS */
+.tarjeta-metrica-diagonal {
+  position: relative;
+  background-color: var(--color-secundario-claro);
+  border: 2.5px solid var(--color-secundario);
+  border-radius: 27px;
+  width: 100%;
+  height: 650px;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 32px;
+}
+
+/* Diagonal  desde esquina superior derecha a esquina inferior izquierda */
+.svg-diagonal {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.svg-diagonal line {
+  stroke: var(--color-secundario);
+  stroke-width: 2.5px;
+}
+
+/* Posición de los bloques numéricos */
+.bloque-metrica {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.bloque-superior-izq {
+  top: 36px;
+  left: 36px;
+  text-align: left;
+  max-width: 65%;
+}
+
+.bloque-inferior-der {
+  bottom: 36px;
+  right: 36px;
+  text-align: right;
+  max-width: 65%;
+}
+
+.metrica-titulo {
+  font-family: var(--font-titulos);
+  font-size: clamp(16px, 1.4vw, 22px);
+  font-weight: 700;
+  color: var(--color-primario-oscuro);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.metrica-valor {
+  font-family: var(--font-titulos);
+  font-size: clamp(86px, 9vw, 136px);
+  font-weight: 700;
+  color: var(--color-primario);
+  line-height: 0.85;
+  margin: 12px 0 0 0;
+  letter-spacing: -2px;
+}
+
+.bloque-inferior-der .metrica-valor {
+  margin: 0 0 12px 0;
+}
+
+/* FLECHAS DENTRO DE LA TARJETA */
+:host ::ng-deep .carrusel-flecha {
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 10 !important;
+  width: 44px !important;
+  height: 44px !important;
+  color: var(--color-primario) !important;
+  font-size: 30px !important;
+  background-color: rgba(255, 255, 255, 0.75) !important;
+  border: 1px solid var(--color-secundario) !important;
+  border-radius: 50% !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  backdrop-filter: blur(4px) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12) !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Centrado óptico exacto del caracter de flecha */
+:host ::ng-deep .carrusel-flecha span {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  height: 100% !important;
+  width: 100% !important;
+  transform: translateY(-4px) !important;
+}
+:host ::ng-deep .carrusel-flecha-anterior {
+  left: 14px !important;
+}
+
+:host ::ng-deep .carrusel-flecha-siguiente {
+  right: 14px !important;
+}
+
+:host ::ng-deep .carrusel-flecha:hover {
+  background-color: var(--color-primario) !important;
+  color: var(--color-blanco) !important;
+  border-color: var(--color-primario) !important;
+  transform: translateY(-50%) scale(1.1) !important;
+}
+
+/*  RESPONSIVE MOBILE (< 576px)*/
+@media (max-width: 575px) {
+  .tarjeta-metrica-diagonal {
+    height: 500px;
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .bloque-superior-izq {
+    top: 24px;
+    left: 20px;
+  }
+
+  .bloque-inferior-der {
+    bottom: 24px;
+    right: 20px;
+  }
+
+  .metrica-titulo {
+    font-size: 14px;
+  }
+
+  .metrica-valor {
+    font-size: clamp(64px, 18vw, 82px);
+  }
+
+  :host ::ng-deep .carrusel-flecha {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 18px !important;
+  }
+
+  :host ::ng-deep .carrusel-flecha-anterior {
+    left: 8px !important;
+  }
+
+  :host ::ng-deep .carrusel-flecha-siguiente {
+    right: 8px !important;
+  }
+}

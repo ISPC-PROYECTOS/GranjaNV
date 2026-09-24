@@ -1,21 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { GestionHuevos } from './gestion-huevos/gestion-huevos';
-import { RegistroIncidentes } from './registro-incidentes/registro-incidentes';
 import { GestionGallinas } from './gestion-gallinas/gestion-gallinas';
+import { DatosProduccion } from './datos-produccion/datos-produccion';
 
 @Component({
   selector: 'app-panel-produccion',
   standalone: true,
   imports: [
-    CommonModule, 
-    RouterLink, 
-    GestionHuevos, 
-    RegistroIncidentes, 
-    GestionGallinas
+    CommonModule,
+    GestionHuevos,
+    GestionGallinas,
+    DatosProduccion
   ],
   templateUrl: './panel-produccion.html',
   styleUrl: './panel-produccion.css',
 })
-export class PanelProduccion {}
+export class PanelProduccion {
+  readonly vistaMobile = signal<'formulario' | 'metricas'>('formulario');
+
+  mostrarFormulario(): void {
+    this.vistaMobile.set('formulario');
+  }
+
+  mostrarMetricas(): void {
+    this.vistaMobile.set('metricas');
+  }
+}
