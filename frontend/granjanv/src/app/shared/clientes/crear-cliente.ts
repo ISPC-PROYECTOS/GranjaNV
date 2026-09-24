@@ -1,22 +1,25 @@
-import { Component, EventEmitter,Input, Output, inject, signal } from '@angular/core';
+import { Component, EventEmitter,Input, Output, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ClientesService } from '../../core/services/clientes.service';
 import { Cliente } from '../../core/models/cliente.model';
+import { ClienteSugerenciasComponent } from '../clientes-sugerencias/clientes-sugerencias';
 
 const PATRON_TEXTO = '^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]{3,}$';
 const PATRON_TELEFONO = '^[0-9]{10,}$';
 @Component({
   selector: 'app-crear-cliente',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ClienteSugerenciasComponent, ClienteSugerenciasComponent],
   templateUrl: './crear-cliente.html',
   styleUrl: './crear-cliente.css'
 })
 export class CrearClienteComponent {
-  private fb = inject(FormBuilder);
+  private fb = inject(FormBuilder); 
   private clientesService = inject(ClientesService);
 
+  
   @Input() set nombreInicial(valor: string) {
     if (valor && !this.clienteId()) {
       this.formularioCliente.patchValue({ nombre: valor });
@@ -48,7 +51,15 @@ export class CrearClienteComponent {
   isLoading = signal<boolean>(false);
   mostrarConfirmacion = signal<boolean>(false);
 
-  
+  // Signal para guardar la lista de clientes registrados
+  clientesExistentes = signal<Cliente[]>([]);
+
+  constructor() {
+    this.clientesService.obtenerClientes().subscribe({
+      next: (data) => this.clientesExistentes.set(data),
+      error: (err) => console.error('Error al cargar clientes:', err)
+    });
+  }
 
   formularioCliente: FormGroup = this.fb.group({
     nombre: ['', [Validators.required, Validators.minLength(3), Validators.pattern(PATRON_TEXTO)]],
@@ -59,13 +70,50 @@ export class CrearClienteComponent {
     tipo: ['MINORISTA', [Validators.required]]
   });
 
+  // Escuchamos en tiempo real los cambios de nombre y apellido
+  private nombreValue = toSignal(this.formularioCliente.get('nombre')!.valueChanges, {
+    initialValue: this.formularioCliente.get('nombre')?.value || ''
+  });
+
+  private apellidoValue = toSignal(this.formularioCliente.get('apellido')!.valueChanges, {
+    initialValue: this.formularioCliente.get('apellido')?.value || ''
+  });
+
+  // Lista de coincidencia en tiempo real mientras escribe el nombre
+  coincidenciasNombre = computed(() => {
+    const nomOriginal = this.nombreValue() || '';
+    const nom = (this.nombreValue() || '').trim().toLowerCase();
+    if (!nom || nom.length < 2) return [];
+
+    if (nomOriginal.includes(' ')) return [];
+
+    const existeExacto = this.clientesExistentes().some(c => c.nombre.trim().toLowerCase() === nom);
+    if (existeExacto) return [];
+
+    return this.clientesExistentes().filter(c => 
+      c.nombre.toLowerCase().includes(nom)
+    );
+  });
+
+  // Detección inmediata si el NOMBRE ya existe en la base de datos
+  esNombreIdentico = computed(() => {
+    const nom = (this.nombreValue() || '').trim().toLowerCase();
+
+    if (!nom || nom.length < 3) return false;
+
+    return this.clientesExistentes().some(c => 
+      c.nombre.trim().toLowerCase() === nom
+    );
+  });
+
   solicitarConfirmacion(): void {
-  if (this.formularioCliente.invalid) {
-    this.formularioCliente.markAllAsTouched();
-    return;
-  }
-  this.errorBackend.set(null);
-  this.mostrarConfirmacion.set(true);
+    if (this.formularioCliente.invalid || this.esNombreIdentico()) {
+      this.formularioCliente.markAllAsTouched();
+      return;
+    }
+  
+    this.errorBackend.set(null);
+    this.mostrarConfirmacion.set(true);
 }
 
 cancelarConfirmacion(): void {

@@ -18,17 +18,39 @@
     </div>
   }
 
+ 
+
   <form class="gestion-formulario m-0" [formGroup]="formularioCliente" (ngSubmit)="solicitarConfirmacion()">
     
     <div class="row g-3">
-      <div class="col-md-6 mb-2">
+      <div class="col-md-6 mb-2 position-relative">
         <label for="nombre" class="form-label">Nombre *</label>
-        <input type="text" id="nombre" class="form-control" formControlName="nombre" placeholder="Ej. Juan o Almacen X">
+        <input type="text" id="nombre" class="form-control" [class.is-invalid]="esNombreIdentico()"
+          formControlName="nombre" placeholder="Ej. Juan o Almacen X">
         @if (formularioCliente.get('nombre')?.touched && formularioCliente.get('nombre')?.hasError('required')) {
           <p class="error-msg">El nombre es obligatorio.</p>
         } @else if (formularioCliente.get('nombre')?.touched && (formularioCliente.get('nombre')?.hasError('minlength') || formularioCliente.get('nombre')?.hasError('pattern'))) {
             <p class="error-msg">Ingresá al menos 3 letras (sin números).</p>
         }
+
+        <!-- Mensajes de error y aviso de bloqueo -->
+        @if (formularioCliente.get('nombre')?.touched && formularioCliente.get('nombre')?.hasError('required')) {
+          <p class="error-msg">El nombre es obligatorio.</p>
+        } @else if (formularioCliente.get('nombre')?.touched && (formularioCliente.get('nombre')?.hasError('minlength') || formularioCliente.get('nombre')?.hasError('pattern'))) {
+          <p class="error-msg">Ingresá al menos 3 letras (sin números).</p>
+        } @else if (esNombreIdentico()) {
+          <p class="error-msg ">
+            <i class="hgi-stroke hgi-alert-circle me-1"></i> Este nombre ya se encuentra registrado. Ingresá uno diferente para continuar.
+          </p>
+        }
+
+        <!-- Componente cliente-sugerencias reutilizable con clases flotantes de Bootstrap -->
+        @if (coincidenciasNombre().length > 0 && !esNombreIdentico()) {
+        
+            <app-cliente-sugerencias [clientes]="coincidenciasNombre()" />
+          
+        }
+
       </div>
 
       <div class="col-md-6 mb-2">
@@ -80,7 +102,7 @@
       <button type="button" class="btn-limpiar" (click)="limpiar()" [disabled]="isLoading()">
         Limpiar
       </button>
-      <button type="submit" class="btn-guardar" [disabled]="isLoading()">
+      <button type="submit" class="btn-guardar" [disabled]="isLoading() || esNombreIdentico()">
         {{ isLoading() ? 'Guardando...' : (clienteId() ? 'Actualizar' : 'Guardar') }}
       </button>
     </div>

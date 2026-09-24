@@ -294,6 +294,15 @@ body {
   color: var(--color-blanco);
 }
 
+.btn-guardar:disabled,
+.btn-guardar[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(40%);
+  border-color: transparent;
+}
+
 /* CONTENEDOR IZQUIERDO */
 
 .seccion-izquierda {
@@ -402,4 +411,12 @@ body.dark-mode .alerta-exito {
   background-color: var(--color-primario-claro);
   color: var(--color-negro);
   border-color: var(--color-exito);
+}
+
+:root[data-theme='dark'] .btn-guardar:disabled,
+:root[data-theme='dark'] .btn-guardar[disabled],
+body.dark-mode .btn-guardar:disabled,
+body.dark-mode .btn-guardar[disabled] {
+  opacity: 0.4;
+  filter: grayscale(60%);
 }
