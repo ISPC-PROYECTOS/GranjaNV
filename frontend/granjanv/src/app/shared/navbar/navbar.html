@@ -25,7 +25,7 @@
           <span class="weather-text">{{ clima()?.temperature }}°C {{ clima()?.description }}</span>
           <i class="hgi-stroke hgi-arrow-down-01 weather-arrow" [class.rotated]="detallesAbiertos()"></i>
           } @else {
-          <i class="hgi-stroke hgi-cloud-cross"></i>
+          <i class="hgi-stroke hgi-work-alert"></i>
           <span class="weather-text">Clima no disponible</span>
           }
         </button>
@@ -49,7 +49,7 @@
             </div>
 
             <div class="weather-detail-item">
-              <i class="hgi-stroke hgi-droplet-02 text-primary-custom"></i>
+              <i class="hgi-stroke hgi-humidity text-primary-custom"></i>
               <div>
                 <small>Humedad</small>
                 <p class="m-0 fw-semibold">{{ clima()?.humidity }}%</p>
@@ -57,7 +57,7 @@
             </div>
 
             <div class="weather-detail-item">
-              <i class="hgi-stroke hgi-wind-02 text-primary-custom"></i>
+              <i class="hgi-stroke hgi-wind-power text-primary-custom"></i>
               <div>
                 <small>Viento</small>
                 <div class="d-flex align-items-center gap-1">
