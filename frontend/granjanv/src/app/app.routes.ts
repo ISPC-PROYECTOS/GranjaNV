@@ -6,6 +6,7 @@ import { Compras } from './features/dashboard/panel-administrador/compras/compra
 import { NotFoundComponent } from './features/not-found/not-found';
 import { Home } from './home/home';
 import { adminGuard } from './core/guards/admin-guard';
+import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
   { path: 'auth/login', component: LoginComponent },
@@ -37,7 +38,8 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/dashboard/panel-produccion/panel-produccion').then(
         (m) => m.PanelProduccion
-      )
+      ),
+    canActivate: [authGuard]
   },
   { path: '', component: Home, pathMatch: 'full' },
   { path: '**', component: NotFoundComponent }

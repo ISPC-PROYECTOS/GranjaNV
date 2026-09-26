@@ -53,7 +53,7 @@ export class PanelDeControl implements OnInit {
       valor: '283',
       icono: 'hgi-eggs',
       color: 'verde',
-      ruta: null,
+      ruta: '/dashboard/produccion',
     },
   ]);
 

@@ -55,7 +55,7 @@ export class LoginComponent {
         if (userRole === 'admin' || userRole === 'administrador' || userRole === 'nahuel') {
           this.router.navigate(['/dashboard/admin/panel-de-control']);
         } else {
-          this.router.navigate(['/dashboard/produccion/gestion-huevos']);
+          this.router.navigate(['/dashboard/produccion']);
         }
       },
       error: (err) => {
