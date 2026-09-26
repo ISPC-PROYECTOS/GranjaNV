@@ -367,6 +367,15 @@ body {
 }
 
 /* =================================
+   BLOQUES BLANCOS REDONDEADOS
+================================= */
+.bloque-blanco {
+  background-color: var(--color-blanco) !important;
+  border-radius: 26px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+}
+
+/* =================================
    MODO OSCURO
 ================================= */
 

@@ -7,6 +7,7 @@ import { NotFoundComponent } from './features/not-found/not-found';
 import { Home } from './home/home';
 import { adminGuard } from './core/guards/admin-guard';
 
+
 export const routes: Routes = [
   { path: 'auth/login', component: LoginComponent },
   { 
@@ -32,6 +33,43 @@ export const routes: Routes = [
       ),
     canActivate: [adminGuard]
   },
+ 
+  { path: 'dashboard/admin/gestion-reportes',
+    loadComponent: () =>
+      import('./features/dashboard/panel-administrador/gestion-reportes/gestion-reportes').then(
+      (m) => m.GestionReportes
+      ),
+    canActivate: [adminGuard],
+    children: [
+      { path: '', redirectTo: 'metricas', pathMatch: 'full' },
+
+      /*{
+        path: 'reportes',
+        loadComponent: () =>
+          import('./features/dashboard/panel-administrador/gestion-reportes/reportes/reportes').then(
+          (m) => m.Reportes
+          ),
+      },*/
+
+      {
+      path: 'metricas', // <-- Tu pantalla
+      loadComponent: () =>
+        import('./features/dashboard/panel-administrador/gestion-reportes/metricas/metricas').then(
+          (m) => m.Metricas
+        ),
+    },
+    /*{
+      path: 'administracion',
+      loadComponent: () =>
+        import('./features/dashboard/panel-administrador/gestion-reportes/administracion/administracion').then(
+          (m) => m.Administracion
+        ),
+    },*/
+
   { path: '', component: Home, pathMatch: 'full' },
   { path: '**', component: NotFoundComponent }
+  ],
+}
+
+
 ];

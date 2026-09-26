@@ -1,0 +1,33 @@
+
+
+.barra-pestanias {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  overflow-x: auto;
+}
+
+/* Botón base de pestaña */
+.btn-pestania {
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+  font-family: var(--font-titulos);
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 10px 22px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  white-space: nowrap;
+}
+
+.btn-pestania:hover {
+  background-color: var(--color-primario-oscuro);
+  color: var(--color-blanco);
+}
+
+/* Pestaña seleccionada: borde terracota como en el diseño */
+.btn-pestania.pestania-activa {
+  border-color: var(--color-secundario);
+}

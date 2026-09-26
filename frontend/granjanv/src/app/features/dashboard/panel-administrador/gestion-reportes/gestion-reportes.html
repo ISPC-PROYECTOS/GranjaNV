@@ -1,0 +1,32 @@
+<main class="container-fluid gestion-pagina pb-4">
+  <!-- Botón para regresar al panel general -->
+  <button
+    class="btn btn-volver-panel"
+    type="button"
+    routerLink="/dashboard/admin/panel-de-control"
+  >
+    ← Panel de control
+  </button>
+
+  <!-- Contenedor blanco/crema con borde verde (idéntico al diseño) -->
+  <section class="gestion-seccion">
+    <!-- Barra superior de botones de pestañas -->
+    <nav class="bloque-blanco barra-pestanias" role="tablist" aria-label="Pestañas de gestión y reportes">
+      @for (pestania of pestanias; track pestania.ruta) {
+        <a
+          [routerLink]="pestania.ruta"
+          routerLinkActive="pestania-activa"
+          class="btn-pestania"
+          role="tab"
+        >
+          {{ pestania.etiqueta }}
+        </a>
+      }
+    </nav>
+
+    <!-- Espacio dinámico donde se renderiza la vista hija seleccionada -->
+    <div class="mt-3">
+      <router-outlet></router-outlet>
+    </div>
+  </section>
+</main>
