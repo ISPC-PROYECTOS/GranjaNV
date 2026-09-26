@@ -153,8 +153,11 @@
               <i class="hgi-stroke hgi-checkmark-circle-02" aria-hidden="true"></i>
               Pedidos cerrados ({{ pedidosCerrados().length }})
             </span>
-            <i class="hgi-stroke hgi-arrow-down-01 icono-chevron" [class.rotado]="mostrarCerrados()"
-              aria-hidden="true"></i>
+            <span class="total-ventas-toggle">
+              Total: ${{ formatearMoneda(totalVentas()) }}
+              <i class="hgi-stroke hgi-arrow-down-01 icono-chevron" [class.rotado]="mostrarCerrados()"
+                aria-hidden="true"></i>
+            </span>
           </button>
 
           @if (mostrarCerrados()) {
@@ -339,14 +342,15 @@
               </button>
               }
             </div>
-            <input id="fecha-entrega-manual" type="date" class="form-control" [min]="fechaMinima"
+            <input id="fecha-entrega-manual" type="date" class="form-control"
               [ngModel]="fechaEntregaSeleccionada()" (ngModelChange)="onCambioFechaManual($event)" required />
           </div>
 
           <!-- Acciones del Formulario -->
           <div class="gestion-formulario-acciones pt-2">
             <button type="button" class="btn btn-limpiar" (click)="limpiar()">Limpiar</button>
-            <button type="button" class="btn btn-guardar" (click)="guardarPedido()" [disabled]="isGuardando()">
+            <button type="button" class="btn btn-guardar" (click)="guardarPedido()"
+              [disabled]="isGuardando() || fechaPasadaAntesDeLas20()">
               {{ pedidoEditandoId() ? 'Actualizar' : 'Guardar' }}
             </button>
           </div>

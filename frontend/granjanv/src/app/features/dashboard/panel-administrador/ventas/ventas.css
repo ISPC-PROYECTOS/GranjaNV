@@ -291,6 +291,19 @@
   margin-bottom: 8px;
 }
 
+.total-ventas-toggle {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  color: var(--color-secundario);
+  font-family: var(--font-titulos);
+  font-size: 15px;
+}
+
+.total-ventas-toggle .icono-chevron {
+  color: var(--color-primario-oscuro);
+}
+
 .pedidos-cerrados-lista {
   max-height: 180px;
   overflow-y: auto;

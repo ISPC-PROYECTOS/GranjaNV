@@ -1,7 +1,8 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { interval, Subscription } from 'rxjs';
 
 import { PedidosService } from '../../../../core/services/pedidos.service';
 import { ClientesService } from '../../../../core/services/clientes.service';
@@ -28,9 +29,10 @@ import { CrearClienteComponent } from '../../../../shared/clientes/crear-cliente
   templateUrl: './ventas.html',
   styleUrl: './ventas.css',
 })
-export class Ventas implements OnInit {
+export class Ventas implements OnInit, OnDestroy {
   private readonly pedidosService = inject(PedidosService);
   private readonly clientesService = inject(ClientesService);
+  private readonly actualizadorHora: Subscription;
 
   readonly vistaMobile = signal<'pedidos' | 'formulario'>('formulario');
 
@@ -72,6 +74,7 @@ export class Ventas implements OnInit {
   
   readonly fechaMinima = formatearFechaISO(new Date());
   readonly fechaEntregaSeleccionada = signal<string>(this.fechaMinima);
+  readonly horaActual = signal<number>(new Date().getHours());
   readonly opcionesProximosDias = signal<OpcionDiaEntrega[]>(this.generarProximosDias());
 
   readonly productos = signal<ProductoCatalogo[]>([
@@ -83,6 +86,14 @@ export class Ventas implements OnInit {
 
   readonly precioTotal = computed(() =>
     this.productos().reduce((acc, p) => acc + p.maples * p.precioMaple, 0),
+  );
+
+  readonly fechaPasadaAntesDeLas20 = computed(
+    () => this.fechaEntregaSeleccionada() < this.fechaMinima && this.horaActual() < 20,
+  );
+
+  readonly totalVentas = computed(() =>
+    this.pedidosCerrados().reduce((acc, pedido) => acc + Number(pedido.total), 0),
   );
 
   readonly cantidadTotalMaples = computed(() =>
@@ -99,6 +110,16 @@ export class Ventas implements OnInit {
         c.nombre.toLowerCase().includes(q) || (c.apellido && c.apellido.toLowerCase().includes(q)),
     );
   });
+
+  constructor() {
+    this.actualizadorHora = interval(60_000).subscribe(() => {
+      this.horaActual.set(new Date().getHours());
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.actualizadorHora.unsubscribe();
+  }
 
 
 
@@ -232,22 +253,21 @@ export class Ventas implements OnInit {
     this.mostrarCerrados.update((v) => !v);
   }
   seleccionarDiaEntrega(fechaIso: string): void {
-    if (fechaIso < this.fechaMinima) {
-      this.fechaEntregaSeleccionada.set(this.fechaMinima);
-      return;
-    }
-    this.fechaEntregaSeleccionada.set(fechaIso);
+    this.actualizarFechaEntrega(fechaIso);
   }
 
   onCambioFechaManual(valor: string): void {
-    if (valor && valor < this.fechaMinima) {
-      this.errorBackend.set('La fecha de reparto no puede ser anterior al día de hoy.');
-      this.fechaEntregaSeleccionada.set(this.fechaMinima);
-      return;
-    }
-    this.errorBackend.set(null);
+    this.actualizarFechaEntrega(valor);
+  }
+
+  private actualizarFechaEntrega(valor: string): void {
     this.fechaEntregaSeleccionada.set(valor);
-  } 
+    this.errorBackend.set(
+      valor && valor < this.fechaMinima && this.horaActual() < 20
+        ? 'La fecha de reparto no puede ser anterior al día de hoy hasta las 20:00.'
+        : null,
+    );
+  }
 
 
   incrementarProducto(codigo: TipoHuevo): void {
