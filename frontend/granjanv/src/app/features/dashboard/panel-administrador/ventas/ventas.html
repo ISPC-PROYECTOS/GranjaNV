@@ -227,7 +227,7 @@
 
         <div class="gestion-formulario p-3 mt-1">
           <!-- Autocompletado de Clientes -->
-          <div class="mb-2 position-relative">
+          <div class="mb-2">
             <div class="d-flex justify-content-between align-items-center mb-1">
               <label for="buscar-cliente" class="form-label mb-0">Cliente *</label>
 
@@ -247,25 +247,27 @@
               </div>
             </div>
 
-            <input id="buscar-cliente" type="text" class="form-control" placeholder="Buscar cliente..."
-              [ngModel]="terminoBusquedaCliente()" (ngModelChange)="onEscribirCliente($event)" autocomplete="off" />
+            <div class="position-relative">
+              <input id="buscar-cliente" type="text" class="form-control" placeholder="Buscar cliente..."
+                [ngModel]="terminoBusquedaCliente()" (ngModelChange)="onEscribirCliente($event)" autocomplete="off" />
 
-            @if (clientesFiltrados().length > 0 && !clienteSeleccionado()) {
-              <app-cliente-sugerencias 
+              @if (clientesFiltrados().length > 0 && !clienteSeleccionado()) {
+                <app-cliente-sugerencias 
                 [clientes]="clientesFiltrados()" 
                 (seleccionar)="seleccionarCliente($any($event))" 
-              />
-            
-            }
+                />
+              }
 
-            @if (terminoBusquedaCliente().trim() && clientesFiltrados().length === 0 && !clienteSeleccionado()) {
-            <ul class="dropdown-clientes-sugerencias shadow" role="listbox">
-              <li role="option" tabindex="0" (click)="abrirModalNuevoCliente()" class="item-sin-cliente">
-                <i class="hgi-stroke hgi-user-add-01 me-1"></i> No existe "{{ terminoBusquedaCliente() }}". Registrar
-                cliente
-              </li>
-            </ul>
-            }
+              @if (terminoBusquedaCliente().trim() && clientesFiltrados().length === 0 && !clienteSeleccionado()) {
+              <ul class="dropdown-clientes-sugerencias shadow" role="listbox">
+                <li role="option" tabindex="0" (click)="abrirModalNuevoCliente()" class="item-sin-cliente">
+                  <i class="hgi-stroke hgi-user-add-01 me-1"></i> No existe "{{ terminoBusquedaCliente() }}". Registrar
+                  cliente
+                </li>
+              </ul>
+              }
+            </div>
+
             <!-- Datos autocompletados del cliente -->
             <div class="row g-2 mb-2 mt-2">
               <div class="col-12 col-sm-6">

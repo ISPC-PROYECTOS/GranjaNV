@@ -477,32 +477,7 @@
    CLIENTES Y AUTOCOMPLETADO
 ================================= */
 
-.dropdown-clientes-sugerencias {
-  position: absolute;
-  /* top: 100%; */
-  left: 0;
-  right: 0;
-  background: var(--color-blanco);
-  border-radius: 10px;
-  list-style: none;
-  padding: 6px 0;
-  margin: 2px 0 0 0;
-  z-index: 100;
-  max-height: 160px;
-  overflow-y: auto;
-}
 
-.dropdown-clientes-sugerencias li {
-  padding: 6px 14px;
-  cursor: pointer;
-  font-size: 13px;
-}
-
-.dropdown-clientes-sugerencias li:hover,
-.dropdown-clientes-sugerencias li:focus {
-  background-color: var(--color-primario-claro);
-  outline: none;
-}
 
 .btn-nuevo-cliente,
 .btn-editar-cliente-inline {
@@ -525,6 +500,21 @@
   transform: translateY(-1px);
 }
 
+.dropdown-clientes-sugerencias {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--color-blanco);
+  border-radius: 10px;
+  list-style: none;
+  padding: 6px 0;
+  margin: 2px 0 0 0;
+  z-index: 1050;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
 .item-sin-cliente {
   color: var(--color-secundario-oscuro) !important;
   font-family: var(--font-titulos);
@@ -535,6 +525,8 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
 }
 
 .item-sin-cliente i {
