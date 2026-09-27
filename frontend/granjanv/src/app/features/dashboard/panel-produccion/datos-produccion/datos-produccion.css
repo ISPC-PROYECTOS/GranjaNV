@@ -6,12 +6,23 @@
 
 .datos-produccion-wrapper {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
   height: 100%;
 }
-
+.datos-titulo {
+  font-family: var(--font-titulos);
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.5px;
+  color: var(--color-primario-oscuro);
+}
+:host-context(body.dark-mode) .datos-titulo {
+  color: var(--color-negro);
+}
 /* Carrusel contenedor */
 :host app-carrusel,
 :host ::ng-deep .carrusel-wrapper {
@@ -28,7 +39,6 @@
   width: 100% !important;
   height: 100% !important;
 }
-
 /* Tarjeta principal DATOS */
 .tarjeta-metrica-diagonal {
   position: relative;

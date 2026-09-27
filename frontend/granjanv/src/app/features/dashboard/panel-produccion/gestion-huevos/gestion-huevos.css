@@ -11,12 +11,13 @@
   letter-spacing: 0.5px;
 }
 
-/* Formulario beige contenedor */
+/* Formulario contenedor */
 .gestion-formulario {
   background-color: var(--color-secundario-claro);
   border-radius: 20px;
   padding: 16px;
   margin-top: 12px;
+  box-sizing: border-box;
 }
 
 .productos-grid {
@@ -94,25 +95,6 @@
   cursor: not-allowed;
 }
 
-/* Botones de acción */
-.gestion-formulario-acciones {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-}
-
-.btn-limpiar,
-.btn-guardar {
-  flex: 1;
-  min-width: 0;
-  padding: 10px 0;
-  font-size: 15px;
-  font-weight: 600;
-  border-radius: 8px;
-  text-align: center;
-}
-
 /* Mobile específico */
 @media (max-width: 575px) {
   .gestion-formulario {
@@ -138,5 +120,16 @@
   .contador-valor {
     width: 28px;
     font-size: 14px;
+  }
+
+  .gestion-formulario-acciones {
+    gap: 12px;
+    width: 100%;
+  }
+
+  .btn-limpiar,
+  .btn-guardar {
+    flex: 1;
+    min-width: 0;
   }
 }

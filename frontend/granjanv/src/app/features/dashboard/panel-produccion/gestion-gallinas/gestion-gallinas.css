@@ -3,7 +3,6 @@
   width: 100%;
 }
 
-/* Título blanco alineado con PRODUCCIÓN DIARIA */
 .gestion-subtitulo {
   font-family: var(--font-titulos);
   font-size: 20px;
@@ -11,14 +10,13 @@
   letter-spacing: 0.5px;
 }
 
-/* Tarjeta contenedora beige */
 .acordeon-gallinas {
   background-color: var(--color-secundario-claro);
   border-radius: 20px;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
-/* Encabezado colapsable que replica exactamente el figma */
 .btn-acordeon-header {
   width: 100%;
   display: flex;
@@ -29,6 +27,7 @@
   padding: 16px 20px;
   text-align: left;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 .header-textos {
@@ -52,6 +51,14 @@
 
 .icono-chevron.rotado {
   transform: rotate(180deg);
+}
+
+/* Contenedor del formulario interno */
+.acordeon-gallinas .gestion-formulario {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  margin-top: 0;
 }
 
 @media (max-width: 575px) {

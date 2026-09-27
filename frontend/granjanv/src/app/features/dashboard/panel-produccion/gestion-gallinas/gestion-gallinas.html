@@ -20,7 +20,7 @@
     </button>
 
     @if (desplegado()) {
-      <div class="p-3 animate-fade-in">
+      <div class="animate-fade-in">
         <!-- Alertas de feedback -->
         @if (mensajeExito()) {
           <div class="alerta-exito" role="alert">
@@ -128,7 +128,7 @@
           <div class="gestion-formulario-acciones pt-2">
             <button type="button" class="btn btn-limpiar" (click)="limpiar()">Limpiar</button>
             <button type="submit" class="btn btn-guardar" [disabled]="isGuardando()">
-              {{ isGuardando() ? 'Guardando...' : 'Registrar' }}
+              {{ isGuardando() ? 'Guardando...' : 'Guardar' }}
             </button>
           </div>
         </form>
