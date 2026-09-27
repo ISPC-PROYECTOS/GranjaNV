@@ -343,6 +343,43 @@ body {
   color: var(--color-negro);
 }
 
+/* .btn-eliminar {
+  background-color: var(--color-secundario);
+  color: var(--color-blanco);
+} */
+
+.btn-modal-cancelar,
+.btn-modal-eliminar {
+  min-width: 120px;
+  padding: 6px 14px;
+  border: 2px solid var(--color-secundario);
+  border-radius: 7px;
+  font-family: var(--font-titulos);
+  font-weight: 600;
+}
+
+.btn-modal-cancelar {
+  background-color: transparent;
+  color: var(--color-negro);
+  border-color: var(--color-gris-oscuro);
+}
+
+.btn-modal-cancelar:hover {
+  background-color: var(--color-negro);
+  border-color: var(--color-negro);
+  color: var(--color-blanco);
+}
+
+.btn-modal-eliminar {
+  background-color: var(--color-secundario);
+  color: var(--color-blanco);
+}
+
+.btn-modal-eliminar:hover {
+  background-color: var(--color-secundario-oscuro);
+  border-color: var(--color-secundario-oscuro);
+  color: #ffffff;
+}
 /* =================================
    ALERTA DE ERROR DESTACADA
 ================================= */
@@ -374,6 +411,28 @@ body.dark-mode {
   color: var(--color-negro);
 }
 
+body.dark-mode .btn-volver-panel {
+  color: var(--color-negro);
+}
+
+body.dark-mode .btn-volver-panel:hover {
+  color: var(--color-negro);
+}
+
+body.dark-mode .tabs-mobile {
+  background-color: var(--color-blanco);
+}
+
+body.dark-mode .tab-mobile {
+  background-color: var(--color-gris-medio);
+  color: var(--color-negro);
+}
+
+body.dark-mode .tab-mobile-activo {
+  background-color: var(--color-primario);
+  color: var(--color-negro);
+}
+
 body.dark-mode .gestion-titulo,
 body.dark-mode .metrica-titulo,
 body.dark-mode .metrica-valor,
@@ -402,4 +461,17 @@ body.dark-mode .alerta-exito {
   background-color: var(--color-primario-claro);
   color: var(--color-negro);
   border-color: var(--color-exito);
+}
+
+body.dark-mode .modal-confirmacion-caja {
+  background-color: var(--color-crema);
+  color: var(--color-negro);
+}
+
+body.dark-mode .modal-confirmacion-caja h4 {
+  color: var(--color-primario);
+}
+
+body.dark-mode .modal-confirmacion-caja .text-muted {
+  color: var(--color-gris-oscuro) !important;
 }

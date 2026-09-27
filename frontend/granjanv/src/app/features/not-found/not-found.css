@@ -101,3 +101,11 @@
   outline: 2px solid var(--color-crema);
   outline-offset: 3px;
 }
+
+/* MODO OSCURO */
+
+:host-context(body.dark-mode) .error-code,
+:host-context(body.dark-mode) .error-title,
+:host-context(body.dark-mode) .error-description {
+  color: var(--color-negro);
+}
