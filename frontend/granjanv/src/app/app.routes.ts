@@ -41,6 +41,24 @@ export const routes: Routes = [
       ),
     canActivate: [authGuard]
   },
+  {
+    path: 'dashboard/admin/gestion-reportes',
+    loadComponent: () =>
+      import('./features/dashboard/panel-administrador/gestion-reportes/gestion-reportes').then(
+        (m) => m.GestionReportes
+      ),
+    canActivate: [adminGuard],
+    children: [
+      { path: '', redirectTo: 'metricas', pathMatch: 'full' },
+      {
+        path: 'metricas',
+        loadComponent: () =>
+          import('./features/dashboard/panel-administrador/gestion-reportes/metricas/metricas').then(
+            (m) => m.Metricas
+          ),
+      },
+    ],
+  },
   { path: '', component: Home, pathMatch: 'full' },
   { path: '**', component: NotFoundComponent }
 ];
