@@ -574,14 +574,14 @@
   overflow-y: auto;
 }
 
-.modal-confirmacion-caja {
+/* .modal-confirmacion-caja {
   width: 100%;
   max-width: 460px;
   padding: 24px;
   border-radius: 8px;
   background: var(--color-blanco);
   box-shadow: 0 12px 36px color-mix(in srgb, var(--color-negro) 20%, transparent);
-}
+} */
 
 /* =================================
    ANIMACIONES
