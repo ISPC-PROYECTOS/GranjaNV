@@ -81,6 +81,7 @@ export class Ventas implements OnInit {
     { codigo: 'BLANCO_2', nombre: 'Blanco N.° 2', precioMaple: 4200, maples: 0 },
     { codigo: 'COLOR_1', nombre: 'Color N.° 1', precioMaple: 4800, maples: 0 },
     { codigo: 'COLOR_2', nombre: 'Color N.° 2', precioMaple: 4500, maples: 0 },
+    { codigo: 'MIXTO', nombre: 'Mixto', precioMaple: 4500, maples: 0 },
   ]);
 
   readonly precioTotal = computed(() =>
