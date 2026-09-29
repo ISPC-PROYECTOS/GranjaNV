@@ -9,20 +9,29 @@ import { adminGuard } from './core/guards/admin-guard';
 import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
-  { path: 'auth/login', component: LoginComponent },
+  { path: 'auth/login', loadComponent: () => import('./features/auth/auth').then((m) => m.LoginComponent) },
   { 
     path: 'dashboard/admin/panel-de-control', 
-    component: PanelDeControl,
+    loadComponent: () =>
+      import('./features/dashboard/panel-administrador/panel-de-control/panel-de-control').then(
+        (m) => m.PanelDeControl
+      ),
     canActivate: [adminGuard] 
   },
   {
     path: 'dashboard/admin/finanzas',
-    component: Compras,
+    loadComponent: () =>
+      import('./features/dashboard/panel-administrador/compras/compras').then(
+        (m) => m.Compras
+      ),
     canActivate: [adminGuard]
   },
   {
     path: 'dashboard/admin/registro-usuario',
-    component: RegistroUsuarioComponent,
+    loadComponent: () =>
+      import('./features/dashboard/panel-administrador/registro-usuario/registro-usuario').then(
+        (m) => m.RegistroUsuarioComponent
+      ),
     canActivate: [adminGuard]
   },
   {
@@ -59,6 +68,6 @@ export const routes: Routes = [
       },
     ],
   },
-  { path: '', component: Home, pathMatch: 'full' },
-  { path: '**', component: NotFoundComponent }
+  { path: '', loadComponent: () => import('./home/home').then((m) => m.Home), pathMatch: 'full' },
+  { path: '**', loadComponent: () => import('./features/not-found/not-found').then((m) => m.NotFoundComponent) },
 ];
