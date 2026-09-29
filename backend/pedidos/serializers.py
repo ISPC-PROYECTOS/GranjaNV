@@ -13,6 +13,7 @@ PRECIOS_MAPLE_REFERENCIA: dict[str, Decimal] = {
     ItemPedido.TipoHuevo.BLANCO_2: Decimal("4200.00"),
     ItemPedido.TipoHuevo.COLOR_1: Decimal("4800.00"),
     ItemPedido.TipoHuevo.COLOR_2: Decimal("4500.00"),
+    ItemPedido.TipoHuevo.MIXTO: Decimal("4500.00"),
 }
 
 
