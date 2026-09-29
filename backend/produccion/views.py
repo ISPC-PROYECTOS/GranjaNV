@@ -1,11 +1,11 @@
-from django.db.models import Sum, Q
+from django.db.models import Sum, Value
+from django.db.models.functions import Coalesce
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from pedidos.models import ItemPedido
-from users.permissions import IsAdminRole
 from .models import Galpon, MovimientoGallina, RegistroProduccion, ItemProduccionHuevo
 from .serializers import (
     GalponSerializer,
@@ -50,48 +50,64 @@ class ProduccionViewSet(viewsets.GenericViewSet):
     @action(detail=False, methods=["get"], url_path="metricas")
     def metricas(self, request):
         """
-        Calcula las métricas de producción y existencias consolidadas.
+        Calcula el stock físico real disponible en galpón:
+        Stock = (Huevos Recolectados) - (Huevos Entregados en Pedidos)
         """
         total_gallinas = (
-            Galpon.objects.filter(activo=True).aggregate(total=Sum("cantidad_actual_gallinas"))["total"]
-            or 0
+            Galpon.objects.filter(activo=True).aggregate(
+                total=Coalesce(Sum("cantidad_actual_gallinas"), Value(0))
+            )["total"]
         )
 
-        huevos_por_tipo = (
+        # 1. Huevos ingresados a depósito por recolección diaria
+        recoleccion_qs = (
             ItemProduccionHuevo.objects.values("tipo_huevo")
-            .annotate(total_huevos=Sum("cantidad_huevos"))
+            .annotate(total=Coalesce(Sum("cantidad_huevos"), Value(0)))
         )
+        recolectados = {item["tipo_huevo"]: item["total"] for item in recoleccion_qs}
 
-        maples_dict = {
-            "COLOR_1": 0,
-            "COLOR_2": 0,
-            "BLANCO_1": 0,
-            "BLANCO_2": 0,
-            "MIXTO": 0,
-        }
+        # 2. Huevos egresados físicamente por pedidos entregados
+        entregas_qs = (
+            ItemPedido.objects.filter(pedido__estado_entrega=True)
+            .values("tipo_huevo")
+            .annotate(total=Coalesce(Sum("cantidad_unidades"), Value(0)))
+        )
+        entregados = {item["tipo_huevo"]: item["total"] for item in entregas_qs}
 
-        total_huevos_aptos = 0
-        for item in huevos_por_tipo:
-            tipo = item["tipo_huevo"]
-            if tipo in maples_dict:
-                maples = item["total_huevos"] // ItemProduccionHuevo.HUEVOS_POR_MAPLE
-                maples_dict[tipo] = maples
-                total_huevos_aptos += item["total_huevos"]
+        tipos_maple = [
+            ItemPedido.TipoHuevo.COLOR_1,
+            ItemPedido.TipoHuevo.COLOR_2,
+            ItemPedido.TipoHuevo.BLANCO_1,
+            ItemPedido.TipoHuevo.BLANCO_2,
+            ItemPedido.TipoHuevo.MIXTO,
+        ]
+
+        maples_stock: dict[str, int] = {}
+        total_maples_disponibles = 0
+
+        for tipo in tipos_maple:
+            huevos_ingresados = recolectados.get(tipo, 0)
+            huevos_salidos = entregados.get(tipo, 0)
+            huevos_netos = max(0, huevos_ingresados - huevos_salidos)
+
+            maples = huevos_netos // ItemProduccionHuevo.HUEVOS_POR_MAPLE
+            maples_stock[tipo] = maples
+            total_maples_disponibles += maples
 
         total_mermas = (
-            RegistroProduccion.objects.aggregate(total=Sum("huevos_rotos"))["total"] or 0
+            RegistroProduccion.objects.aggregate(
+                total=Coalesce(Sum("huevos_rotos"), Value(0))
+            )["total"]
         )
 
-        total_maples = total_huevos_aptos // ItemProduccionHuevo.HUEVOS_POR_MAPLE
-
         payload = {
-            "total_maples": total_maples,
+            "total_maples": total_maples_disponibles,
             "total_gallinas": total_gallinas,
-            "maples_color_2": maples_dict["COLOR_2"],
-            "maples_color_1": maples_dict["COLOR_1"],
-            "maples_blanco_2": maples_dict["BLANCO_2"],
-            "maples_blanco_1": maples_dict["BLANCO_1"],
-            "mixtos": maples_dict["MIXTO"],
+            "maples_color_2": maples_stock[ItemPedido.TipoHuevo.COLOR_2],
+            "maples_color_1": maples_stock[ItemPedido.TipoHuevo.COLOR_1],
+            "maples_blanco_2": maples_stock[ItemPedido.TipoHuevo.BLANCO_2],
+            "maples_blanco_1": maples_stock[ItemPedido.TipoHuevo.BLANCO_1],
+            "mixtos": maples_stock[ItemPedido.TipoHuevo.MIXTO],
             "mermas": total_mermas,
         }
 

@@ -22,6 +22,7 @@ import { formatearFechaISO, obtenerRangoMesActual } from '../../../../core/utils
 import { Buscador } from '../../../../shared/buscador/buscador';
 import { CrearClienteComponent } from '../../../../shared/clientes/crear-cliente';
 import { ClienteSugerenciasComponent } from '../../../../shared/clientes-sugerencias/clientes-sugerencias';
+import { ProduccionService } from '../../../../core/services/produccion.service';
 
 @Component({
   selector: 'app-ventas',
@@ -33,6 +34,7 @@ import { ClienteSugerenciasComponent } from '../../../../shared/clientes-sugeren
 export class Ventas implements OnInit {
   private readonly pedidosService = inject(PedidosService);
   private readonly clientesService = inject(ClientesService);
+  private readonly produccionService = inject(ProduccionService);
 
   readonly vistaMobile = signal<'pedidos' | 'formulario'>('formulario');
 
@@ -440,6 +442,7 @@ export class Ventas implements OnInit {
       this.mostrarNotificacion('Estado actualizado. El pedido volvió a pendientes.');
       this.cargarPedidosPendientes();
       this.cargarPedidosCerrados();
+      this.produccionService.cargarMetricasProduccion();
 
       // Desplazamiento y expansión automática hacia el pedido en pendientes
       setTimeout(() => {
@@ -494,13 +497,15 @@ export class Ventas implements OnInit {
   }
 
   toggleEntrega(pedido: PedidoRead): void {
-    this.pedidosService.toggleEntrega(pedido.id).subscribe({
-      next: () => {
-        this.cargarPedidosPendientes();
-        this.cargarPedidosCerrados();
-      },
-    });
-  }
+  this.pedidosService.toggleEntrega(pedido.id).subscribe({
+    next: () => {
+      this.cargarPedidosPendientes();
+      this.cargarPedidosCerrados();
+      // Notifica al servicio de producción para refrescar el signal
+      this.produccionService.cargarMetricasProduccion();
+    },
+  });
+}
 
   limpiar(): void {
     this.pedidoEditandoId.set(null);
