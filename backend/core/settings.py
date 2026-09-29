@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "pedidos",
     "compras",
     "clientes",
+    "produccion",
     "home",
 ]
 
