@@ -24,6 +24,17 @@ import { CrearClienteComponent } from '../../../../shared/clientes/crear-cliente
 import { ClienteSugerenciasComponent } from '../../../../shared/clientes-sugerencias/clientes-sugerencias';
 import { ProduccionService } from '../../../../core/services/produccion.service';
 
+interface ItemStockDeficit {
+  tipo: string;
+  solicitados: number;
+  disponibles: number;
+}
+
+interface AlertaStockFaltante {
+  pedido: PedidoRead;
+  faltantes: ItemStockDeficit[];
+}
+
 @Component({
   selector: 'app-ventas',
   imports: [CommonModule, FormsModule, RouterLink, SelectorFecha, Buscador, CrearClienteComponent,
@@ -42,6 +53,7 @@ export class Ventas implements OnInit {
   readonly pedidosPendientes = signal<PedidoRead[]>([]);
   readonly pedidosCerrados = signal<PedidoRead[]>([]);
   readonly clientes = signal<Cliente[]>([]);
+  readonly alertaStock = signal<AlertaStockFaltante | null>(null);
 
   // Filtros independientes
   readonly busquedaPendientes = signal<string>('');
@@ -105,7 +117,72 @@ export class Ventas implements OnInit {
     );
   });
 
+  private obtenerStockDisponible(tipo: TipoHuevo): number {
+    const stock = this.produccionService.datosProduccion();
+    switch (tipo) {
+      case 'COLOR_1':
+        return stock.maples_color_1;
+      case 'COLOR_2':
+        return stock.maples_color_2;
+      case 'BLANCO_1':
+        return stock.maples_blanco_1;
+      case 'BLANCO_2':
+        return stock.maples_blanco_2;
+      case 'MIXTO':
+        return stock.mixtos;
+      default:
+        return 0;
+    }
+  }
 
+  solicitarToggleEntrega(pedido: PedidoRead): void {
+    if (pedido.estado_entrega) {
+      this.ejecutarToggleEntrega(pedido.id);
+      return;
+    }
+
+    this.produccionService.cargarMetricasProduccion();
+
+    const faltantes: ItemStockDeficit[] = [];
+    for (const item of pedido.items) {
+      const disponible = this.obtenerStockDisponible(item.tipo_huevo);
+      if (item.cantidad_maples > disponible) {
+        faltantes.push({
+          tipo: item.tipo_huevo_display || item.tipo_huevo,
+          solicitados: item.cantidad_maples,
+          disponibles: disponible,
+        });
+      }
+    }
+
+    if (faltantes.length > 0) {
+      this.alertaStock.set({ pedido, faltantes });
+    } else {
+      this.ejecutarToggleEntrega(pedido.id);
+    }
+  }
+
+  confirmarEntregaSinStock(): void {
+    const alerta = this.alertaStock();
+    if (!alerta) return;
+    this.ejecutarToggleEntrega(alerta.pedido.id);
+    this.cancelarAlertaStock();
+  }
+
+  cancelarAlertaStock(): void {
+    this.alertaStock.set(null);
+  }
+
+  private ejecutarToggleEntrega(pedidoId: number): void {
+    this.pedidosService.toggleEntrega(pedidoId).subscribe({
+      next: () => {
+        this.cargarPedidosPendientes();
+        this.cargarPedidosCerrados();
+        this.produccionService.cargarMetricasProduccion();
+      },
+      error: (err) => console.error('Error al cambiar entrega:', err),
+    });
+  }
 
   abrirModalNuevoCliente(): void {
     this.clienteAEditar.set(null);
