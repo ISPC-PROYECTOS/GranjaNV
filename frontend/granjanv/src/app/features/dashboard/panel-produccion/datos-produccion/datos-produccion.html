@@ -15,12 +15,22 @@
         <!-- Bloque Superior Izquierdo -->
         <div class="bloque-metrica bloque-superior-izq">
           <span class="metrica-titulo">{{ tarjeta.arribaTitulo }}</span>
-          <span class="metrica-valor">{{ tarjeta.arribaValor }}</span>
+          <span
+            class="metrica-valor"
+            [class.metrica-valor-negativo]="esNegativo(tarjeta.arribaValor)"
+          >
+            {{ tarjeta.arribaValor }}
+          </span>
         </div>
 
         <!-- Bloque Inferior Derecho -->
         <div class="bloque-metrica bloque-inferior-der">
-          <span class="metrica-valor">{{ tarjeta.abajoValor }}</span>
+          <span
+            class="metrica-valor"
+            [class.metrica-valor-negativo]="esNegativo(tarjeta.abajoValor)"
+          >
+            {{ tarjeta.abajoValor }}
+          </span>
           <span class="metrica-titulo">{{ tarjeta.abajoTitulo }}</span>
         </div>
       </div>

@@ -12,6 +12,7 @@
   width: 100%;
   height: 100%;
 }
+
 .datos-titulo {
   font-family: var(--font-titulos);
   font-size: 24px;
@@ -20,9 +21,11 @@
   letter-spacing: 0.5px;
   color: var(--color-primario-oscuro);
 }
+
 :host-context(body.dark-mode) .datos-titulo {
   color: var(--color-negro);
 }
+
 /* Carrusel contenedor */
 :host app-carrusel,
 :host ::ng-deep .carrusel-wrapper {
@@ -39,6 +42,7 @@
   width: 100% !important;
   height: 100% !important;
 }
+
 /* Tarjeta principal DATOS */
 .tarjeta-metrica-diagonal {
   position: relative;
@@ -52,7 +56,7 @@
   padding: 32px;
 }
 
-/* Diagonal  desde esquina superior derecha a esquina inferior izquierda */
+/* Diagonal desde esquina superior derecha a esquina inferior izquierda */
 .svg-diagonal {
   position: absolute;
   inset: 0;
@@ -111,6 +115,15 @@
   margin: 0 0 12px 0;
 }
 
+/* Color para valores en déficit / negativos */
+.metrica-valor.metrica-valor-negativo {
+  color: var(--color-error-oscuro) !important;
+}
+
+:host-context(body.dark-mode) .metrica-valor.metrica-valor-negativo {
+  color: var(--color-error) !important;
+}
+
 /* FLECHAS DENTRO DE LA TARJETA */
 :host ::ng-deep .carrusel-flecha {
   position: absolute !important;
@@ -133,7 +146,6 @@
   transition: all 0.2s ease !important;
 }
 
-/* Centrado óptico exacto del caracter de flecha */
 :host ::ng-deep .carrusel-flecha span {
   display: inline-flex !important;
   align-items: center !important;
@@ -143,6 +155,7 @@
   width: 100% !important;
   transform: translateY(-4px) !important;
 }
+
 :host ::ng-deep .carrusel-flecha-anterior {
   left: 14px !important;
 }
@@ -158,7 +171,7 @@
   transform: translateY(-50%) scale(1.1) !important;
 }
 
-/*  RESPONSIVE MOBILE (< 576px)*/
+/* RESPONSIVE MOBILE (< 576px) */
 @media (max-width: 575px) {
   .tarjeta-metrica-diagonal {
     height: 500px;

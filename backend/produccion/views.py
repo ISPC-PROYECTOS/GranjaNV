@@ -88,9 +88,9 @@ class ProduccionViewSet(viewsets.GenericViewSet):
         for tipo in tipos_maple:
             huevos_ingresados = recolectados.get(tipo, 0)
             huevos_salidos = entregados.get(tipo, 0)
-            huevos_netos = max(0, huevos_ingresados - huevos_salidos)
+            huevos_netos = huevos_ingresados - huevos_salidos
 
-            maples = huevos_netos // ItemProduccionHuevo.HUEVOS_POR_MAPLE
+            maples = int(huevos_netos // ItemProduccionHuevo.HUEVOS_POR_MAPLE)
             maples_stock[tipo] = maples
             total_maples_disponibles += maples
 
