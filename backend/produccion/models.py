@@ -66,7 +66,7 @@ class MovimientoGallina(models.Model):
         related_name="movimientos_gallinas",
         db_index=True,
     )
-    fecha = models.DateField(default=timezone.now, db_index=True)
+    fecha = models.DateField(default=timezone.localdate, db_index=True)
     tipo_movimiento = models.CharField(max_length=10, choices=TipoMovimiento.choices)
     motivo_movimiento = models.CharField(max_length=20, choices=MotivoMovimiento.choices)
     cantidad_gallinas = models.PositiveIntegerField(validators=[MinValueValidator(1)])
@@ -96,7 +96,7 @@ class RegistroProduccion(models.Model):
         related_name="registros_produccion",
         db_index=True,
     )
-    fecha = models.DateField(default=timezone.now, db_index=True)
+    fecha = models.DateField(default=timezone.localdate, db_index=True)
     huevos_rotos = models.PositiveIntegerField(
         default=0,
         help_text="Huevos rotos o mermas registradas en unidades individuales.",
