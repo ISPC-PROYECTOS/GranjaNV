@@ -10,55 +10,60 @@ import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
   { path: 'auth/login', component: LoginComponent },
-  { 
-    path: 'dashboard/admin/panel-de-control', 
+  {
+    path: 'dashboard/admin/panel-de-control',
     component: PanelDeControl,
-    canActivate: [adminGuard] 
+    canActivate: [adminGuard],
   },
   {
     path: 'dashboard/admin/finanzas',
     component: Compras,
-    canActivate: [adminGuard]
+    canActivate: [adminGuard],
   },
   {
     path: 'dashboard/admin/registro-usuario',
     component: RegistroUsuarioComponent,
-    canActivate: [adminGuard]
+    canActivate: [adminGuard],
   },
   {
     path: 'dashboard/admin/ventas',
     loadComponent: () =>
-      import('./features/dashboard/panel-administrador/ventas/ventas').then(
-        (m) => m.Ventas
-      ),
-    canActivate: [adminGuard]
+      import('./features/dashboard/panel-administrador/ventas/ventas').then((m) => m.Ventas),
+    canActivate: [adminGuard],
   },
   {
     path: 'dashboard/produccion',
     loadComponent: () =>
       import('./features/dashboard/panel-produccion/panel-produccion').then(
-        (m) => m.PanelProduccion
+        (m) => m.PanelProduccion,
       ),
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'dashboard/admin/gestion-reportes',
     loadComponent: () =>
       import('./features/dashboard/panel-administrador/gestion-reportes/gestion-reportes').then(
-        (m) => m.GestionReportes
+        (m) => m.GestionReportes,
       ),
     canActivate: [adminGuard],
     children: [
-      { path: '', redirectTo: 'metricas', pathMatch: 'full' },
+      { path: '', redirectTo: 'reportes', pathMatch: 'full' },
+      {
+        path: 'reportes',
+        loadComponent: () =>
+          import('./features/dashboard/panel-administrador/gestion-reportes/reportes/reportes').then(
+            (m) => m.Reportes,
+          ),
+      },
       {
         path: 'metricas',
         loadComponent: () =>
           import('./features/dashboard/panel-administrador/gestion-reportes/metricas/metricas').then(
-            (m) => m.Metricas
+            (m) => m.Metricas,
           ),
       },
     ],
   },
   { path: '', component: Home, pathMatch: 'full' },
-  { path: '**', component: NotFoundComponent }
+  { path: '**', component: NotFoundComponent },
 ];
