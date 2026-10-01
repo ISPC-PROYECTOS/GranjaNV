@@ -1,0 +1,60 @@
+<section class="contenedor-metricas animate-fade-in">
+  <!-- Texto guía inferior a las pestañas -->
+  <p class="bajada-seccion">Indicadores generales para la toma de decisiones.</p>
+
+  <!-- Fila de las 3 tarjetas superiores (KPIs) -->
+  <div class="bloque-blanco p-4 p-md-5 mb-4">
+    <div class="row g-5 justify-content-center">
+        @for (tarjeta of tarjetasKpi(); track tarjeta.titulo) {
+        <div class="col-12 col-md-4">
+            <article class="tarjeta-kpi">
+                <div class="tarjeta-kpi-cabecera">
+                <div class="icono-kpi" aria-hidden="true">
+                <i class="hgi-stroke" [class]="tarjeta.icono"></i>
+                </div>
+                <h3 class="tarjeta-kpi-titulo">{{ tarjeta.titulo }}</h3>
+                </div>
+
+          <div class="tarjeta-kpi-cuerpo">
+            <span class="tarjeta-kpi-valor">{{ tarjeta.valor }}</span>
+            <small class="tarjeta-kpi-subtexto">{{ tarjeta.subtexto }}</small>
+          </div>
+        </article>
+      </div>
+    }
+    </div>
+  </div>
+
+  <!-- Fila de los dos paneles para los gráficos -->
+  <div class="row g-4">
+    <!-- Panel Gráfico de Barras: Ventas -->
+    <div class="col-12 col-lg-6">
+      <article class="bloque blanco panel-grafico">
+        <div class="grafico-marcador-posicion" aria-label="Evolución mensual de ventas">
+          <!-- Gráfico SVG vectorial fiel a la imagen de barras -->
+          <svg viewBox="0 0 300 200" class="svg-ilustracion" aria-hidden="true">
+            <rect x="30" y="40" width="22" height="140" rx="4" fill="none" stroke="currentColor" stroke-width="8" />
+            <rect x="75" y="70" width="22" height="110" rx="4" fill="none" stroke="currentColor" stroke-width="8" />
+            <rect x="120" y="110" width="22" height="70" rx="4" fill="none" stroke="currentColor" stroke-width="8" />
+            <rect x="165" y="150" width="22" height="30" rx="4" fill="none" stroke="currentColor" stroke-width="8" />
+            <line x1="20" y1="180" x2="280" y2="180" stroke="currentColor" stroke-width="8" stroke-linecap="round" />
+          </svg>
+        </div>
+      </article>
+    </div>
+
+    <!-- Panel Gráfico de Líneas: Producción -->
+    <div class="col-12 col-lg-6">
+      <article class="bloque-blanco panel-grafico">
+        <div class="grafico-marcador-posicion" aria-label="Tendencia de recolección de producción">
+          <!-- Gráfico SVG vectorial fiel a la imagen de líneas -->
+          <svg viewBox="0 0 300 200" class="svg-ilustracion" aria-hidden="true">
+            <line x1="40" y1="30" x2="40" y2="180" stroke="currentColor" stroke-width="8" stroke-linecap="round" />
+            <line x1="40" y1="180" x2="270" y2="180" stroke="currentColor" stroke-width="8" stroke-linecap="round" />
+            <polyline points="45,170 110,80 170,120 250,50" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

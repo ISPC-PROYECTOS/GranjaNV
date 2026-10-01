@@ -294,6 +294,15 @@ body {
   color: var(--color-blanco);
 }
 
+.btn-guardar:disabled,
+.btn-guardar[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(40%);
+  border-color: transparent;
+}
+
 /* CONTENEDOR IZQUIERDO */
 
 .seccion-izquierda {
@@ -395,6 +404,15 @@ body {
 }
 
 /* =================================
+   BLOQUES BLANCOS REDONDEADOS
+================================= */
+.bloque-blanco {
+  background-color: var(--color-blanco) !important;
+  border-radius: 26px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+}
+
+/* =================================
    MODO OSCURO
 ================================= */
 
@@ -474,4 +492,12 @@ body.dark-mode .modal-confirmacion-caja h4 {
 
 body.dark-mode .modal-confirmacion-caja .text-muted {
   color: var(--color-gris-oscuro) !important;
+}
+
+:root[data-theme='dark'] .btn-guardar:disabled,
+:root[data-theme='dark'] .btn-guardar[disabled],
+body.dark-mode .btn-guardar:disabled,
+body.dark-mode .btn-guardar[disabled] {
+  opacity: 0.4;
+  filter: grayscale(60%);
 }
