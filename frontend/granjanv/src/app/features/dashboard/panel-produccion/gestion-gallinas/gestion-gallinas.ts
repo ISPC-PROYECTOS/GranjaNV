@@ -61,6 +61,11 @@ export class GestionGallinas {
       return;
     }
 
+    if (!this.descripcionIncidente()){
+      this.errorMensaje.set('Ingresá un detalle o descripción del movimiento.');
+      return;
+    }
+
     const payload: MovimientoGallinaPayload = {
       galpon: Number(this.galponSeleccionado()),
       fecha: formatearFechaISO(new Date()),

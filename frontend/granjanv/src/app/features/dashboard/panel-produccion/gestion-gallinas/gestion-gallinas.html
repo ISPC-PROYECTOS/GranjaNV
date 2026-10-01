@@ -1,6 +1,20 @@
 <div class="contenedor-gestion-gallinas mt-4">
   <h3 class="gestion-subtitulo text-white mb-2">GESTIÓN DE GALLINAS</h3>
 
+  <!-- Alertas de feedback  -->
+  @if (mensajeExito()) {
+    <div class="alerta-exito mb-3" role="alert">
+      {{ mensajeExito() }}
+    </div>
+  }
+
+  @if (errorMensaje()) {
+    <div class="alerta-error mb-3" role="alert">
+      {{ errorMensaje() }}
+    </div>
+  }
+
+  <!-- Acordeón principal -->
   <div class="acordeon-gallinas">
     <button
       type="button"
@@ -21,19 +35,6 @@
 
     @if (desplegado()) {
       <div class="animate-fade-in">
-        <!-- Alertas de feedback -->
-        @if (mensajeExito()) {
-          <div class="alerta-exito" role="alert">
-            {{ mensajeExito() }}
-          </div>
-        }
-
-        @if (errorMensaje()) {
-          <div class="alerta-error" role="alert">
-            {{ errorMensaje() }}
-          </div>
-        }
-
         <form class="gestion-formulario m-0 p-3" (ngSubmit)="solicitarGuardado()">
           <div class="row g-2 mb-3">
             <!-- Galpón -->
@@ -112,7 +113,7 @@
 
           <!-- Detalle o Causa -->
           <div class="mb-3">
-            <label for="mov-desc" class="form-label">Causa o detalle del incidente</label>
+            <label for="mov-desc" class="form-label">Causa o detalle del incidente *</label>
             <input
               id="mov-desc"
               type="text"

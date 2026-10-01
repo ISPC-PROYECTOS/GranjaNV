@@ -33,17 +33,17 @@ export class DatosProduccion {
       {
         arribaTitulo: 'MAPLES COLOR 02',
         arribaValor: datos.maples_color_2,
-        abajoTitulo: 'MAPLE COLOR 01',
+        abajoTitulo: 'MAPLES COLOR 01',
         abajoValor: datos.maples_color_1,
       },
       {
         arribaTitulo: 'MAPLES BLANCO 02',
         arribaValor: datos.maples_blanco_2,
-        abajoTitulo: 'MAPLE BLANCO 01',
+        abajoTitulo: 'MAPLES BLANCO 01',
         abajoValor: datos.maples_blanco_1,
       },
       {
-        arribaTitulo: 'MIXTOS',
+        arribaTitulo: 'MAPLES MIXTOS',
         arribaValor: datos.mixtos,
         abajoTitulo: 'MERMAS',
         abajoValor: datos.mermas,
