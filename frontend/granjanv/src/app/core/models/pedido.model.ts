@@ -1,6 +1,6 @@
 import { Cliente } from './cliente.model';
 
-export type TipoHuevo = 'BLANCO_1' | 'BLANCO_2' | 'COLOR_1' | 'COLOR_2';
+export type TipoHuevo = 'BLANCO_1' | 'BLANCO_2' | 'COLOR_1' | 'COLOR_2' | 'MIXTO';
 
 export interface MetricasDashboardResponse {
   pedidos_pendientes: number;

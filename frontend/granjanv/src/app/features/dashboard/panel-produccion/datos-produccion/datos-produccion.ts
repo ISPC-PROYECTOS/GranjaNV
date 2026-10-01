@@ -20,7 +20,6 @@ export interface TarjetaMetricaProduccion {
 export class DatosProduccion {
   private readonly produccionService = inject(ProduccionService);
 
-  // Computado reactivo: al cambiar el estado en el servicio, las 4 tarjetas se actualizan al instante
   readonly tarjetasMetricas = computed<TarjetaMetricaProduccion[]>(() => {
     const datos = this.produccionService.datosProduccion();
 
@@ -51,4 +50,12 @@ export class DatosProduccion {
       },
     ];
   });
+
+  /**
+   * Determina si el valor numérico representa déficit en stock.
+   */
+  esNegativo(valor: string | number): boolean {
+    const num = Number(valor);
+    return !isNaN(num) && num < 0;
+  }
 }

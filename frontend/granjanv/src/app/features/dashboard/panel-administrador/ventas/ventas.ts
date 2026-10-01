@@ -22,6 +22,18 @@ import { formatearFechaISO, obtenerRangoMesActual } from '../../../../core/utils
 import { Buscador } from '../../../../shared/buscador/buscador';
 import { CrearClienteComponent } from '../../../../shared/clientes/crear-cliente';
 import { ClienteSugerenciasComponent } from '../../../../shared/clientes-sugerencias/clientes-sugerencias';
+import { ProduccionService } from '../../../../core/services/produccion.service';
+
+interface ItemStockDeficit {
+  tipo: string;
+  solicitados: number;
+  disponibles: number;
+}
+
+interface AlertaStockFaltante {
+  pedido: PedidoRead;
+  faltantes: ItemStockDeficit[];
+}
 
 @Component({
   selector: 'app-ventas',
@@ -33,6 +45,7 @@ import { ClienteSugerenciasComponent } from '../../../../shared/clientes-sugeren
 export class Ventas implements OnInit {
   private readonly pedidosService = inject(PedidosService);
   private readonly clientesService = inject(ClientesService);
+  private readonly produccionService = inject(ProduccionService);
 
   readonly vistaMobile = signal<'pedidos' | 'formulario'>('formulario');
 
@@ -40,6 +53,7 @@ export class Ventas implements OnInit {
   readonly pedidosPendientes = signal<PedidoRead[]>([]);
   readonly pedidosCerrados = signal<PedidoRead[]>([]);
   readonly clientes = signal<Cliente[]>([]);
+  readonly alertaStock = signal<AlertaStockFaltante | null>(null);
 
   // Filtros independientes
   readonly busquedaPendientes = signal<string>('');
@@ -81,6 +95,7 @@ export class Ventas implements OnInit {
     { codigo: 'BLANCO_2', nombre: 'Blanco N.° 2', precioMaple: 4200, maples: 0 },
     { codigo: 'COLOR_1', nombre: 'Color N.° 1', precioMaple: 4800, maples: 0 },
     { codigo: 'COLOR_2', nombre: 'Color N.° 2', precioMaple: 4500, maples: 0 },
+    { codigo: 'MIXTO', nombre: 'Mixto', precioMaple: 4500, maples: 0 },
   ]);
 
   readonly precioTotal = computed(() =>
@@ -102,7 +117,72 @@ export class Ventas implements OnInit {
     );
   });
 
+  private obtenerStockDisponible(tipo: TipoHuevo): number {
+    const stock = this.produccionService.datosProduccion();
+    switch (tipo) {
+      case 'COLOR_1':
+        return stock.maples_color_1;
+      case 'COLOR_2':
+        return stock.maples_color_2;
+      case 'BLANCO_1':
+        return stock.maples_blanco_1;
+      case 'BLANCO_2':
+        return stock.maples_blanco_2;
+      case 'MIXTO':
+        return stock.mixtos;
+      default:
+        return 0;
+    }
+  }
 
+  solicitarToggleEntrega(pedido: PedidoRead): void {
+    if (pedido.estado_entrega) {
+      this.ejecutarToggleEntrega(pedido.id);
+      return;
+    }
+
+    this.produccionService.cargarMetricasProduccion();
+
+    const faltantes: ItemStockDeficit[] = [];
+    for (const item of pedido.items) {
+      const disponible = this.obtenerStockDisponible(item.tipo_huevo);
+      if (item.cantidad_maples > disponible) {
+        faltantes.push({
+          tipo: item.tipo_huevo_display || item.tipo_huevo,
+          solicitados: item.cantidad_maples,
+          disponibles: disponible,
+        });
+      }
+    }
+
+    if (faltantes.length > 0) {
+      this.alertaStock.set({ pedido, faltantes });
+    } else {
+      this.ejecutarToggleEntrega(pedido.id);
+    }
+  }
+
+  confirmarEntregaSinStock(): void {
+    const alerta = this.alertaStock();
+    if (!alerta) return;
+    this.ejecutarToggleEntrega(alerta.pedido.id);
+    this.cancelarAlertaStock();
+  }
+
+  cancelarAlertaStock(): void {
+    this.alertaStock.set(null);
+  }
+
+  private ejecutarToggleEntrega(pedidoId: number): void {
+    this.pedidosService.toggleEntrega(pedidoId).subscribe({
+      next: () => {
+        this.cargarPedidosPendientes();
+        this.cargarPedidosCerrados();
+        this.produccionService.cargarMetricasProduccion();
+      },
+      error: (err) => console.error('Error al cambiar entrega:', err),
+    });
+  }
 
   abrirModalNuevoCliente(): void {
     this.clienteAEditar.set(null);
@@ -439,6 +519,7 @@ export class Ventas implements OnInit {
       this.mostrarNotificacion('Estado actualizado. El pedido volvió a pendientes.');
       this.cargarPedidosPendientes();
       this.cargarPedidosCerrados();
+      this.produccionService.cargarMetricasProduccion();
 
       // Desplazamiento y expansión automática hacia el pedido en pendientes
       setTimeout(() => {
@@ -493,13 +574,15 @@ export class Ventas implements OnInit {
   }
 
   toggleEntrega(pedido: PedidoRead): void {
-    this.pedidosService.toggleEntrega(pedido.id).subscribe({
-      next: () => {
-        this.cargarPedidosPendientes();
-        this.cargarPedidosCerrados();
-      },
-    });
-  }
+  this.pedidosService.toggleEntrega(pedido.id).subscribe({
+    next: () => {
+      this.cargarPedidosPendientes();
+      this.cargarPedidosCerrados();
+      // Notifica al servicio de producción para refrescar el signal
+      this.produccionService.cargarMetricasProduccion();
+    },
+  });
+}
 
   limpiar(): void {
     this.pedidoEditandoId.set(null);
