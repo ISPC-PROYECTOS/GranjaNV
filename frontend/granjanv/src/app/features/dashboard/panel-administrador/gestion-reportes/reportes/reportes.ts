@@ -58,11 +58,6 @@ export class Reportes {
       return;
     }
 
-    if (this.reporteSeleccionado === 'completo') {
-      console.log('Informe completo todavía no conectado');
-      return;
-    }
-
     const fechaDesde = this.rangoSeleccionado.fechaDesde;
     const fechaHasta = this.rangoSeleccionado.fechaHasta;
 

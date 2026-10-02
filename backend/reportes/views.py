@@ -90,18 +90,18 @@ def obtener_datos_produccion(fecha_desde, fecha_hasta):
 
 def agregar_finanzas_pdf(pdf, datos, y):
     pdf.setFont("Helvetica-Bold", 12)
-    pdf.drawString(50, y, "Resumen financiero")
+    pdf.drawString(50, y, "RESUMEN FINANCIERO")
 
     pdf.setFont("Helvetica", 11)
     pdf.drawString(50, y - 25, f"Ingresos: ${datos['ingresos']}")
     pdf.drawString(50, y - 45, f"Egresos: ${datos['egresos']}")
     pdf.drawString(50, y - 65, f"Balance neto: ${datos['balance_neto']}")
 
-    return y - 100
+    return y - 105
 
 def agregar_produccion_pdf(pdf, datos, y):
     pdf.setFont("Helvetica-Bold", 12)
-    pdf.drawString(50, y, "Resumen de producción")
+    pdf.drawString(50, y, "RESUMEN DE PRODUCCIÓN")
 
     pdf.setFont("Helvetica", 11)
     pdf.drawString(
@@ -119,7 +119,7 @@ def agregar_produccion_pdf(pdf, datos, y):
     pdf.drawString(50, y - 85, "Producción por tipo")
 
     pdf.setFont("Helvetica", 11)
-    y -= 110
+    y -= 100
 
     for tipo, cantidad in datos["produccion_por_tipo"].items():
         nombre_tipo = tipo.replace("_", " ").title()
@@ -146,6 +146,21 @@ def agregar_produccion_excel(hoja, datos):
         nombre_tipo = tipo.replace("_", " ").title()
         hoja.append([nombre_tipo, cantidad])
 
+def convertir_para_mongo(valor):
+    if isinstance(valor, Decimal):
+        return float(valor)
+
+    if isinstance(valor, dict):
+        return {
+            clave: convertir_para_mongo(dato)
+            for clave, dato in valor.items()
+        }
+
+    if isinstance(valor, list):
+        return [convertir_para_mongo(dato) for dato in valor]
+
+    return valor
+
 def registrar_exportacion(
     usuario,
     tipo,
@@ -160,13 +175,7 @@ def registrar_exportacion(
         db = cliente["granjanv_reportes"]
         coleccion = db["exportaciones"]
 
-        datos_mongo = {}
-
-        for clave, valor in datos.items():
-            if isinstance(valor, Decimal):
-                datos_mongo[clave] = float(valor)
-            else:
-                datos_mongo[clave] = valor
+        datos_mongo = convertir_para_mongo(datos)
 
         registro = {
             "tipo": tipo,
@@ -387,6 +396,128 @@ def exportar_finanzas_excel(request):
     )
     response["Content-Disposition"] = (
         'attachment; filename="reporte_finanzas.xlsx"'
+    )
+
+    return response
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated, IsAdminRole])
+def exportar_completo_pdf(request):
+    fecha_desde = request.query_params.get("fecha_desde")
+    fecha_hasta = request.query_params.get("fecha_hasta")
+
+    finanzas = obtener_datos_finanzas(fecha_desde, fecha_hasta)
+    produccion = obtener_datos_produccion(fecha_desde, fecha_hasta)
+
+    datos = {
+        "finanzas": finanzas,
+        "produccion": produccion,
+    }
+
+    buffer = BytesIO()
+
+    pdf = canvas.Canvas(buffer, pagesize=A4)
+    pdf.setTitle("INFORME COMPLETO")
+
+    pdf.setFont("Helvetica-Bold", 18)
+    pdf.drawString(50, 790, "INFORME COMPLETO")
+
+    pdf.setFont("Helvetica", 11)
+    pdf.drawString(
+        50,
+        765,
+        f"Período: {fecha_desde} al {fecha_hasta}",
+    )
+
+    y = agregar_finanzas_pdf(pdf, finanzas, 730)
+    agregar_produccion_pdf(pdf, produccion, y)
+
+    pdf.showPage()
+    pdf.save()
+
+    registrar_exportacion(
+        request.user,
+        "completo",
+        "pdf",
+        fecha_desde,
+        fecha_hasta,
+        datos,
+    )
+
+    buffer.seek(0)
+
+    response = HttpResponse(
+        buffer.getvalue(),
+        content_type="application/pdf",
+    )
+    response["Content-Disposition"] = (
+        'attachment; filename="informe_completo.pdf"'
+    )
+
+    return response
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated, IsAdminRole])
+def exportar_completo_excel(request):
+    fecha_desde = request.query_params.get("fecha_desde")
+    fecha_hasta = request.query_params.get("fecha_hasta")
+
+    finanzas = obtener_datos_finanzas(fecha_desde, fecha_hasta)
+    produccion = obtener_datos_produccion(fecha_desde, fecha_hasta)
+
+    datos = {
+        "finanzas": finanzas,
+        "produccion": produccion,
+    }
+
+    workbook = Workbook()
+
+    # Hoja Finanzas
+    hoja_finanzas = workbook.active
+    hoja_finanzas.title = "Finanzas"
+
+    hoja_finanzas.append(["Informe Completo - Finanzas"])
+    hoja_finanzas.append(
+        ["Período", f"{fecha_desde} al {fecha_hasta}"]
+    )
+    hoja_finanzas.append([])
+
+    agregar_finanzas_excel(hoja_finanzas, finanzas)
+
+    # Hoja Producción
+    hoja_produccion = workbook.create_sheet("Producción")
+
+    hoja_produccion.append(["Informe Completo - Producción"])
+    hoja_produccion.append(
+        ["Período", f"{fecha_desde} al {fecha_hasta}"]
+    )
+    hoja_produccion.append([])
+
+    agregar_produccion_excel(hoja_produccion, produccion)
+
+    buffer = BytesIO()
+    workbook.save(buffer)
+
+    registrar_exportacion(
+        request.user,
+        "completo",
+        "excel",
+        fecha_desde,
+        fecha_hasta,
+        datos,
+    )
+
+    buffer.seek(0)
+
+    response = HttpResponse(
+        buffer.getvalue(),
+        content_type=(
+            "application/vnd.openxmlformats-officedocument."
+            "spreadsheetml.sheet"
+        ),
+    )
+    response["Content-Disposition"] = (
+        'attachment; filename="informe_completo.xlsx"'
     )
 
     return response

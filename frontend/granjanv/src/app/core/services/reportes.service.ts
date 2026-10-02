@@ -26,7 +26,7 @@ export class ReportesService {
   }
 
   exportarReporte(
-    tipo: 'finanzas' | 'produccion',
+    tipo: 'finanzas' | 'produccion' | 'completo',
     formato: 'pdf' | 'excel',
     fechaDesde: string,
     fechaHasta: string
