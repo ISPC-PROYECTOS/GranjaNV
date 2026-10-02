@@ -1,11 +1,11 @@
-
-
 .barra-pestanias {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 8px 12px;
   overflow-x: auto;
+  border-radius: 10px;
+  margin-top: 10px;
 }
 
 /* Botón base de pestaña */
@@ -14,7 +14,7 @@
   color: var(--color-blanco);
   font-family: var(--font-titulos);
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 600;
   text-decoration: none;
   padding: 10px 22px;
   border-radius: 10px;

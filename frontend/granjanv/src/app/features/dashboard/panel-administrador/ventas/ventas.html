@@ -102,7 +102,7 @@
 
                 <div class="acciones-estado">
                   <button type="button" class="btn btn-estado-toggle" [class.completado]="pedido.estado_entrega"
-                    (click)="toggleEntrega(pedido)">
+                    (click)="solicitarToggleEntrega(pedido)">
                     <i class="hgi-stroke hgi-tick-02" aria-hidden="true"></i>
                     {{ pedido.estado_entrega ? 'Entregado' : 'Entregué' }}
                   </button>
@@ -396,6 +396,57 @@
     </div>
   </div>
   }
+
+  @if (alertaStock(); as alerta) {
+  <div class="modal-confirmacion-backdrop">
+    <div
+      class="modal-confirmacion-caja animate-fade-in"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-alerta-stock"
+    >
+      <h4 id="titulo-alerta-stock">Stock Insuficiente</h4>
+      
+      <div class="alerta-error-modal text-start mb-3">
+        Uno o más productos del pedido superan el stock registrado actualmente en el sistema.
+      </div>
+
+      <p class="text-muted small mb-2 text-start">
+        Maples con faltante en galpón:
+      </p>
+
+      <ul class="list-unstyled text-start small mb-3 px-2">
+        @for (item of alerta.faltantes; track item.tipo) {
+          <li class="py-1">
+            <strong>{{ item.tipo }}:</strong> Solicitados: <strong>{{ item.solicitados }}</strong> | 
+            En stock: <span class="text-danger fw-bold">{{ item.disponibles }}</span>
+          </li>
+        }
+      </ul>
+
+      <p class="text-muted small text-start mb-3">
+        ¿Deseas marcar la entrega de todas formas? (Permitido por demoras en la carga de recolección diaria).
+      </p>
+
+      <div class="d-flex gap-2 justify-content-end">
+        <button
+          type="button"
+          class="btn btn-sm btn-limpiar"
+          (click)="cancelarAlertaStock()"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm btn-guardar"
+          (click)="confirmarEntregaSinStock()"
+        >
+          Confirmar de todos modos
+        </button>
+      </div>
+    </div>
+  </div>
+}
 
   @if (mostrarConfirmacionEliminar() && pedidoAEliminar(); as pedido) {
   <div class="modal-overlay-backdrop">

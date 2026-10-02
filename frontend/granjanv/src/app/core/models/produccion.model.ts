@@ -1,13 +1,18 @@
 import { TipoHuevo } from './pedido.model';
 
-// Extendemos TipoHuevo mixto
-export type CategoriaProduccionHuevo = TipoHuevo | 'MIXTO';
+export type CategoriaProduccionHuevo = TipoHuevo;
 
 export interface Galpon {
   id: number;
   numero_galpon: number;
   nombre: string;
+  capacidad_maxima: number;
+  cantidad_inicial_gallinas: number;
+  cantidad_actual_gallinas: number;
+  descripcion_galpon: string;
   activo: boolean;
+  creado_en?: string;
+  actualizado_en?: string;
 }
 
 export interface ItemProduccionHuevo {
@@ -19,7 +24,7 @@ export interface RegistroProduccionPayload {
   galpon: number;
   fecha: string;
   items: ItemProduccionHuevo[];
-  huevos_rotos: number; // Merma en unidades
+  huevos_rotos: number;
   total_maples: number;
 }
 

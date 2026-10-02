@@ -7,7 +7,7 @@
   >
     <ng-template #itemTemplate let-tarjeta>
       <div class="tarjeta-metrica-diagonal">
-        <!-- Línea diagonal en SVG para garantizar ángulo exacto e inmutable -->
+        <!-- Línea diagonal -->
         <svg class="svg-diagonal" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
           <line x1="100" y1="0" x2="0" y2="100" vector-effect="non-scaling-stroke" />
         </svg>
@@ -15,12 +15,22 @@
         <!-- Bloque Superior Izquierdo -->
         <div class="bloque-metrica bloque-superior-izq">
           <span class="metrica-titulo">{{ tarjeta.arribaTitulo }}</span>
-          <span class="metrica-valor">{{ tarjeta.arribaValor }}</span>
+          <span
+            class="metrica-valor"
+            [class.metrica-valor-negativo]="esNegativo(tarjeta.arribaValor)"
+          >
+            {{ tarjeta.arribaValor }}
+          </span>
         </div>
 
         <!-- Bloque Inferior Derecho -->
         <div class="bloque-metrica bloque-inferior-der">
-          <span class="metrica-valor">{{ tarjeta.abajoValor }}</span>
+          <span
+            class="metrica-valor"
+            [class.metrica-valor-negativo]="esNegativo(tarjeta.abajoValor)"
+          >
+            {{ tarjeta.abajoValor }}
+          </span>
           <span class="metrica-titulo">{{ tarjeta.abajoTitulo }}</span>
         </div>
       </div>

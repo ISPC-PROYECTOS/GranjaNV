@@ -1,10 +1,10 @@
 from django.http import JsonResponse  # pyright: ignore[reportMissingModuleSource]
 import pymongo  # pyright: ignore[reportMissingImports]
+from django.conf import settings
 
-MONGO_URI= "mongodb+srv://granjanv-user:bduser@granjanv-bd.3a2xxcb.mongodb.net/?appName=Granjanv-bd"
 def obtener_recetas(request):
     try:
-        cliente = pymongo.MongoClient(MONGO_URI)
+        cliente = pymongo.MongoClient(settings.MONGO_URI)
         db = cliente["granjanv_landing"]
         coleccion_recetas = db["recetas"]
         

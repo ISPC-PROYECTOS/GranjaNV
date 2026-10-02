@@ -100,6 +100,17 @@ body {
   text-align: center;
 }
 
+.alerta-error-modal {
+  background-color: rgba(255, 107, 107, 0.15);
+  color: var(--color-negro);
+  border: 1px solid var(--color-error);
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
 .alerta-exito {
   background-color: rgba(129, 199, 132, 0.15);
   color: var(--color-crema);
@@ -322,7 +333,7 @@ body {
 .modal-confirmacion-backdrop {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.55);
+  background-color: color-mix(in srgb, var(--color-negro) 55%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;
