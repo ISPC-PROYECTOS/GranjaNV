@@ -20,7 +20,6 @@ from pedidos.models import Pedido
 from produccion.models import ItemProduccionHuevo, RegistroProduccion
 from users.permissions import IsAdminRole
 
-
 def obtener_datos_finanzas(fecha_desde, fecha_hasta):
     ventas = Pedido.objects.filter(estado_pago=True)
     gastos = Gasto.objects.all()
@@ -48,7 +47,6 @@ def obtener_datos_finanzas(fecha_desde, fecha_hasta):
         "egresos": total_egresos,
         "balance_neto": balance_neto,
     }
-
 
 def obtener_datos_produccion(fecha_desde, fecha_hasta):
     registros = RegistroProduccion.objects.all()
@@ -90,6 +88,63 @@ def obtener_datos_produccion(fecha_desde, fecha_hasta):
         "produccion_por_tipo": produccion_por_tipo,
     }
 
+def agregar_finanzas_pdf(pdf, datos, y):
+    pdf.setFont("Helvetica-Bold", 12)
+    pdf.drawString(50, y, "Resumen financiero")
+
+    pdf.setFont("Helvetica", 11)
+    pdf.drawString(50, y - 25, f"Ingresos: ${datos['ingresos']}")
+    pdf.drawString(50, y - 45, f"Egresos: ${datos['egresos']}")
+    pdf.drawString(50, y - 65, f"Balance neto: ${datos['balance_neto']}")
+
+    return y - 100
+
+def agregar_produccion_pdf(pdf, datos, y):
+    pdf.setFont("Helvetica-Bold", 12)
+    pdf.drawString(50, y, "Resumen de producción")
+
+    pdf.setFont("Helvetica", 11)
+    pdf.drawString(
+        50,
+        y - 25,
+        f"Total producido: {datos['total_maples']} maples",
+    )
+    pdf.drawString(
+        50,
+        y - 45,
+        f"Mermas: {datos['mermas']} huevos",
+    )
+
+    pdf.setFont("Helvetica-Bold", 12)
+    pdf.drawString(50, y - 85, "Producción por tipo")
+
+    pdf.setFont("Helvetica", 11)
+    y -= 110
+
+    for tipo, cantidad in datos["produccion_por_tipo"].items():
+        nombre_tipo = tipo.replace("_", " ").title()
+        pdf.drawString(50, y, f"{nombre_tipo}: {cantidad} maples")
+        y -= 20
+
+    return y
+
+def agregar_finanzas_excel(hoja, datos):
+    hoja.append(["Concepto", "Monto"])
+    hoja.append(["Ingresos", datos["ingresos"]])
+    hoja.append(["Egresos", datos["egresos"]])
+    hoja.append(["Balance neto", datos["balance_neto"]])
+
+def agregar_produccion_excel(hoja, datos):
+    hoja.append(["Resumen"])
+    hoja.append(["Total producido", datos["total_maples"], "maples"])
+    hoja.append(["Mermas", datos["mermas"], "huevos"])
+    hoja.append([])
+
+    hoja.append(["Producción por tipo", "Maples"])
+
+    for tipo, cantidad in datos["produccion_por_tipo"].items():
+        nombre_tipo = tipo.replace("_", " ").title()
+        hoja.append([nombre_tipo, cantidad])
 
 def registrar_exportacion(
     usuario,
@@ -171,34 +226,7 @@ def exportar_produccion_pdf(request):
         f"Período: {fecha_desde} al {fecha_hasta}",
     )
 
-    pdf.setFont("Helvetica-Bold", 12)
-    pdf.drawString(50, 720, "Resumen de producción")
-
-    pdf.setFont("Helvetica", 11)
-    pdf.drawString(
-        50,
-        695,
-        f"Total producido: {datos['total_maples']} maples",
-    )
-    pdf.drawString(
-        50,
-        675,
-        f"Mermas: {datos['mermas']} huevos",
-    )
-
-    pdf.setFont("Helvetica-Bold", 12)
-    pdf.drawString(50, 635, "Producción por tipo")
-
-    y = 610
-
-    for tipo, cantidad in datos["produccion_por_tipo"].items():
-        nombre_tipo = tipo.replace("_", " ").title()
-        pdf.drawString(
-            50,
-            y,
-            f"{nombre_tipo}: {cantidad} maples",
-        )
-        y -= 20
+    agregar_produccion_pdf(pdf, datos, 720)
 
     pdf.showPage()
     pdf.save()
@@ -218,7 +246,6 @@ def exportar_produccion_pdf(request):
         buffer.getvalue(),
         content_type="application/pdf",
     )
-
     response["Content-Disposition"] = (
         'attachment; filename="reporte_produccion.pdf"'
     )
@@ -241,16 +268,7 @@ def exportar_produccion_excel(request):
     hoja.append(["Período", f"{fecha_desde} al {fecha_hasta}"])
     hoja.append([])
 
-    hoja.append(["Resumen"])
-    hoja.append(["Total producido", datos["total_maples"], "maples"])
-    hoja.append(["Mermas", datos["mermas"], "huevos"])
-    hoja.append([])
-
-    hoja.append(["Producción por tipo", "Maples"])
-
-    for tipo, cantidad in datos["produccion_por_tipo"].items():
-        nombre_tipo = tipo.replace("_", " ").title()
-        hoja.append([nombre_tipo, cantidad])
+    agregar_produccion_excel(hoja, datos)
 
     buffer = BytesIO()
     workbook.save(buffer)
@@ -264,7 +282,6 @@ def exportar_produccion_excel(request):
         datos,
     )
 
-
     buffer.seek(0)
 
     response = HttpResponse(
@@ -274,7 +291,6 @@ def exportar_produccion_excel(request):
             "spreadsheetml.sheet"
         ),
     )
-
     response["Content-Disposition"] = (
         'attachment; filename="reporte_produccion.xlsx"'
     )
@@ -288,19 +304,6 @@ def exportar_finanzas_pdf(request):
     fecha_hasta = request.query_params.get("fecha_hasta")
 
     datos = obtener_datos_finanzas(fecha_desde, fecha_hasta)
-
-    total_ingresos = datos["ingresos"]
-    total_egresos = datos["egresos"]
-    balance_neto = datos["balance_neto"]
-
-    registrar_exportacion(
-        request.user,
-        "finanzas",
-        "pdf",
-        fecha_desde,
-        fecha_hasta,
-        datos,
-    )
 
     buffer = BytesIO()
 
@@ -317,16 +320,19 @@ def exportar_finanzas_pdf(request):
         f"Período: {fecha_desde} al {fecha_hasta}",
     )
 
-    pdf.setFont("Helvetica-Bold", 12)
-    pdf.drawString(50, 720, "Resumen financiero")
-
-    pdf.setFont("Helvetica", 11)
-    pdf.drawString(50, 695, f"Ingresos: ${total_ingresos}")
-    pdf.drawString(50, 675, f"Egresos: ${total_egresos}")
-    pdf.drawString(50, 655, f"Balance neto: ${balance_neto}")
+    agregar_finanzas_pdf(pdf, datos, 720)
 
     pdf.showPage()
     pdf.save()
+
+    registrar_exportacion(
+        request.user,
+        "finanzas",
+        "pdf",
+        fecha_desde,
+        fecha_hasta,
+        datos,
+    )
 
     buffer.seek(0)
 
@@ -334,7 +340,6 @@ def exportar_finanzas_pdf(request):
         buffer.getvalue(),
         content_type="application/pdf",
     )
-
     response["Content-Disposition"] = (
         'attachment; filename="reporte_finanzas.pdf"'
     )
@@ -349,9 +354,18 @@ def exportar_finanzas_excel(request):
 
     datos = obtener_datos_finanzas(fecha_desde, fecha_hasta)
 
-    total_ingresos = datos["ingresos"]
-    total_egresos = datos["egresos"]
-    balance_neto = datos["balance_neto"]
+    workbook = Workbook()
+    hoja = workbook.active
+    hoja.title = "Finanzas"
+
+    hoja.append(["Reporte de Finanzas"])
+    hoja.append(["Período", f"{fecha_desde} al {fecha_hasta}"])
+    hoja.append([])
+
+    agregar_finanzas_excel(hoja, datos)
+
+    buffer = BytesIO()
+    workbook.save(buffer)
 
     registrar_exportacion(
         request.user,
@@ -362,20 +376,6 @@ def exportar_finanzas_excel(request):
         datos,
     )
 
-    workbook = Workbook()
-    hoja = workbook.active
-    hoja.title = "Finanzas"
-
-    hoja.append(["Reporte de Finanzas"])
-    hoja.append(["Período", f"{fecha_desde} al {fecha_hasta}"])
-    hoja.append([])
-    hoja.append(["Concepto", "Monto"])
-    hoja.append(["Ingresos", total_ingresos])
-    hoja.append(["Egresos", total_egresos])
-    hoja.append(["Balance neto", balance_neto])
-
-    buffer = BytesIO()
-    workbook.save(buffer)
     buffer.seek(0)
 
     response = HttpResponse(
@@ -385,7 +385,6 @@ def exportar_finanzas_excel(request):
             "spreadsheetml.sheet"
         ),
     )
-
     response["Content-Disposition"] = (
         'attachment; filename="reporte_finanzas.xlsx"'
     )
