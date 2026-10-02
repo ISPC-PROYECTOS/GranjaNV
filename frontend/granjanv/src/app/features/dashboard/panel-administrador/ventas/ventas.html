@@ -149,15 +149,19 @@
         <div class="seccion-pedidos-cerrados mt-auto pt-3 border-top">
           <button type="button" class="btn btn-toggle-cerrados w-100" [attr.aria-expanded]="mostrarCerrados()"
             (click)="toggleMostrarCerrados()">
-            <span class="d-flex align-items-center gap-2 fw-semibold">
-              <i class="hgi-stroke hgi-checkmark-circle-02" aria-hidden="true"></i>
-              Pedidos cerrados ({{ pedidosCerrados().length }})
+            <span class="cerrados-icono" aria-hidden="true">
+              <i class="hgi-stroke hgi-checkmark-circle-02"></i>
+            </span>
+            <span class="cerrados-identidad">
+              <span class="cerrados-titulo">Pedidos cerrados</span>
+              <span class="cerrados-cantidad">{{ pedidosCerrados().length }} pedidos completados</span>
             </span>
             <span class="total-ventas-toggle">
-              Total: ${{ formatearMoneda(totalVentas()) }}
-              <i class="hgi-stroke hgi-arrow-down-01 icono-chevron" [class.rotado]="mostrarCerrados()"
-                aria-hidden="true"></i>
+              <span>Total</span>
+              <strong>${{ formatearMoneda(totalVentas()) }}</strong>
             </span>
+            <i class="hgi-stroke hgi-arrow-down-01 cerrados-chevron" [class.rotado]="mostrarCerrados()"
+              aria-hidden="true"></i>
           </button>
 
           @if (mostrarCerrados()) {
