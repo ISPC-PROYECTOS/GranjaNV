@@ -108,7 +108,7 @@
                   </button>
 
                   <button type="button" class="btn btn-estado-toggle" [class.completado]="pedido.estado_pago"
-                    (click)="togglePago(pedido)">
+                    (click)="solicitarTogglePago(pedido)">
                     <i class="hgi-stroke hgi-dollar-circle" aria-hidden="true"></i>
                     {{ pedido.estado_pago ? 'Cobrado' : 'Cobré' }}
                   </button>
@@ -466,6 +466,56 @@
     </div>
   </div>
   }  
+
+  <!-- MODAL DE CONFIRMACIÓN DE CIERRE DE PEDIDO -->
+  @if (mostrarConfirmacionCierre() && pedidoACerrar(); as pedido) {
+  <div class="modal-confirmacion-backdrop">
+    <div
+      class="modal-confirmacion-caja animate-fade-in"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-confirmar-cierre"
+    >
+      <h4 id="titulo-confirmar-cierre">Confirmar cierre de pedido</h4>
+      <p class="text-muted small mb-3">
+        Estás por marcar el pedido como
+        <strong>{{ accionCierrePendiente() === 'pago' ? 'cobrado' : 'entregado' }}</strong>.
+        Al completar ambos requisitos (entrega y cobro), el pedido pasará automáticamente a
+        <strong>Cerrados</strong>:
+      </p>
+
+      <ul class="list-unstyled text-start small mb-3 px-2">
+        <li><strong>Cliente:</strong> {{ pedido.cliente.nombre }} {{ pedido.cliente.apellido }}</li>
+        <li><strong>Fecha de entrega:</strong> {{ formatearFechaDisplay(pedido.fecha_entrega) }}</li>
+        <li><strong>Productos:</strong> {{ pedido.resumen_productos }}</li>
+        <li><strong>Total:</strong> ${{ formatearMoneda(pedido.total) }}</li>
+      </ul>
+
+      <p class="text-muted small text-start px-2 mb-3">
+        ¿Deseas confirmar la operación y cerrar el pedido?
+      </p>
+
+      <div class="d-flex gap-2 justify-content-end">
+        <button
+          type="button"
+          class="btn btn-sm btn-limpiar"
+          (click)="cancelarConfirmacionCierre()"
+          [disabled]="isGuardando()"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm btn-guardar"
+          (click)="confirmarCierrePedido()"
+          [disabled]="isGuardando()"
+        >
+          {{ isGuardando() ? 'Cerrando...' : 'Confirmar y cerrar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+  }
   <!-- MODAL REAPERTURA DE PEDIDO CERRADO -->
   @if (mostrarModalReabrir() && pedidoAReabrir(); as pedido) {
   <div class="modal-overlay-backdrop">

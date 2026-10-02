@@ -54,6 +54,9 @@ export class Ventas implements OnInit {
   readonly pedidosCerrados = signal<PedidoRead[]>([]);
   readonly clientes = signal<Cliente[]>([]);
   readonly alertaStock = signal<AlertaStockFaltante | null>(null);
+  readonly mostrarConfirmacionCierre = signal<boolean>(false);
+  readonly pedidoACerrar = signal<PedidoRead | null>(null);
+  readonly accionCierrePendiente = signal<'pago' | 'entrega' | null>(null);
 
   // Filtros independientes
   readonly busquedaPendientes = signal<string>('');
@@ -157,31 +160,31 @@ export class Ventas implements OnInit {
 
     if (faltantes.length > 0) {
       this.alertaStock.set({ pedido, faltantes });
-    } else {
-      this.ejecutarToggleEntrega(pedido.id);
+      return;
     }
+
+    this.procederConEntrega(pedido);
   }
 
   confirmarEntregaSinStock(): void {
     const alerta = this.alertaStock();
     if (!alerta) return;
-    this.ejecutarToggleEntrega(alerta.pedido.id);
+    const pedido = alerta.pedido;
     this.cancelarAlertaStock();
+    this.procederConEntrega(pedido);
   }
 
   cancelarAlertaStock(): void {
     this.alertaStock.set(null);
   }
 
-  private ejecutarToggleEntrega(pedidoId: number): void {
-    this.pedidosService.toggleEntrega(pedidoId).subscribe({
-      next: () => {
-        this.cargarPedidosPendientes();
-        this.cargarPedidosCerrados();
-        this.produccionService.cargarMetricasProduccion();
-      },
-      error: (err) => console.error('Error al cambiar entrega:', err),
-    });
+  private procederConEntrega(pedido: PedidoRead): void {
+    if (pedido.estado_pago) {
+      this.abrirModalConfirmacionCierre(pedido, 'entrega');
+      return;
+    }
+
+    this.ejecutarToggleEntrega(pedido.id);
   }
 
   abrirModalNuevoCliente(): void {
@@ -565,12 +568,21 @@ export class Ventas implements OnInit {
   }
 
   togglePago(pedido: PedidoRead): void {
-    this.pedidosService.togglePago(pedido.id).subscribe({
-      next: () => {
-        this.cargarPedidosPendientes();
-        this.cargarPedidosCerrados();
-      },
-    });
+    this.solicitarTogglePago(pedido);
+  }
+
+  solicitarTogglePago(pedido: PedidoRead): void {
+    if (pedido.estado_pago) {
+      this.ejecutarTogglePago(pedido.id);
+      return;
+    }
+
+    if (pedido.estado_entrega) {
+      this.abrirModalConfirmacionCierre(pedido, 'pago');
+      return;
+    }
+
+    this.ejecutarTogglePago(pedido.id);
   }
 
   toggleEntrega(pedido: PedidoRead): void {
@@ -583,6 +595,27 @@ export class Ventas implements OnInit {
     },
   });
 }
+
+  private ejecutarTogglePago(pedidoId: number): void {
+    this.pedidosService.togglePago(pedidoId).subscribe({
+      next: () => {
+        this.cargarPedidosPendientes();
+        this.cargarPedidosCerrados();
+      },
+      error: (err) => console.error('Error al actualizar pago:', err),
+    });
+  }
+
+  private ejecutarToggleEntrega(pedidoId: number): void {
+    this.pedidosService.toggleEntrega(pedidoId).subscribe({
+      next: () => {
+        this.cargarPedidosPendientes();
+        this.cargarPedidosCerrados();
+        this.produccionService.cargarMetricasProduccion();
+      },
+      error: (err) => console.error('Error al cambiar entrega:', err),
+    });
+  }
 
   limpiar(): void {
     this.pedidoEditandoId.set(null);
@@ -636,5 +669,58 @@ export class Ventas implements OnInit {
   private mostrarNotificacion(msg: string): void {
     this.mensajeExito.set(msg);
     setTimeout(() => this.mensajeExito.set(null), 3000);
+  }
+
+  abrirModalConfirmacionCierre(pedido: PedidoRead, accion: 'pago' | 'entrega'): void {
+    this.pedidoACerrar.set(pedido);
+    this.accionCierrePendiente.set(accion);
+    this.mostrarConfirmacionCierre.set(true);
+  }
+
+  cancelarConfirmacionCierre(): void {
+    this.mostrarConfirmacionCierre.set(false);
+    this.pedidoACerrar.set(null);
+    this.accionCierrePendiente.set(null);
+  }
+
+  confirmarCierrePedido(): void {
+    const pedido = this.pedidoACerrar();
+    const accion = this.accionCierrePendiente();
+    if (!pedido || !accion) return;
+
+    this.isGuardando.set(true);
+
+    if (accion === 'pago') {
+      this.pedidosService.togglePago(pedido.id).subscribe({
+        next: () => {
+          this.isGuardando.set(false);
+          this.cancelarConfirmacionCierre();
+          this.mostrarNotificacion('¡Pedido marcado como cobrado y cerrado con éxito!');
+          this.cargarPedidosPendientes();
+          this.cargarPedidosCerrados();
+        },
+        error: (err) => {
+          this.isGuardando.set(false);
+          console.error('Error al cerrar pedido por pago:', err);
+          this.errorBackend.set('Error al registrar el cobro y cerrar el pedido.');
+        },
+      });
+    } else if (accion === 'entrega') {
+      this.pedidosService.toggleEntrega(pedido.id).subscribe({
+        next: () => {
+          this.isGuardando.set(false);
+          this.cancelarConfirmacionCierre();
+          this.mostrarNotificacion('¡Pedido marcado como entregado y cerrado con éxito!');
+          this.cargarPedidosPendientes();
+          this.cargarPedidosCerrados();
+          this.produccionService.cargarMetricasProduccion();
+        },
+        error: (err) => {
+          this.isGuardando.set(false);
+          console.error('Error al cerrar pedido por entrega:', err);
+          this.errorBackend.set('Error al registrar la entrega y cerrar el pedido.');
+        },
+      });
+    }
   }
 }
