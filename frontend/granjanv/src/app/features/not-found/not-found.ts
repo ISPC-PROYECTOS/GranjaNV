@@ -19,7 +19,7 @@ export class NotFoundComponent {
       if (this.authService.isAdmin()) {
         this.router.navigate(['/dashboard/admin/panel-de-control']);
       } else {
-        this.router.navigate(['/dashboard/produccion/gestion-huevos']);
+        this.router.navigate(['/dashboard/produccion']);
       }
     } else {
       this.router.navigate(['/auth/login']);

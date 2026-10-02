@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Gastos } from '../../../../core/services/gastos';
 import { PedidosService } from '../../../../core/services/pedidos.service';
+import { ProduccionService } from '../../../../core/services/produccion.service';
 import { obtenerRangoMesActual } from '../../../../core/utils/date.utils';
 
 export interface MetricaDashboard {
@@ -21,6 +22,7 @@ export interface MetricaDashboard {
 export class PanelDeControl implements OnInit {
   private readonly gastosService = inject(Gastos);
   private readonly pedidosService = inject(PedidosService);
+  private readonly produccionService = inject(ProduccionService);
 
   readonly totalCompras = signal<number>(0);
   readonly totalVentasCobradas = signal<number>(0);
@@ -50,10 +52,10 @@ export class PanelDeControl implements OnInit {
     },
     {
       titulo: 'PRODUCCIÓN',
-      valor: '283',
+      valor: this.formatearNumero(this.produccionService.datosProduccion().total_maples),
       icono: 'hgi-eggs',
       color: 'verde',
-      ruta: '/dashboard/admin/produccion',
+      ruta: '/dashboard/produccion',
     },
   ]);
 
@@ -82,6 +84,8 @@ export class PanelDeControl implements OnInit {
         console.error('Error al obtener las métricas de ventas y pedidos:', error);
       },
     });
+
+    this.produccionService.cargarMetricasProduccion();
   }
 
   formatearNumero(valor: number | string | null | undefined): string {

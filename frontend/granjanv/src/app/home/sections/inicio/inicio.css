@@ -4,8 +4,7 @@
   background-image: linear-gradient(
     rgba(0, 0, 0, 0.35),
     rgba(0, 0, 0, 0.35)
-  ), url('/ImagenesHome/Bienvenida.png');
-
+  ), url('/ImagenesHome/Bienvenida.webp'); /* CAMBIAR PNG POR WEBP */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

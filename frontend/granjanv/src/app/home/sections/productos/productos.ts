@@ -17,25 +17,25 @@ export class Productos {
       id: 1,
       nombre: 'Huevo mediano de color',
       descripcion: 'Tamaño práctico para el consumo diario, con cáscara de color natural y sabor suave.',
-      imagen: '/ImagenesHome/huevos-1.jpeg'
+      imagen: '/ImagenesHome/huevos-1.webp'
     },
     {
       id: 2,
       nombre: 'Huevo grande de color',
       descripcion: 'Una opción abundante para tortillas, revueltos y preparaciones que necesitan más cuerpo.',
-      imagen: '/ImagenesHome/huevos-2.jpeg'
+      imagen: '/ImagenesHome/huevos-2.webp'
     },
     {
       id: 3,
       nombre: 'Huevo blanco mediano',
       descripcion: 'Huevo blanco mediano, ideal para desayunos, ensaladas y recetas de todos los días.',
-      imagen: '/ImagenesHome/huevos-3.jpg'
+      imagen: '/ImagenesHome/huevos-3.webp'
     },
     {
       id: 4,
       nombre: 'Huevo blanco grande',
       descripcion: 'Su tamaño grande aporta una porción generosa para pastelería, omelettes y comidas familiares.',
-      imagen: '/ImagenesHome/huevo-4.jpg'
+      imagen: '/ImagenesHome/huevos-4.webp'
     }
   ];
 

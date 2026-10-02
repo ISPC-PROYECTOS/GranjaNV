@@ -23,6 +23,18 @@ import { formatearFechaISO, obtenerRangoMesActual } from '../../../../core/utils
 import { Buscador } from '../../../../shared/buscador/buscador';
 import { CrearClienteComponent } from '../../../../shared/clientes/crear-cliente';
 import { ClienteSugerenciasComponent } from '../../../../shared/clientes-sugerencias/clientes-sugerencias';
+import { ProduccionService } from '../../../../core/services/produccion.service';
+
+interface ItemStockDeficit {
+  tipo: string;
+  solicitados: number;
+  disponibles: number;
+}
+
+interface AlertaStockFaltante {
+  pedido: PedidoRead;
+  faltantes: ItemStockDeficit[];
+}
 
 @Component({
   selector: 'app-ventas',
@@ -35,6 +47,7 @@ export class Ventas implements OnInit, OnDestroy {
   private readonly pedidosService = inject(PedidosService);
   private readonly clientesService = inject(ClientesService);
   private readonly actualizadorHora: Subscription;
+  private readonly produccionService = inject(ProduccionService);
 
   readonly vistaMobile = signal<'pedidos' | 'formulario'>('formulario');
 
@@ -42,6 +55,10 @@ export class Ventas implements OnInit, OnDestroy {
   readonly pedidosPendientes = signal<PedidoRead[]>([]);
   readonly pedidosCerrados = signal<PedidoRead[]>([]);
   readonly clientes = signal<Cliente[]>([]);
+  readonly alertaStock = signal<AlertaStockFaltante | null>(null);
+  readonly mostrarConfirmacionCierre = signal<boolean>(false);
+  readonly pedidoACerrar = signal<PedidoRead | null>(null);
+  readonly accionCierrePendiente = signal<'pago' | 'entrega' | null>(null);
 
   // Filtros independientes
   readonly busquedaPendientes = signal<string>('');
@@ -84,6 +101,7 @@ export class Ventas implements OnInit, OnDestroy {
     { codigo: 'BLANCO_2', nombre: 'Blanco N.° 2', precioMaple: 4200, maples: 0 },
     { codigo: 'COLOR_1', nombre: 'Color N.° 1', precioMaple: 4800, maples: 0 },
     { codigo: 'COLOR_2', nombre: 'Color N.° 2', precioMaple: 4500, maples: 0 },
+    { codigo: 'MIXTO', nombre: 'Mixto', precioMaple: 4500, maples: 0 },
   ]);
 
   readonly precioTotal = computed(() =>
@@ -113,7 +131,72 @@ export class Ventas implements OnInit, OnDestroy {
     );
   });
 
-  constructor() {
+  private obtenerStockDisponible(tipo: TipoHuevo): number {
+    const stock = this.produccionService.datosProduccion();
+    switch (tipo) {
+      case 'COLOR_1':
+        return stock.maples_color_1;
+      case 'COLOR_2':
+        return stock.maples_color_2;
+      case 'BLANCO_1':
+        return stock.maples_blanco_1;
+      case 'BLANCO_2':
+        return stock.maples_blanco_2;
+      case 'MIXTO':
+        return stock.mixtos;
+      default:
+        return 0;
+    }
+  }
+
+  solicitarToggleEntrega(pedido: PedidoRead): void {
+    if (pedido.estado_entrega) {
+      this.ejecutarToggleEntrega(pedido.id);
+      return;
+    }
+
+    this.produccionService.cargarMetricasProduccion();
+
+    const faltantes: ItemStockDeficit[] = [];
+    for (const item of pedido.items) {
+      const disponible = this.obtenerStockDisponible(item.tipo_huevo);
+      if (item.cantidad_maples > disponible) {
+        faltantes.push({
+          tipo: item.tipo_huevo_display || item.tipo_huevo,
+          solicitados: item.cantidad_maples,
+          disponibles: disponible,
+        });
+      }
+    }
+
+    if (faltantes.length > 0) {
+      this.alertaStock.set({ pedido, faltantes });
+      return;
+    }
+
+    this.procederConEntrega(pedido);
+  }
+
+  confirmarEntregaSinStock(): void {
+    const alerta = this.alertaStock();
+    if (!alerta) return;
+    const pedido = alerta.pedido;
+    this.cancelarAlertaStock();
+    this.procederConEntrega(pedido);
+  }
+
+  cancelarAlertaStock(): void {
+    this.alertaStock.set(null);
+  }
+
+  private procederConEntrega(pedido: PedidoRead): void {
+    if (pedido.estado_pago) {
+      this.abrirModalConfirmacionCierre(pedido, 'entrega');
+      return;
+    }
+
+    this.ejecutarToggleEntrega(pedido.id);
+  }  constructor() {
     this.actualizadorHora = interval(60_000).subscribe(() => {
       this.horaActual.set(new Date().getHours());
     });
@@ -459,6 +542,7 @@ export class Ventas implements OnInit, OnDestroy {
       this.mostrarNotificacion('Estado actualizado. El pedido volvió a pendientes.');
       this.cargarPedidosPendientes();
       this.cargarPedidosCerrados();
+      this.produccionService.cargarMetricasProduccion();
 
       // Desplazamiento y expansión automática hacia el pedido en pendientes
       setTimeout(() => {
@@ -504,20 +588,52 @@ export class Ventas implements OnInit, OnDestroy {
   }
 
   togglePago(pedido: PedidoRead): void {
-    this.pedidosService.togglePago(pedido.id).subscribe({
-      next: () => {
-        this.cargarPedidosPendientes();
-        this.cargarPedidosCerrados();
-      },
-    });
+    this.solicitarTogglePago(pedido);
+  }
+
+  solicitarTogglePago(pedido: PedidoRead): void {
+    if (pedido.estado_pago) {
+      this.ejecutarTogglePago(pedido.id);
+      return;
+    }
+
+    if (pedido.estado_entrega) {
+      this.abrirModalConfirmacionCierre(pedido, 'pago');
+      return;
+    }
+
+    this.ejecutarTogglePago(pedido.id);
   }
 
   toggleEntrega(pedido: PedidoRead): void {
-    this.pedidosService.toggleEntrega(pedido.id).subscribe({
+  this.pedidosService.toggleEntrega(pedido.id).subscribe({
+    next: () => {
+      this.cargarPedidosPendientes();
+      this.cargarPedidosCerrados();
+      // Notifica al servicio de producción para refrescar el signal
+      this.produccionService.cargarMetricasProduccion();
+    },
+  });
+}
+
+  private ejecutarTogglePago(pedidoId: number): void {
+    this.pedidosService.togglePago(pedidoId).subscribe({
       next: () => {
         this.cargarPedidosPendientes();
         this.cargarPedidosCerrados();
       },
+      error: (err) => console.error('Error al actualizar pago:', err),
+    });
+  }
+
+  private ejecutarToggleEntrega(pedidoId: number): void {
+    this.pedidosService.toggleEntrega(pedidoId).subscribe({
+      next: () => {
+        this.cargarPedidosPendientes();
+        this.cargarPedidosCerrados();
+        this.produccionService.cargarMetricasProduccion();
+      },
+      error: (err) => console.error('Error al cambiar entrega:', err),
     });
   }
 
@@ -573,5 +689,58 @@ export class Ventas implements OnInit, OnDestroy {
   private mostrarNotificacion(msg: string): void {
     this.mensajeExito.set(msg);
     setTimeout(() => this.mensajeExito.set(null), 3000);
+  }
+
+  abrirModalConfirmacionCierre(pedido: PedidoRead, accion: 'pago' | 'entrega'): void {
+    this.pedidoACerrar.set(pedido);
+    this.accionCierrePendiente.set(accion);
+    this.mostrarConfirmacionCierre.set(true);
+  }
+
+  cancelarConfirmacionCierre(): void {
+    this.mostrarConfirmacionCierre.set(false);
+    this.pedidoACerrar.set(null);
+    this.accionCierrePendiente.set(null);
+  }
+
+  confirmarCierrePedido(): void {
+    const pedido = this.pedidoACerrar();
+    const accion = this.accionCierrePendiente();
+    if (!pedido || !accion) return;
+
+    this.isGuardando.set(true);
+
+    if (accion === 'pago') {
+      this.pedidosService.togglePago(pedido.id).subscribe({
+        next: () => {
+          this.isGuardando.set(false);
+          this.cancelarConfirmacionCierre();
+          this.mostrarNotificacion('¡Pedido marcado como cobrado y cerrado con éxito!');
+          this.cargarPedidosPendientes();
+          this.cargarPedidosCerrados();
+        },
+        error: (err) => {
+          this.isGuardando.set(false);
+          console.error('Error al cerrar pedido por pago:', err);
+          this.errorBackend.set('Error al registrar el cobro y cerrar el pedido.');
+        },
+      });
+    } else if (accion === 'entrega') {
+      this.pedidosService.toggleEntrega(pedido.id).subscribe({
+        next: () => {
+          this.isGuardando.set(false);
+          this.cancelarConfirmacionCierre();
+          this.mostrarNotificacion('¡Pedido marcado como entregado y cerrado con éxito!');
+          this.cargarPedidosPendientes();
+          this.cargarPedidosCerrados();
+          this.produccionService.cargarMetricasProduccion();
+        },
+        error: (err) => {
+          this.isGuardando.set(false);
+          console.error('Error al cerrar pedido por entrega:', err);
+          this.errorBackend.set('Error al registrar la entrega y cerrar el pedido.');
+        },
+      });
+    }
   }
 }

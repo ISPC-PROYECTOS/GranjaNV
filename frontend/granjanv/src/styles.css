@@ -1,8 +1,9 @@
-/* Tipografías */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans:wght@400;500;600&display=swap');
-
-/* Hugeicons */
-@import url('https://cdn.hugeicons.com/font/hgi-stroke-rounded.css');
+@import '@fontsource/montserrat/500.css';
+@import '@fontsource/montserrat/600.css';
+@import '@fontsource/montserrat/700.css';
+@import '@fontsource/open-sans/400.css';
+@import '@fontsource/open-sans/600.css';
+@import '@fontsource/open-sans/700.css';
 
 :root {
   --color-primario: #67875f;
@@ -91,6 +92,17 @@ body {
 .alerta-error {
   background-color: rgba(255, 107, 107, 0.15);
   color: var(--color-crema);
+  border: 1px solid var(--color-error);
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.alerta-error-modal {
+  background-color: rgba(255, 107, 107, 0.15);
+  color: var(--color-negro);
   border: 1px solid var(--color-error);
   padding: 0.75rem 1rem;
   border-radius: 12px;
@@ -321,7 +333,7 @@ body {
 .modal-confirmacion-backdrop {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.55);
+  background-color: color-mix(in srgb, var(--color-negro) 55%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -501,3 +513,4 @@ body.dark-mode .btn-guardar[disabled] {
   opacity: 0.4;
   filter: grayscale(60%);
 }
+>>>>>>>>> Temporary merge branch 2

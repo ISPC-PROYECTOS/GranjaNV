@@ -1,0 +1,72 @@
+<main class="container-fluid gestion-pagina pb-4">
+  @if (isAdmin()) {
+    <button
+      class="btn btn-volver-panel"
+      type="button"
+      routerLink="/dashboard/admin/panel-de-control"
+    >
+      ← Panel de control
+    </button>
+  }
+  
+  <!-- Navegación móvil por pestañas -->
+  <nav class="d-sm-none tabs-mobile" role="tablist" aria-label="Secciones de producción móvil">
+    <button
+      type="button"
+      role="tab"
+      id="tab-formulario"
+      aria-controls="panel-formulario-produccion"
+      class="btn tab-mobile"
+      [attr.aria-selected]="vistaMobile() === 'formulario'"
+      [class.tab-mobile-activo]="vistaMobile() === 'formulario'"
+      (click)="mostrarFormulario()"
+    >
+      Cargar producción
+    </button>
+
+    <button
+      type="button"
+      role="tab"
+      id="tab-metricas"
+      aria-controls="panel-metricas-produccion"
+      class="btn tab-mobile"
+      [attr.aria-selected]="vistaMobile() === 'metricas'"
+      [class.tab-mobile-activo]="vistaMobile() === 'metricas'"
+      (click)="mostrarMetricas()"
+    >
+      Datos producción
+    </button>
+  </nav>
+
+  <!-- Grilla principal de dos columnas -->
+  <section class="row gestion-seccion my-2 g-4">
+    <!-- COLUMNA IZQUIERDA: DATOS DE PRODUCCIÓN (CARRUSEL) -->
+    <div
+      id="panel-metricas-produccion"
+      role="tabpanel"
+      aria-labelledby="tab-metricas"
+      class="col-12 col-lg-6 order-2 order-lg-1"
+      [class.d-none]="vistaMobile() !== 'metricas'"
+      [class.d-sm-block]="true"
+    >
+      <section class="seccion-izquierda panel-columna">
+        <app-datos-produccion></app-datos-produccion>
+      </section>
+    </div>
+
+    <!-- COLUMNA DERECHA: GESTIÓN DE HUEVOS + GESTIÓN DE GALLINAS -->
+    <div
+      id="panel-formulario-produccion"
+      role="tabpanel"
+      aria-labelledby="tab-formulario"
+      class="col-12 col-lg-6 order-1 order-lg-2"
+      [class.d-none]="vistaMobile() !== 'formulario'"
+      [class.d-sm-block]="true"
+    >
+      <section class="seccion-derecha panel-columna">
+        <app-gestion-huevos></app-gestion-huevos>
+        <app-gestion-gallinas></app-gestion-gallinas>
+      </section>
+    </div>
+  </section>
+</main>

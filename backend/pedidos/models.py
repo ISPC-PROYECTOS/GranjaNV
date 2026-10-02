@@ -29,7 +29,6 @@ class Pedido(models.Model):
     actualizado_en = models.DateTimeField(auto_now=True)
 
     class Meta:
-        # Ordenado prioritariamente por la fecha de entrega más próxima (ascendente)
         ordering = ["fecha_entrega", "creado_en"]
         verbose_name = "Pedido"
         verbose_name_plural = "Pedidos"
@@ -39,15 +38,7 @@ class Pedido(models.Model):
         ]
 
     def __str__(self) -> str:
-        return f"Pedido #{self.pk} - {self.cliente.nombre} (${self.total}) [{self.fecha_entrega}]"
-
-    def recalcular_total(self) -> Decimal:
-        total_acumulado = sum(
-            (item.subtotal for item in self.items.all()), Decimal("0.00")
-        )
-        self.total = total_acumulado
-        self.save(update_fields=["total"])
-        return self.total
+        return f"Pedido #{self.pk} - {self.cliente.nombre} (${self.total})"
 
 
 class ItemPedido(models.Model):
@@ -58,6 +49,7 @@ class ItemPedido(models.Model):
         BLANCO_2 = "BLANCO_2", "Blanco 2"
         COLOR_1 = "COLOR_1", "Color 1"
         COLOR_2 = "COLOR_2", "Color 2"
+        MIXTO = "MIXTO", "Mixto"
 
     pedido = models.ForeignKey(
         Pedido,
@@ -93,7 +85,3 @@ class ItemPedido(models.Model):
                 name="check_cantidad_unidades_positiva",
             ),
         ]
-
-    def __str__(self) -> str:
-        maples = self.cantidad_unidades // self.HUEVOS_POR_MAPLE
-        return f"{maples} maples ({self.cantidad_unidades} u.) {self.get_tipo_huevo_display()}"

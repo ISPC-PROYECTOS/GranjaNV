@@ -56,7 +56,9 @@ INSTALLED_APPS = [
     "pedidos",
     "compras",
     "clientes",
+    "produccion",
     "home",
+    "reportes",
 ]
 
 MIDDLEWARE = [
@@ -117,6 +119,12 @@ DATABASES = {
     }
 }
 
+# MongoDB
+MONGO_URI = os.environ.get(
+    "MONGO_URI",
+    "mongodb+srv://granjanv-user:bduser@granjanv-bd.3a2xxcb.mongodb.net/?appName=Granjanv-bd",
+)
+
 # Especificar el modelo de usuario personalizado
 AUTH_USER_MODEL = "users.Usuario"
 
@@ -154,9 +162,9 @@ SIMPLE_JWT = {
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "es-ar"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "America/Argentina/Buenos_Aires"
 
 USE_I18N = True
 
