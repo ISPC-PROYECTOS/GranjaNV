@@ -505,6 +505,7 @@ body.dark-mode .modal-confirmacion-caja h4 {
 body.dark-mode .modal-confirmacion-caja .text-muted {
   color: var(--color-gris-oscuro) !important;
 }
+
 :root[data-theme='dark'] .btn-guardar:disabled,
 :root[data-theme='dark'] .btn-guardar[disabled],
 body.dark-mode .btn-guardar:disabled,

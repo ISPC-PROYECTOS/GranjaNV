@@ -1,15 +1,20 @@
 :host {
   display: block;
-  min-height: calc(100vh - 70px);
   font-family: var(--font-textos);
 }
 
 .registro-wrapper {
+  min-height: calc(100vh - 70px);
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 2.5rem 1rem;
   box-sizing: border-box;
+}
+
+.registro-wrapper-modal {
+  min-height: 0;
+  padding: 0;
 }
 
 .registro-container {

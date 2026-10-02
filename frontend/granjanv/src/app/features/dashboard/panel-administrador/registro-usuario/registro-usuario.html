@@ -1,13 +1,15 @@
-<div class="registro-wrapper">
+<div class="registro-wrapper" [class.registro-wrapper-modal]="modoModal">
   <div class="registro-container">
 
     <div class="card card-form">
       <div class="header">
+        @if (!modoModal) {
         <button class="btn-volver-panel" type="button" routerLink="/dashboard/admin/panel-de-control">
           ← Panel de control
         </button>
+        }
         <h1>GRANJA NV</h1>
-        <p>Alta de nuevo usuario</p>
+        <p id="titulo-alta-usuario">Alta de nuevo usuario</p>
       </div>
 
       @if (errorMessage()) {

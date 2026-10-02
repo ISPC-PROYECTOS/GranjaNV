@@ -71,6 +71,13 @@ export const routes: Routes = [
             (m) => m.Metricas,
           ),
       },
+      {
+        path: 'usuarios',
+        loadComponent: () =>
+          import('./features/dashboard/panel-administrador/gestion-reportes/usuarios/usuarios').then(
+            (m) => m.Usuarios,
+          ),
+      },
     ],
   },
   { path: '', loadComponent: () => import('./home/home').then((m) => m.Home), pathMatch: 'full' },

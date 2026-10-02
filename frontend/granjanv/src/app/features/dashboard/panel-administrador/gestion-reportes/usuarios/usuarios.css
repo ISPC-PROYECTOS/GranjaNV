@@ -1,0 +1,26 @@
+:host-context(body.dark-mode) .list-group-item {
+  --bs-list-group-bg: var(--color-blanco);
+  --bs-list-group-color: var(--color-negro);
+  --bs-list-group-border-color: var(--color-gris-medio);
+}
+
+:host-context(body.dark-mode) .bg-success-subtle.text-success-emphasis {
+  background-color: var(--color-primario-claro) !important;
+  color: var(--color-negro) !important;
+}
+
+:host-context(body.dark-mode) .bg-warning-subtle.text-warning-emphasis {
+  background-color: color-mix(in srgb, var(--color-secundario) 30%, var(--color-blanco)) !important;
+  color: var(--color-negro) !important;
+}
+
+:host-context(body.dark-mode) .gestion-formulario .form-control,
+:host-context(body.dark-mode) .gestion-formulario .form-select {
+  border: 1px solid var(--color-gris-medio);
+  background-color: var(--color-blanco);
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .gestion-formulario .form-control::placeholder {
+  color: var(--color-gris-oscuro);
+}

@@ -1,0 +1,115 @@
+<section aria-labelledby="titulo-usuarios">
+  <header class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-sm-between gap-3 mb-3">
+    <div>
+      <h2 id="titulo-usuarios" class="gestion-titulo mb-1">USUARIOS</h2>
+      <p class="text-muted mb-0">{{ usuarios().length }} usuarios registrados</p>
+    </div>
+    <button type="button" class="btn btn-guardar align-self-start" (click)="altaAbierta.set(true)">
+      <i class="hgi-stroke hgi-user-add-01" aria-hidden="true"></i>
+      Nuevo usuario
+    </button>
+  </header>
+
+  @if (error()) {
+    <div class="alerta-error-modal" role="alert">{{ error() }}</div>
+  }
+
+  <div class="list-group" aria-live="polite" [attr.aria-busy]="cargando()">
+    @if (cargando()) {
+      <p class="list-group-item text-center text-muted py-4">Cargando usuarios...</p>
+    } @else if (usuarios().length === 0) {
+      <p class="list-group-item text-center text-muted py-4">Todavía no hay usuarios registrados.</p>
+    } @else {
+      @for (usuario of usuarios(); track usuario.id_usuario) {
+        <article class="list-group-item d-flex flex-column flex-sm-row align-items-sm-center gap-3">
+          <div class="d-flex align-items-center gap-3 flex-grow-1">
+            <span class="rounded-circle bg-success-subtle text-success-emphasis d-inline-flex align-items-center justify-content-center flex-shrink-0 fw-bold"
+              style="width: 2.75rem; height: 2.75rem" aria-hidden="true">{{ iniciales(usuario) }}</span>
+            <div class="text-break">
+              <strong class="d-block">{{ usuario.nombre }} {{ usuario.apellido }}</strong>
+              <span class="text-muted small">{{ usuario.email }}</span>
+            </div>
+          </div>
+          <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 ms-sm-auto">
+            <span class="badge rounded-pill bg-warning-subtle text-warning-emphasis">{{ usuario.rol }}</span>
+            <div class="d-flex gap-2">
+              <button type="button" class="btn btn-limpiar" aria-label="Editar usuario"
+                title="Editar usuario" (click)="abrirEdicion(usuario)">
+              <i class="hgi-stroke hgi-pencil-edit-01" aria-hidden="true"></i>
+              </button>
+              <button type="button" class="btn btn-modal-eliminar" aria-label="Eliminar usuario"
+                title="Eliminar usuario" (click)="eliminarUsuario(usuario)">
+                <i class="hgi-stroke hgi-delete-02" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </article>
+      }
+    }
+  </div>
+</section>
+
+@if (altaAbierta()) {
+  <div class="modal-confirmacion-backdrop" (click)="altaAbierta.set(false)">
+    <section class="modal-confirmacion-caja position-relative p-0 overflow-auto" role="dialog" aria-modal="true"
+      aria-labelledby="titulo-alta-usuario" (click)="$event.stopPropagation()">
+      <button type="button" class="btn-close position-absolute top-0 end-0 m-3" aria-label="Cerrar alta de usuario"
+        (click)="altaAbierta.set(false)">
+      </button>
+      <app-registro-usuario [modoModal]="true" (registrado)="usuarioCreado($event)" />
+    </section>
+  </div>
+}
+
+@if (usuarioEditando(); as usuario) {
+  <div class="modal-confirmacion-backdrop" (click)="cerrarEdicion()">
+    <section class="modal-confirmacion-caja position-relative text-start" role="dialog" aria-modal="true" aria-labelledby="titulo-editar-usuario"
+      (click)="$event.stopPropagation()">
+      <header class="position-relative mb-3">
+        <h4 id="titulo-editar-usuario">Editar usuario</h4>
+        <button type="button" class="btn-close position-absolute top-0 end-0" aria-label="Cerrar edición"
+          (click)="cerrarEdicion()"></button>
+      </header>
+      <form class="gestion-formulario mt-0" [formGroup]="formulario" (ngSubmit)="guardarEdicion()">
+        <div class="row g-3">
+          <div class="col-12 col-sm-6">
+            <label for="usuario-nombre" class="form-label">Nombre</label>
+            <input id="usuario-nombre" class="form-control" type="text" formControlName="nombre" autocomplete="given-name">
+          </div>
+          <div class="col-12 col-sm-6">
+            <label for="usuario-apellido" class="form-label">Apellido</label>
+            <input id="usuario-apellido" class="form-control" type="text" formControlName="apellido" autocomplete="family-name">
+          </div>
+          <div class="col-12">
+            <label for="usuario-email" class="form-label">Correo electrónico</label>
+            <input id="usuario-email" class="form-control" type="email" formControlName="email" autocomplete="email">
+          </div>
+          <div class="col-12">
+            <label for="usuario-rol" class="form-label">Rol</label>
+            <select id="usuario-rol" class="form-select" formControlName="rol">
+              <option value="Empleado">Empleado</option>
+              <option value="Administrador">Administrador</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <label for="usuario-password" class="form-label">Nueva contraseña <span class="text-muted fw-normal">(opcional)</span></label>
+            <input id="usuario-password" class="form-control" type="password" formControlName="password"
+              autocomplete="new-password" placeholder="Dejar vacía para conservarla">
+          </div>
+        </div>
+        @if (formulario.controls.password.touched && formulario.controls.password.hasError('minlength')) {
+          <p class="error-msg text-danger">La contraseña debe tener al menos 8 caracteres.</p>
+        }
+        @if (error()) {
+          <div class="alerta-error-modal mt-3" role="alert">{{ error() }}</div>
+        }
+        <footer class="gestion-formulario-acciones mt-3 flex-wrap">
+          <button type="button" class="btn btn-limpiar" (click)="cerrarEdicion()">Cancelar</button>
+          <button type="submit" class="btn btn-guardar" [disabled]="guardando()">
+            {{ guardando() ? 'Guardando...' : 'Guardar cambios' }}
+          </button>
+        </footer>
+      </form>
+    </section>
+  </div>
+}

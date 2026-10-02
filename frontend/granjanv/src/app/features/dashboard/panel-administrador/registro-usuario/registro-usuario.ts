@@ -1,9 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth-service';
-import { RegistroRequest } from '../../../../core/models/user.model';
+import { RegistroRequest, Usuario } from '../../../../core/models/user.model';
 
 @Component({
   selector: 'app-registro-usuario',
@@ -15,6 +15,9 @@ import { RegistroRequest } from '../../../../core/models/user.model';
 export class RegistroUsuarioComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
+
+  @Input() modoModal = false;
+  @Output() registrado = new EventEmitter<Usuario>();
 
   successMessage = signal<string | null>(null);
   errorMessage = signal<string | null>(null);
@@ -39,8 +42,9 @@ export class RegistroUsuarioComponent {
     const formData = this.registroForm.value as RegistroRequest;
 
     this.authService.registrarUsuario(formData).subscribe({
-      next: () => {
+      next: (usuario) => {
         this.successMessage.set('Usuario registrado exitosamente.');
+        this.registrado.emit(usuario);
         this.registroForm.reset({ rol: 'Empleado' });
       },
       error: (err) => {
