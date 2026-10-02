@@ -1,5 +1,6 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReportesService, MetricasComerciales } from '../../../../../core/services/reporte.service';
 
 export interface IndicadorClave {
     titulo: string;
@@ -14,11 +15,32 @@ export interface IndicadorClave {
   templateUrl: './metricas.html',
   styleUrl: './metricas.css'
 })
-export class Metricas {
-  readonly totalVentasMes = signal<number>(137000);
-  readonly porcentajeVentasVsMesAnterior = signal<number>(12);
-  readonly produccionDiariaPromedio = signal<number>(273);
-  readonly gananciaNetaMes = signal<number>(67000);
+export class Metricas implements OnInit {
+    private reportesService = inject(ReportesService);
+
+  readonly totalVentasMes = signal<number>(0);
+  readonly porcentajeVentasVsMesAnterior = signal<number>(0);
+  readonly produccionDiariaPromedio = signal<number>(0);
+  readonly gananciaNetaMes = signal<number>(0);
+
+  ngOnInit(): void {
+    this.cargarMetricasDesdeBackend();
+  }
+
+  cargarMetricasDesdeBackend() {
+    this.reportesService.getMetricasComerciales().subscribe({
+      next: (data) => {
+        // Actualizamos las señales con los valores reales que devuelve Django
+        this.totalVentasMes.set(Number(data.ventas_del_mes));
+        this.porcentajeVentasVsMesAnterior.set(Number(data.porcentaje_cambio_ventas));
+        this.produccionDiariaPromedio.set(Number(data.produccion_diaria_promedio));
+        this.gananciaNetaMes.set(Number(data.ganancia_neta_mensual));
+      },
+      error: (err) => {
+        console.error('Error al cargar las métricas desde la API:', err);
+      }
+    });
+  }
 
   // Lista armada para dibujar las 3 tarjetas superiores de forma limpia
   readonly tarjetasKpi = computed<IndicadorClave[]>(() => [
