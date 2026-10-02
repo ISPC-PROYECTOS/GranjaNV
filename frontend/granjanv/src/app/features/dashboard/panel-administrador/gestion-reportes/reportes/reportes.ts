@@ -54,39 +54,38 @@ export class Reportes {
   }
 
   exportarReporte(): void {
-    if (this.reporteSeleccionado !== 'finanzas') {
-      console.log('Reporte todavía no conectado:', this.reporteSeleccionado);
+    if (!this.reporteSeleccionado) {
       return;
     }
 
-    const solicitud =
-      this.formatoSeleccionado === 'pdf'
-        ? this.reportesService.exportarFinanzasPdf(
-            this.rangoSeleccionado.fechaDesde,
-            this.rangoSeleccionado.fechaHasta,
-          )
-        : this.reportesService.exportarFinanzasExcel(
-            this.rangoSeleccionado.fechaDesde,
-            this.rangoSeleccionado.fechaHasta,
-          );
+    if (this.reporteSeleccionado === 'completo') {
+      console.log('Informe completo todavía no conectado');
+      return;
+    }
 
-    solicitud.subscribe({
-      next: (archivo) => {
-        const extension = this.formatoSeleccionado === 'pdf' ? 'pdf' : 'xlsx';
+    const fechaDesde = this.rangoSeleccionado.fechaDesde;
+    const fechaHasta = this.rangoSeleccionado.fechaHasta;
 
-        const url = URL.createObjectURL(archivo);
+    this.reportesService
+      .exportarReporte(this.reporteSeleccionado, this.formatoSeleccionado, fechaDesde, fechaHasta)
+      .subscribe({
+        next: (archivo) => {
+          const extension = this.formatoSeleccionado === 'pdf' ? 'pdf' : 'xlsx';
 
-        const enlace = document.createElement('a');
-        enlace.href = url;
-        enlace.download = `reporte_finanzas.${extension}`;
-        enlace.click();
+          const url = URL.createObjectURL(archivo);
 
-        URL.revokeObjectURL(url);
-        this.cerrarModal();
-      },
-      error: (error) => {
-        console.error('Error al exportar el reporte:', error);
-      },
-    });
+          const enlace = document.createElement('a');
+          enlace.href = url;
+          enlace.download = `reporte_${this.reporteSeleccionado}.${extension}`;
+
+          enlace.click();
+
+          URL.revokeObjectURL(url);
+          this.cerrarModal();
+        },
+        error: (error) => {
+          console.error('Error al exportar el reporte:', error);
+        },
+      });
   }
 }
