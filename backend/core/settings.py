@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "clientes",
     "produccion",
     "home",
+    "reportes",
 ]
 
 MIDDLEWARE = [
@@ -117,6 +118,12 @@ DATABASES = {
         },
     }
 }
+
+# MongoDB
+MONGO_URI = os.environ.get(
+    "MONGO_URI",
+    "mongodb+srv://granjanv-user:bduser@granjanv-bd.3a2xxcb.mongodb.net/?appName=Granjanv-bd",
+)
 
 # Especificar el modelo de usuario personalizado
 AUTH_USER_MODEL = "users.Usuario"

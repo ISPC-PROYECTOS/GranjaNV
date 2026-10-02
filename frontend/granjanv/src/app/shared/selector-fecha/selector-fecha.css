@@ -24,7 +24,7 @@
 .panel-filtro-fechas {
   min-width: 210px;
   border-radius: 12px;
-  border: 1px solid var(--color-gris-claro);
+  border: 1px solid var(--color-primario);
   font-family: var(--font-textos);
   background-color: var(--color-blanco);
 }
