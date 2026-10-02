@@ -42,3 +42,5 @@ npm-debug.log*
 Thumbs.db
 FETCH_HEAD
 repomix-output.xml
+
+.env
