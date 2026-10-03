@@ -20,6 +20,7 @@ from openpyxl import Workbook
 from users.permissions import IsAdminRole
 from pedidos.models import Pedido
 from compras.models import Gasto
+from produccion.models import RegistroProduccion, Galpon
 from .serializers import MetricasComercialesSerializer
 
 
@@ -33,34 +34,59 @@ def obtener_metricas_comerciales(request):
     hoy = dj_timezone.now()
     mes_actual = hoy.month
     anio_actual = hoy.year
+    dias_transcurridos = max(hoy.day, 1)
 
-    # 1. Ventas del mes actual (Pedidos cobrados: estado_pago=True)
+    # Ventas del mes actual (Pedidos cobrados: estado_pago=True)
     total_ventas = Pedido.objects.filter(
         estado_pago=True,
         fecha_entrega__year=anio_actual,
         fecha_entrega__month=mes_actual
     ).aggregate(total=Sum('total'))['total'] or Decimal('0.00')
 
-    # 2. Gastos operativos del mes actual (Para calcular la ganancia neta)
+    #  Gastos operativos del mes actual (Para calcular la ganancia neta)
     total_gastos = Gasto.objects.filter(
         fecha__year=anio_actual,
         fecha__month=mes_actual
     ).aggregate(total=Sum('monto'))['total'] or Decimal('0.00')
 
-    # Ganancia neta = Ventas cobradas menos los gastos del mes
     ganancia_neta = total_ventas - total_gastos
 
-    # 3. Datos estructurados para el serializador
+    # Cálculos de Producción y Porcentaje de Postura del mes actual
+    registros_mes = RegistroProduccion.objects.filter(
+        fecha__year=anio_actual,
+        fecha__month=mes_actual
+    )
+    total_maples_mes = registros_mes.aggregate(total=Sum('total_maples'))['total'] or 0
+    
+    # Producción diaria promedio de maples
+    produccion_diaria_promedio = Decimal(total_maples_mes) / Decimal(dias_transcurridos)   # Total de gallinas activas en la granja
+    total_gallinas_activas = Galpon.objects.filter(activo=True).aggregate(
+        total=Sum('cantidad_actual_gallinas')
+    )['total'] or 0
+
+    # Cálculo del Porcentaje de Postura: 
+    # (Total de Huevos Producidos / Total de Gallinas Vivas) * 100
+    # Cada maple equivale a 30 huevos.
+    porcentaje_postura = Decimal('0.00')
+    if total_gallinas_activas > 0 and dias_transcurridos > 0:
+        total_huevos_mes = total_maples_mes * 30
+        #huevos_por_ave_dia = Decimal(total_huevos_mes) / Decimal(total_gallinas_activas * dias_transcurridos)
+        porcentaje_postura = round(Decimal(total_huevos_mes) / (Decimal(total_gallinas_activas * dias_transcurridos)) * Decimal('100.00'), 2)
+        # huevos_por_dia = Decimal(total_huevos_mes) / Decimal(dias_transcurridos)
+        # porcentaje_postura = round(Decimal(total_huevos_mes) / Decimal(total_gallinas_activas) * Decimal('100.00'), 2)
+
+    # Datos estructurados para el serializador
     datos_calculados = {
         'ventas_del_mes': total_ventas,
         'porcentaje_cambio_ventas': Decimal('0.00'),
-        'produccion_diaria_promedio': Decimal('0.00'),
+        'produccion_diaria_promedio': produccion_diaria_promedio,
+        'porcentaje_postura_mes': porcentaje_postura,
         'ganancia_neta_mensual': ganancia_neta,
         'evolucion_ventas_meses': [
             {'mes': 'Mes actual', 'total': float(total_ventas)},
         ],
         'tendencia_produccion_meses': [
-            {'mes': 'Mes actual', 'promedio': 0},
+            {'mes': 'Mes actual', 'promedio': float(produccion_diaria_promedio)},
         ]
     }
 

@@ -2,27 +2,25 @@
   <!-- Texto guía inferior a las pestañas -->
   <p class="bajada-seccion">Indicadores generales para la toma de decisiones.</p>
 
-  <!-- Fila de las 3 tarjetas superiores (KPIs) -->
+  <!-- Carrusel de tarjetas superiores (KPIs) -->
   <div class="bloque-blanco p-4 p-md-5 mb-4">
-    <div class="row g-5 justify-content-center">
-        @for (tarjeta of tarjetasKpi(); track tarjeta.titulo) {
-        <div class="col-12 col-md-4">
-            <article class="tarjeta-kpi">
-                <div class="tarjeta-kpi-cabecera">
-                <div class="icono-kpi" aria-hidden="true">
-                <i class="hgi-stroke" [class]="tarjeta.icono"></i>
-                </div>
-                <h3 class="tarjeta-kpi-titulo">{{ tarjeta.titulo }}</h3>
-                </div>
+    <app-carrusel [items]="tarjetasKpi()" [visibleDesktop]="3" [visibleMobile]="1">
+      <ng-template #itemTemplate let-tarjeta>
+        <article class="tarjeta-kpi">
+          <div class="tarjeta-kpi-cabecera">
+            <div class="icono-kpi" aria-hidden="true">
+              <i class="hgi-stroke" [class]="tarjeta.icono"></i>
+            </div>
+            <h3 class="tarjeta-kpi-titulo">{{ tarjeta.titulo }}</h3>
+          </div>
 
           <div class="tarjeta-kpi-cuerpo">
             <span class="tarjeta-kpi-valor">{{ tarjeta.valor }}</span>
             <small class="tarjeta-kpi-subtexto">{{ tarjeta.subtexto }}</small>
           </div>
         </article>
-      </div>
-    }
-    </div>
+      </ng-template>
+    </app-carrusel>
   </div>
 
   <!-- Fila de los dos paneles para los gráficos -->

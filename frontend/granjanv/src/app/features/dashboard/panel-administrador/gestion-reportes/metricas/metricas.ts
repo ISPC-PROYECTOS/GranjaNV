@@ -1,6 +1,9 @@
 import { Component, OnInit, signal, computed, inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReportesService, MetricasComerciales } from '../../../../../core/services/reporte.service';
+import { ReportesService } from '../../../../../core/services/reporte.service';
+import { MetricasComerciales } from '../../../../../core/models/reporte.model';
+import { CarruselComponent } from '../../../../../shared/carrusel/carrusel';
+
 
 export interface IndicadorClave {
     titulo: string;
@@ -12,6 +15,7 @@ export interface IndicadorClave {
 @Component({
   selector: 'app-metricas',
   standalone: true,
+  imports: [CommonModule, CarruselComponent],
   templateUrl: './metricas.html',
   styleUrl: './metricas.css'
 })
@@ -21,6 +25,7 @@ export class Metricas implements OnInit {
   readonly totalVentasMes = signal<number>(0);
   readonly porcentajeVentasVsMesAnterior = signal<number>(0);
   readonly produccionDiariaPromedio = signal<number>(0);
+  readonly porcentajePosturaMes = signal<number>(0);
   readonly gananciaNetaMes = signal<number>(0);
 
   ngOnInit(): void {
@@ -34,8 +39,10 @@ export class Metricas implements OnInit {
         this.totalVentasMes.set(Number(data.ventas_del_mes));
         this.porcentajeVentasVsMesAnterior.set(Number(data.porcentaje_cambio_ventas));
         this.produccionDiariaPromedio.set(Number(data.produccion_diaria_promedio));
+        this.porcentajePosturaMes.set(Number(data.porcentaje_postura_mes));
         this.gananciaNetaMes.set(Number(data.ganancia_neta_mensual));
-      },
+        this.porcentajePosturaMes.set(Number(data.porcentaje_postura_mes ?? 0));
+        },
       error: (err) => {
         console.error('Error al cargar las métricas desde la API:', err);
       }
@@ -53,8 +60,14 @@ export class Metricas implements OnInit {
     {
       titulo: 'PRODUCCIÓN PROMEDIO',
       valor: this.produccionDiariaPromedio().toString(),
-      subtexto: 'Maples por día',
+      subtexto: `Maples por día`,
       icono: 'hgi-analytics-01',
+    },
+    {
+      titulo: 'PORCENTAJE DE POSTURA',
+      valor: `${this.porcentajePosturaMes()}%`,
+      subtexto: 'Efectividad del mes',
+      icono: 'hgi-eggs', // Ícono específico de huevos
     },
     {
       titulo: 'GANANCIA NETA',
