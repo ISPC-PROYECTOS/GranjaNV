@@ -1,4 +1,4 @@
-import { Component, OnInit, output } from '@angular/core';
+import { Component, OnInit, Input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { obtenerRangoMesActual } from '../../core/utils/date.utils';
@@ -16,24 +16,35 @@ export interface RangoFechaSeleccionado {
   styleUrl: './selector-fecha.css',
 })
 export class SelectorFecha implements OnInit {
+  @Input() permitirTodos: boolean = false;
   cambioRango = output<RangoFechaSeleccionado>();
 
-  tipoFiltro: 'mes' | 'rango' = 'mes';
+  tipoFiltro: 'todos' | 'mes' | 'rango' = 'mes';
   mesSeleccionado: string = '';
   fechaDesde: string = '';
   fechaHasta: string = '';
 
   ngOnInit(): void {
+    if (this.permitirTodos) {
+      this.tipoFiltro = 'todos';
+      this.cambioRango.emit({ fechaDesde: '', fechaHasta: '' });
+    } else {
     const rango = obtenerRangoMesActual();
     this.mesSeleccionado = rango.fechaDesde.slice(0, 7);
     this.fechaDesde = rango.fechaDesde;
     this.fechaHasta = rango.fechaHasta;
     this.cambioRango.emit(rango);
+    }
   }
 
   onCambioTipo(): void {
-    if (this.tipoFiltro === 'mes') {
-      this.onCambioMes();
+    if (this.tipoFiltro === 'todos') {
+      this.cambioRango.emit({fechaDesde:'', fechaHasta:''});
+      }else if (this.tipoFiltro === 'mes') {
+      if(!this.mesSeleccionado) {
+        this.mesSeleccionado = obtenerRangoMesActual().fechaDesde.slice(0, 7);
+      }
+        this.onCambioMes();
     } else {
       this.aplicarRango();
     }
@@ -57,6 +68,12 @@ export class SelectorFecha implements OnInit {
   }
 
   restablecerFiltro(): void {
+    if (this.permitirTodos) {
+      this.tipoFiltro = 'todos';
+      this.fechaDesde = '';
+      this.fechaHasta = '';
+      this.cambioRango.emit({ fechaDesde: '', fechaHasta: '' });
+    } else {
     const rango = obtenerRangoMesActual();
 
     this.tipoFiltro = 'mes';
@@ -65,5 +82,6 @@ export class SelectorFecha implements OnInit {
     this.fechaHasta = rango.fechaHasta;
 
     this.cambioRango.emit(rango);
+    }
   }
 }

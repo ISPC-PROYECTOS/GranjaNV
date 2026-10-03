@@ -299,7 +299,8 @@ export class Ventas implements OnInit {
   }
 
   onCambioRangoPendientes(rango: RangoFechaSeleccionado): void {
-    this.filtroFechaPendientesActivo.set(true);
+    const tieneFecha = Boolean(rango.fechaDesde && rango.fechaHasta);
+    this.filtroFechaPendientesActivo.set(tieneFecha);
     this.rangoPendientes.set(rango);
     this.cargarPedidosPendientes();
   }

@@ -8,6 +8,9 @@
     <div class="mb-2">
       <label class="form-label mb-1">Tipo de filtro</label>
       <select class="form-select form-select-sm" [(ngModel)]="tipoFiltro" (change)="onCambioTipo()">
+        @if (permitirTodos){
+          <option value="todos">Todos</option>
+        }
         <option value="mes">Por mes</option>
         <option value="rango">Rango de fechas</option>
       </select>
@@ -18,7 +21,7 @@
       <label class="form-label mb-1">Mes</label>
       <input type="month" class="form-control form-control-sm" [(ngModel)]="mesSeleccionado" (change)="onCambioMes()" />
     </div>
-    } @else {
+    } @else if(tipoFiltro === 'rango'){
     <div class="d-flex flex-column gap-2">
       <div>
         <label class="form-label mb-1">Desde</label>
