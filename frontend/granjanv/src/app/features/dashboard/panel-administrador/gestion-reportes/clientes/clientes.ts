@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Cliente } from '../../../../../core/models/cliente.model';
 import { ClientesService } from '../../../../../core/services/clientes.service';
@@ -19,6 +19,14 @@ export class Clientes implements OnInit {
   readonly error = signal<string | null>(null);
   readonly modalAbierto = signal(false);
   readonly clienteEdicion = signal<Cliente | null>(null);
+  readonly filtroEstado = signal<'todos' | 'activos' | 'suspendidos'>('todos');
+  readonly actualizandoEstadoId = signal<number | null>(null);
+  readonly clientesVisibles = computed(() => {
+    const filtro = this.filtroEstado();
+    if (filtro === 'activos') return this.clientes().filter((cliente) => cliente.activo);
+    if (filtro === 'suspendidos') return this.clientes().filter((cliente) => !cliente.activo);
+    return this.clientes();
+  });
 
   ngOnInit(): void {
     this.cargarClientes();
@@ -26,7 +34,7 @@ export class Clientes implements OnInit {
 
   cargarClientes(): void {
     this.cargando.set(true);
-    this.clientesService.obtenerClientes().subscribe({
+    this.clientesService.obtenerClientes(undefined, true).subscribe({
       next: (clientes) => {
         this.clientes.set(clientes);
         this.cargando.set(false);
@@ -60,6 +68,23 @@ export class Clientes implements OnInit {
       const indice = clientes.findIndex((item) => item.id === cliente.id);
       if (indice < 0) return [...clientes, cliente];
       return clientes.map((item, posicion) => posicion === indice ? cliente : item);
+    });
+  }
+
+  cambiarEstado(cliente: Cliente): void {
+    if (cliente.id === undefined || this.actualizandoEstadoId() !== null) return;
+
+    this.actualizandoEstadoId.set(cliente.id);
+    this.error.set(null);
+    this.clientesService.actualizarCliente(cliente.id, { activo: !cliente.activo }).subscribe({
+      next: (actualizado) => {
+        this.actualizarLista(actualizado);
+        this.actualizandoEstadoId.set(null);
+      },
+      error: () => {
+        this.error.set(`No se pudo ${cliente.activo ? 'suspender' : 'activar'} el cliente.`);
+        this.actualizandoEstadoId.set(null);
+      },
     });
   }
 

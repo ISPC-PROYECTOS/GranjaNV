@@ -19,6 +19,9 @@ export class Usuarios implements OnInit {
   readonly usuarios = signal<Usuario[]>([]);
   readonly cargando = signal(true);
   readonly error = signal<string | null>(null);
+  readonly usuarioAEliminar = signal<Usuario | null>(null);
+  readonly eliminando = signal(false);
+  readonly errorEliminacion = signal<string | null>(null);
   readonly altaAbierta = signal(false);
   readonly usuarioEditando = signal<Usuario | null>(null);
   readonly guardando = signal(false);
@@ -101,16 +104,35 @@ export class Usuarios implements OnInit {
     });
   }
 
-  eliminarUsuario(usuario: Usuario): void {
-    const nombre = `${usuario.nombre} ${usuario.apellido}`;
-    if (!window.confirm(`¿Eliminar a ${nombre}?`)) return;
+  solicitarEliminacion(usuario: Usuario): void {
+    this.errorEliminacion.set(null);
+    this.usuarioAEliminar.set(usuario);
+  }
 
-    this.error.set(null);
+  cancelarEliminacion(): void {
+    if (this.eliminando()) return;
+    this.usuarioAEliminar.set(null);
+    this.errorEliminacion.set(null);
+  }
+
+  confirmarEliminacion(): void {
+    const usuario = this.usuarioAEliminar();
+    if (!usuario || this.eliminando()) return;
+
+    this.eliminando.set(true);
+    this.errorEliminacion.set(null);
     this.usuariosService.eliminarUsuario(usuario.id_usuario).subscribe({
-      next: () => this.usuarios.update((lista) =>
-        lista.filter((item) => item.id_usuario !== usuario.id_usuario),
-      ),
-      error: () => this.error.set('No se pudo eliminar el usuario.'),
+      next: () => {
+        this.usuarios.update((lista) =>
+          lista.filter((item) => item.id_usuario !== usuario.id_usuario),
+        );
+        this.eliminando.set(false);
+        this.cancelarEliminacion();
+      },
+      error: () => {
+        this.eliminando.set(false);
+        this.errorEliminacion.set('No se pudo eliminar el usuario. Intentá de nuevo.');
+      },
     });
   }
 

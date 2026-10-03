@@ -38,7 +38,7 @@
               <i class="hgi-stroke hgi-pencil-edit-01" aria-hidden="true"></i>
               </button>
               <button type="button" class="btn btn-modal-eliminar" aria-label="Eliminar usuario"
-                title="Eliminar usuario" (click)="eliminarUsuario(usuario)">
+                title="Eliminar usuario" (click)="solicitarEliminacion(usuario)">
                 <i class="hgi-stroke hgi-delete-02" aria-hidden="true"></i>
               </button>
             </div>
@@ -57,6 +57,32 @@
         (click)="altaAbierta.set(false)">
       </button>
       <app-registro-usuario [modoModal]="true" (registrado)="usuarioCreado($event)" />
+    </section>
+  </div>
+}
+
+@if (usuarioAEliminar(); as usuario) {
+  <div class="modal-confirmacion-backdrop" (click)="cancelarEliminacion()">
+    <section class="modal-confirmacion-caja text-start" role="alertdialog" aria-modal="true"
+      aria-labelledby="titulo-eliminar-usuario" (click)="$event.stopPropagation()">
+      <h4 id="titulo-eliminar-usuario">Eliminar usuario</h4>
+      <p class="mb-2">¿Seguro que querés eliminar a este usuario?</p>
+      <p class="fw-semibold mb-3">{{ usuario.nombre }} {{ usuario.apellido }}<br>
+        <span class="text-muted small">{{ usuario.email }}</span>
+      </p>
+
+      @if (errorEliminacion()) {
+        <div class="alerta-error-modal" role="alert">{{ errorEliminacion() }}</div>
+      }
+
+      <div class="d-flex flex-column flex-sm-row gap-2 justify-content-end">
+        <button type="button" class="btn btn-modal-cancelar" [disabled]="eliminando()"
+          (click)="cancelarEliminacion()">Cancelar</button>
+        <button type="button" class="btn btn-modal-eliminar" [disabled]="eliminando()"
+          (click)="confirmarEliminacion()">
+          {{ eliminando() ? 'Eliminando...' : 'Eliminar usuario' }}
+        </button>
+      </div>
     </section>
   </div>
 }

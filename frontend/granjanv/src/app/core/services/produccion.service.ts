@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import {
   Galpon,
@@ -40,7 +40,7 @@ export class ProduccionService {
   cargarGalpones(): void {
     this.galponesCargando.set(true);
     this.errorGalpones.set(false);
-    this.http.get<Galpon[]>(`${this.apiUrl}galpones/?solo_activos=true`).subscribe({
+    this.obtenerGalpones().subscribe({
       next: (data) => {
         this.galpones.set(data);
         this.galponesCargando.set(false);
@@ -51,6 +51,20 @@ export class ProduccionService {
         console.error('Error al cargar galpones:', err);
       },
     });
+  }
+
+  obtenerGalpones(incluirInactivos = false): Observable<Galpon[]> {
+    const parametro = incluirInactivos ? 'incluir_inactivos' : 'solo_activos';
+    const params = new HttpParams().set(parametro, 'true');
+    return this.http.get<Galpon[]>(`${this.apiUrl}galpones/`, { params });
+  }
+
+  crearGalpon(galpon: Omit<Galpon, 'id' | 'creado_en' | 'actualizado_en'>): Observable<Galpon> {
+    return this.http.post<Galpon>(`${this.apiUrl}galpones/`, galpon);
+  }
+
+  actualizarGalpon(id: number, galpon: Partial<Omit<Galpon, 'id' | 'numero_galpon' | 'creado_en' | 'actualizado_en'>>): Observable<Galpon> {
+    return this.http.patch<Galpon>(`${this.apiUrl}galpones/${id}/`, galpon);
   }
 
   cargarMetricasProduccion(): void {

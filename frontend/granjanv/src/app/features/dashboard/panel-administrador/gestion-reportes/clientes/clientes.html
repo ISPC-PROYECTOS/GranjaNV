@@ -14,31 +14,54 @@
     <div class="alerta-error-modal" role="alert">{{ error() }}</div>
   }
 
+  <div class="btn-group mb-3 clientes-filtros" role="group" aria-label="Filtrar clientes por estado">
+    <button type="button" class="btn btn-sm btn-limpiar" [class.active]="filtroEstado() === 'todos'"
+      (click)="filtroEstado.set('todos')">Todos</button>
+    <button type="button" class="btn btn-sm btn-limpiar" [class.active]="filtroEstado() === 'activos'"
+      (click)="filtroEstado.set('activos')">Activos</button>
+    <button type="button" class="btn btn-sm btn-limpiar" [class.active]="filtroEstado() === 'suspendidos'"
+      (click)="filtroEstado.set('suspendidos')">Suspendidos</button>
+  </div>
+
   <div class="list-group" aria-live="polite" [attr.aria-busy]="cargando()">
     @if (cargando()) {
       <p class="list-group-item text-center text-muted py-4">Cargando clientes...</p>
-    } @else if (clientes().length === 0) {
+    } @else if (clientesVisibles().length === 0) {
       <p class="list-group-item text-center text-muted py-4">Todavía no hay clientes registrados.</p>
     } @else {
-      @for (cliente of clientes(); track cliente.id) {
-        <article class="list-group-item d-flex align-items-center gap-3">
-          <div class="d-flex align-items-center gap-3 flex-grow-1 min-w-0">
+      @for (cliente of clientesVisibles(); track cliente.id) {
+        <article class="list-group-item d-flex flex-column flex-sm-row align-items-sm-center gap-3 cliente-fila">
+          <div class="d-flex align-items-center gap-3 flex-grow-1 cliente-principal">
             <span class="rounded-circle bg-success-subtle text-success-emphasis d-inline-flex align-items-center justify-content-center flex-shrink-0 fw-bold"
               style="width: 2.75rem; height: 2.75rem" aria-hidden="true">{{ iniciales(cliente) }}</span>
-            <div class="text-break">
+            <div class="cliente-identidad">
               <strong class="d-block">{{ cliente.nombre }} {{ cliente.apellido }}</strong>
-              <span class="badge rounded-pill bg-warning-subtle text-warning-emphasis mt-1">
-                {{ cliente.tipo_display || (cliente.tipo === 'MAYORISTA' ? 'Mayorista' : 'Minorista') }}
-              </span>
+              <div class="d-flex flex-wrap gap-1 mt-1">
+                <span class="badge rounded-pill bg-warning-subtle text-warning-emphasis">
+                  {{ cliente.tipo_display || (cliente.tipo === 'MAYORISTA' ? 'Mayorista' : 'Minorista') }}
+                </span>
+                <span class="badge rounded-pill" [class.bg-success-subtle]="cliente.activo"
+                  [class.text-success-emphasis]="cliente.activo" [class.bg-secondary-subtle]="!cliente.activo"
+                  [class.text-secondary-emphasis]="!cliente.activo">
+                  {{ cliente.activo ? 'Activo' : 'Suspendido' }}
+                </span>
+              </div>
             </div>
           </div>
 
-          <button type="button" class="btn btn-limpiar ms-auto"
-            [attr.aria-label]="'Editar cliente ' + cliente.nombre + ' ' + cliente.apellido"
-            title="Editar cliente" (click)="abrirEdicion(cliente)">
-            <i class="hgi-stroke hgi-pencil-edit-01" aria-hidden="true"></i>
-            <span class="d-lg-none ms-1">Editar</span>
-          </button>
+          <div class="d-flex flex-wrap justify-content-end gap-2 ms-sm-auto clientes-acciones">
+            <button type="button" class="btn btn-limpiar"
+              [attr.aria-label]="'Editar cliente ' + cliente.nombre + ' ' + cliente.apellido"
+              title="Editar cliente" (click)="abrirEdicion(cliente)">
+              <i class="hgi-stroke hgi-pencil-edit-01" aria-hidden="true"></i>
+              <span class="d-lg-none ms-1">Editar</span>
+            </button>
+            <button type="button" class="btn" [class.btn-guardar]="!cliente.activo"
+              [class.btn-modal-cancelar]="cliente.activo" [disabled]="actualizandoEstadoId() !== null"
+              (click)="cambiarEstado(cliente)">
+              {{ actualizandoEstadoId() === cliente.id ? 'Actualizando...' : (cliente.activo ? 'Suspender' : 'Activar') }}
+            </button>
+          </div>
         </article>
       }
     }
