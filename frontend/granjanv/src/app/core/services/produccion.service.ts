@@ -16,6 +16,8 @@ export class ProduccionService {
   private readonly apiUrl = 'http://localhost:8000/api/produccion/';
 
   readonly galpones = signal<Galpon[]>([]);
+  readonly galponesCargando = signal(false);
+  readonly errorGalpones = signal(false);
 
   private readonly _datosProduccion = signal<DatosProduccion>({
     total_maples: 0,
@@ -36,9 +38,18 @@ export class ProduccionService {
   }
 
   cargarGalpones(): void {
+    this.galponesCargando.set(true);
+    this.errorGalpones.set(false);
     this.http.get<Galpon[]>(`${this.apiUrl}galpones/?solo_activos=true`).subscribe({
-      next: (data) => this.galpones.set(data),
-      error: (err) => console.error('Error al cargar galpones:', err),
+      next: (data) => {
+        this.galpones.set(data);
+        this.galponesCargando.set(false);
+      },
+      error: (err) => {
+        this.errorGalpones.set(true);
+        this.galponesCargando.set(false);
+        console.error('Error al cargar galpones:', err);
+      },
     });
   }
 

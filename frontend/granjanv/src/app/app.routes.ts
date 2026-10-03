@@ -85,6 +85,13 @@ export const routes: Routes = [
             (m) => m.Clientes,
           ),
       },
+      {
+        path: 'galpones',
+        loadComponent: () =>
+          import('./features/dashboard/panel-administrador/gestion-reportes/galpones/galpones').then(
+            (m) => m.Galpones,
+          ),
+      },
     ],
   },
   { path: '', loadComponent: () => import('./home/home').then((m) => m.Home), pathMatch: 'full' },
