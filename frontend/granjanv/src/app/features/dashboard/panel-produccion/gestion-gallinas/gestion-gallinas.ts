@@ -61,8 +61,14 @@ export class GestionGallinas {
       return;
     }
 
-    if (!this.descripcionIncidente()){
+    const descripcion = this.descripcionIncidente().trim();
+    if (!descripcion) {
       this.errorMensaje.set('Ingresá un detalle o descripción del movimiento.');
+      return;
+    }
+
+    if (descripcion.length < 3) {
+      this.errorMensaje.set('La descripción debe tener al menos 3 caracteres.');
       return;
     }
 
@@ -72,7 +78,7 @@ export class GestionGallinas {
       tipo_movimiento: this.tipoMovimiento(),
       motivo_movimiento: this.motivoMovimiento(),
       cantidad_gallinas: Math.floor(cantidad),
-      descripcion_movimiento: this.descripcionIncidente().trim() || undefined,
+      descripcion_movimiento: descripcion,
     };
 
     this.payloadPendiente.set(payload);
@@ -97,9 +103,13 @@ export class GestionGallinas {
         this.limpiar();
         this.mostrarNotificacion('¡Movimiento de aves registrado con éxito!');
       },
-      error: () => {
+      error: (err) => {
         this.isGuardando.set(false);
-        this.errorMensaje.set('Ocurrió un error al registrar el movimiento.');
+        const errorBackend =
+          err.error?.descripcion_movimiento?.[0] ||
+          err.error?.cantidad_gallinas?.[0] ||
+          'Ocurrió un error al registrar el movimiento.';
+        this.errorMensaje.set(errorBackend);
       },
     });
   }

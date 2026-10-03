@@ -113,17 +113,21 @@
 
           <!-- Detalle o Causa -->
           <div class="mb-3">
-            <label for="mov-desc" class="form-label">Causa o detalle del incidente *</label>
-            <input
-              id="mov-desc"
-              type="text"
-              class="form-control"
-              placeholder="Ej. Incidente térmico, predación, lote nuevo, etc."
-              [ngModel]="descripcionIncidente()"
-              (ngModelChange)="descripcionIncidente.set($event)"
-              name="descripcionIncidente"
-            />
-          </div>
+              <label for="desc-movimiento" class="form-label">
+                Descripción / Detalle *
+              </label>
+              <input
+                id="desc-movimiento"
+                type="text"
+                class="form-control"
+                placeholder="Ej: Aislamiento preventivo por decaimiento"
+                [ngModel]="descripcionIncidente()"
+                (ngModelChange)="descripcionIncidente.set($event)"
+                required
+                aria-required="true"
+                [attr.aria-invalid]="errorMensaje() !== null"
+              />
+            </div>
 
           <!-- Acciones -->
           <div class="gestion-formulario-acciones pt-2">

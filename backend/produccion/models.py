@@ -70,7 +70,7 @@ class MovimientoGallina(models.Model):
     tipo_movimiento = models.CharField(max_length=10, choices=TipoMovimiento.choices)
     motivo_movimiento = models.CharField(max_length=20, choices=MotivoMovimiento.choices)
     cantidad_gallinas = models.PositiveIntegerField(validators=[MinValueValidator(1)])
-    descripcion_movimiento = models.CharField(max_length=255, blank=True, default="")
+    descripcion_movimiento = models.CharField(max_length=255, help_text="Detalle o motivo específico del movimiento de aves.",)
     creado_en = models.DateTimeField(auto_now_add=True)
     actualizado_en = models.DateTimeField(auto_now=True)
 
