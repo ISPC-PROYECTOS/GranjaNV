@@ -78,6 +78,13 @@ export const routes: Routes = [
             (m) => m.Usuarios,
           ),
       },
+      {
+        path: 'clientes',
+        loadComponent: () =>
+          import('./features/dashboard/panel-administrador/gestion-reportes/clientes/clientes').then(
+            (m) => m.Clientes,
+          ),
+      },
     ],
   },
   { path: '', loadComponent: () => import('./home/home').then((m) => m.Home), pathMatch: 'full' },

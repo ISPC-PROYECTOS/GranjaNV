@@ -29,6 +29,7 @@ export class CrearClienteComponent {
   @Input() set clienteEdicion(cliente: Cliente | null) {
     if (cliente) {
       this.clienteId.set(cliente.id ?? null);
+      this.nombreEdicionOriginal.set(cliente.nombre.trim().toLowerCase());
       this.formularioCliente.patchValue({
         nombre: cliente.nombre,
         apellido: cliente.apellido || '',
@@ -39,6 +40,7 @@ export class CrearClienteComponent {
       });
     } else {
       this.clienteId.set(null);
+      this.nombreEdicionOriginal.set('');
     }
   }
 
@@ -46,6 +48,7 @@ export class CrearClienteComponent {
   @Output() cerrar = new EventEmitter<void>();
 
   clienteId = signal<number | null>(null);
+  private readonly nombreEdicionOriginal = signal('');
   errorBackend = signal<string | null>(null);
   mensajeExito = signal<string | null>(null);
   isLoading = signal<boolean>(false);
@@ -100,9 +103,10 @@ export class CrearClienteComponent {
     const nom = (this.nombreValue() || '').trim().toLowerCase();
 
     if (!nom || nom.length < 3) return false;
+    if (nom === this.nombreEdicionOriginal()) return false;
 
-    return this.clientesExistentes().some(c => 
-      c.nombre.trim().toLowerCase() === nom
+    return this.clientesExistentes().some(c =>
+      c.id !== this.clienteId() && c.nombre.trim().toLowerCase() === nom
     );
   });
 

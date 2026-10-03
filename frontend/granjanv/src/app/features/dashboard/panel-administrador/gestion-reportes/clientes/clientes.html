@@ -1,0 +1,56 @@
+<section aria-labelledby="titulo-clientes">
+  <header class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-sm-between gap-3 mb-3">
+    <div>
+      <h2 id="titulo-clientes" class="gestion-titulo mb-1">CLIENTES</h2>
+      <p class="text-muted mb-0">{{ clientes().length }} clientes registrados</p>
+    </div>
+    <button type="button" class="btn btn-guardar align-self-start" (click)="abrirAlta()">
+      <i class="hgi-stroke hgi-user-add-01" aria-hidden="true"></i>
+      Nuevo cliente
+    </button>
+  </header>
+
+  @if (error()) {
+    <div class="alerta-error-modal" role="alert">{{ error() }}</div>
+  }
+
+  <div class="list-group" aria-live="polite" [attr.aria-busy]="cargando()">
+    @if (cargando()) {
+      <p class="list-group-item text-center text-muted py-4">Cargando clientes...</p>
+    } @else if (clientes().length === 0) {
+      <p class="list-group-item text-center text-muted py-4">Todavía no hay clientes registrados.</p>
+    } @else {
+      @for (cliente of clientes(); track cliente.id) {
+        <article class="list-group-item d-flex align-items-center gap-3">
+          <div class="d-flex align-items-center gap-3 flex-grow-1 min-w-0">
+            <span class="rounded-circle bg-success-subtle text-success-emphasis d-inline-flex align-items-center justify-content-center flex-shrink-0 fw-bold"
+              style="width: 2.75rem; height: 2.75rem" aria-hidden="true">{{ iniciales(cliente) }}</span>
+            <div class="text-break">
+              <strong class="d-block">{{ cliente.nombre }} {{ cliente.apellido }}</strong>
+              <span class="badge rounded-pill bg-warning-subtle text-warning-emphasis mt-1">
+                {{ cliente.tipo_display || (cliente.tipo === 'MAYORISTA' ? 'Mayorista' : 'Minorista') }}
+              </span>
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-limpiar ms-auto"
+            [attr.aria-label]="'Editar cliente ' + cliente.nombre + ' ' + cliente.apellido"
+            title="Editar cliente" (click)="abrirEdicion(cliente)">
+            <i class="hgi-stroke hgi-pencil-edit-01" aria-hidden="true"></i>
+            <span class="d-lg-none ms-1">Editar</span>
+          </button>
+        </article>
+      }
+    }
+  </div>
+</section>
+
+@if (modalAbierto()) {
+  <div class="modal-confirmacion-backdrop" (click)="cerrarModal()">
+    <section class="w-100" style="max-width: 800px" role="dialog" aria-modal="true"
+      aria-label="Formulario de cliente" (click)="$event.stopPropagation()">
+      <app-crear-cliente [clienteEdicion]="clienteEdicion()"
+        (clienteGuardado)="actualizarLista($event)" (cerrar)="cerrarModal()" />
+    </section>
+  </div>
+}

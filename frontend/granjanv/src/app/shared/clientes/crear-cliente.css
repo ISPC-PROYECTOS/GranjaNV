@@ -36,6 +36,43 @@
   transform: scale(1.1);
 }
 
+:host-context(body.dark-mode) .contenedor-crear-cliente {
+  background-color: var(--color-blanco);
+  color: var(--color-negro);
+  border: 1px solid var(--color-gris-medio);
+}
+
+:host-context(body.dark-mode) .titulo-cliente,
+:host-context(body.dark-mode) .btn-cerrar-x {
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .gestion-formulario {
+  background-color: var(--color-secundario-claro);
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .gestion-formulario .form-control,
+:host-context(body.dark-mode) .gestion-formulario .form-select {
+  border: 1px solid var(--color-gris-medio);
+  background-color: var(--color-blanco);
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .gestion-formulario .form-control::placeholder {
+  color: var(--color-gris-oscuro);
+}
+
+:host-context(body.dark-mode) .gestion-formulario .form-control:focus,
+:host-context(body.dark-mode) .gestion-formulario .form-select:focus {
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--color-primario) 30%, transparent);
+}
+
+:host-context(body.dark-mode) .gestion-formulario .error-msg {
+  color: #ff8a8a;
+}
+
 /* .btn-limpiar {
   background-color: var(--color-gris-claro);
   color: var(--color-negro);
