@@ -1,15 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface MetricasComerciales {
-  ventas_del_mes: number;
-  porcentaje_cambio_ventas: number;
-  produccion_diaria_promedio: number;
-  ganancia_neta_mensual: number;
-  evolucion_ventas_meses: Array<{ mes: string; total: number }>;
-  tendencia_produccion_meses: Array<{ mes: string; promedio: number }>;
-}
+import { MetricasComerciales } from '../models/reporte.model';
 
 @Injectable({
   providedIn: 'root'

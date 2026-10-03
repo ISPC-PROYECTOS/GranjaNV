@@ -6,7 +6,7 @@ class MetricasComercialesSerializer(serializers.Serializer):
     porcentaje_cambio_ventas = serializers.DecimalField(max_digits=5, decimal_places=2)
     produccion_diaria_promedio = serializers.DecimalField(max_digits=8, decimal_places=2)
     ganancia_neta_mensual = serializers.DecimalField(max_digits=12, decimal_places=2)
-
+    porcentaje_postura_mes = serializers.DecimalField(max_digits=5, decimal_places=2)
     # Datos para los gráficos 
     evolucion_ventas_meses = serializers.ListField(
         child=serializers.DictField(),
