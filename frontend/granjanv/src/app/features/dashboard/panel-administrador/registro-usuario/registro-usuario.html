@@ -7,9 +7,11 @@
         <button class="btn-volver-panel" type="button" routerLink="/dashboard/admin/panel-de-control">
           ← Panel de control
         </button>
-        }
         <h1>GRANJA NV</h1>
         <p id="titulo-alta-usuario">Alta de nuevo usuario</p>
+        } @else {
+        <h2 id="titulo-alta-usuario" class="titulo-modal">Nuevo usuario</h2>
+        }
       </div>
 
       @if (errorMessage()) {

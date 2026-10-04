@@ -34,6 +34,37 @@
 }
 
 @media (max-width: 575px) {
+  .cliente-form-modal {
+    max-height: calc(100vh - 2rem);
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .usuario-edicion-modal {
+    max-height: calc(100vh - 2rem);
+    max-height: calc(100dvh - 2rem);
+    padding: 1rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .usuario-edicion-modal .gestion-formulario {
+    padding: 1rem !important;
+  }
+
+  .usuario-edicion-modal .gestion-formulario-acciones {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .usuario-edicion-modal .gestion-formulario-acciones .btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+  }
+
   .clientes-filtros {
     display: flex;
     width: 100%;
@@ -74,6 +105,14 @@
 }
 
 @media (max-width: 380px) {
+  .usuario-edicion-modal {
+    padding: 0.75rem;
+  }
+
+  .usuario-edicion-modal .gestion-formulario {
+    padding: 0.75rem !important;
+  }
+
   .cliente-fila {
     gap: 0.75rem !important;
     padding: 0.75rem;

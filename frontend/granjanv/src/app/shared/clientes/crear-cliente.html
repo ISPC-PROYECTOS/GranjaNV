@@ -118,11 +118,11 @@
   <!-- Modal de Corroboración de Datos -->
   @if (mostrarConfirmacion()) {
     <div class="modal-confirmacion-backdrop">
-      <div class="modal-confirmacion-caja">
+      <div class="modal-confirmacion-caja confirmacion-cliente">
         <h4>{{ clienteId() ? 'Confirmar actualización' : 'Confirmar cliente' }}</h4>
         <p class="text-muted small mb-3">¿Querés confirmar esta operación?</p>
 
-        <div class="d-flex gap-2 justify-content-end">
+        <div class="d-flex gap-2 justify-content-end confirmacion-cliente-acciones">
           <button type="button" class="btn btn-sm btn-limpiar" (click)="cancelarConfirmacion()" [disabled]="isLoading()">
             Modificar
           </button>

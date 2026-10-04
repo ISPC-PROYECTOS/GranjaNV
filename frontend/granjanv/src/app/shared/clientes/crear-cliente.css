@@ -6,6 +6,7 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   max-width: 800px;
   width: 100%;
+  min-width: 0;
   margin: 0 auto;
 }
 
@@ -89,10 +90,18 @@
     padding: 16px;
     border-radius: 20px;
   }
+
+  .titulo-cliente {
+    margin-bottom: 1.25rem;
+    padding-right: 2.5rem;
+    font-size: 1.35rem;
+  }
   
   .btn-cerrar-x {
     top: 12px;
     right: 12px;
+    min-width: 40px;
+    min-height: 40px;
   }
 
   .gestion-formulario-acciones {
@@ -105,5 +114,64 @@
     flex: 1;
     font-size: 15px;
     padding: 10px 0;
+  }
+
+  .gestion-formulario .row {
+    --bs-gutter-x: 0.75rem;
+    --bs-gutter-y: 0.5rem;
+  }
+
+  .gestion-formulario .form-control,
+  .gestion-formulario .form-select {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .error-msg,
+  .alerta-error {
+    overflow-wrap: anywhere;
+  }
+
+  .confirmacion-cliente {
+    max-height: calc(100vh - 2rem);
+    max-height: calc(100dvh - 2rem);
+    padding: 1rem;
+    overflow-y: auto;
+  }
+
+  .confirmacion-cliente-acciones {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem !important;
+  }
+
+  .confirmacion-cliente-acciones .btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 380px) {
+  .contenedor-crear-cliente {
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .titulo-cliente {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+  }
+
+  .gestion-formulario-acciones {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem !important;
+  }
+
+  .gestion-formulario-acciones .btn-limpiar,
+  .gestion-formulario-acciones .btn-guardar {
+    width: 100%;
+    min-height: 44px;
   }
 }

@@ -70,7 +70,7 @@
 
 @if (modalAbierto()) {
   <div class="modal-confirmacion-backdrop" (click)="cerrarModal()">
-    <section class="w-100" style="max-width: 800px" role="dialog" aria-modal="true"
+    <section class="w-100 cliente-form-modal" style="max-width: 800px" role="dialog" aria-modal="true"
       aria-label="Formulario de cliente" (click)="$event.stopPropagation()">
       <app-crear-cliente [clienteEdicion]="clienteEdicion()"
         (clienteGuardado)="actualizarLista($event)" (cerrar)="cerrarModal()" />

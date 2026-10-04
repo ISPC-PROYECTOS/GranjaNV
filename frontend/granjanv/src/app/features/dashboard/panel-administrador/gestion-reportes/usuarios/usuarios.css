@@ -24,3 +24,90 @@
 :host-context(body.dark-mode) .gestion-formulario .form-control::placeholder {
   color: var(--color-gris-oscuro);
 }
+
+.usuario-fila,
+.usuario-principal,
+.usuario-identidad,
+.usuarios-acciones {
+  min-width: 0;
+}
+
+.usuario-identidad {
+  overflow-wrap: anywhere;
+}
+
+.usuario-alta-modal > .btn-close {
+  z-index: 2;
+}
+
+@media (max-width: 575px) {
+  .usuarios-nuevo {
+    align-self: stretch !important;
+    width: 100%;
+  }
+
+  .usuario-fila {
+    padding: 0.75rem;
+  }
+
+  .usuario-principal {
+    align-items: flex-start !important;
+    gap: 0.75rem !important;
+  }
+
+  .usuarios-acciones {
+    width: 100%;
+    margin-left: 0 !important;
+  }
+
+  .usuarios-acciones-botones {
+    gap: 0.5rem !important;
+  }
+
+  .usuarios-acciones-botones .btn {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    padding: 0;
+  }
+
+  .usuario-alta-modal,
+  .usuario-eliminar-modal,
+  .usuario-edicion-modal {
+    padding: 1rem;
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+  }
+
+  .usuario-edicion-modal .gestion-formulario {
+    padding: 1rem !important;
+  }
+
+  .usuario-edicion-modal .gestion-formulario-acciones {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .usuario-edicion-modal .gestion-formulario-acciones .btn,
+  .usuario-eliminar-modal > div:last-child .btn {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .usuario-fila {
+    padding: 0.625rem;
+  }
+
+  .usuario-principal {
+    gap: 0.625rem !important;
+  }
+
+  .usuarios-acciones {
+    gap: 0.5rem !important;
+  }
+}

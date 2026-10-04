@@ -76,3 +76,135 @@
 :host-context(body.dark-mode) .error-msg {
   color: var(--color-negro);
 }
+
+.registro-wrapper-modal .contenedor-crear-cliente,
+.registro-wrapper-modal .card-form {
+  max-width: none;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.registro-wrapper-modal .card-form {
+  text-align: left;
+}
+
+.registro-wrapper-modal .header {
+  margin-bottom: 1.25rem;
+  text-align: left;
+}
+
+.registro-wrapper-modal .titulo-modal {
+  margin: 0;
+  color: var(--color-primario-oscuro);
+  font-family: var(--font-titulos);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.registro-wrapper-modal .form-group label {
+  color: var(--color-negro);
+}
+
+.registro-wrapper-modal .form-group .error-msg {
+  color: var(--color-error-oscuro);
+}
+
+.registro-wrapper-modal .btn-formulario {
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+}
+
+.registro-wrapper-modal .btn-formulario:hover:not(:disabled) {
+  background-color: var(--color-primario-oscuro);
+  border-color: var(--color-primario-oscuro);
+}
+
+@media (max-width: 575px) {
+  .registro-wrapper:not(.registro-wrapper-modal) {
+    min-height: calc(100vh - 70px);
+    min-height: calc(100dvh - 70px);
+    align-items: flex-start;
+    padding: 1rem 0.75rem;
+  }
+
+  .registro-wrapper-modal {
+    min-height: 0;
+    padding: 0;
+  }
+
+  .card-form {
+    padding: 1.25rem 1rem;
+    border-radius: 20px;
+  }
+
+  .header {
+    margin-bottom: 1rem;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+  }
+
+  .form-group {
+    min-width: 0;
+    margin-bottom: 0.875rem;
+  }
+
+  .form-group input,
+  .form-group .custom-select {
+    min-width: 0;
+    padding: 0.7rem 0.8rem;
+    font-size: 16px;
+  }
+
+  .error-msg,
+  .alerta-error,
+  .alerta-exito {
+    overflow-wrap: anywhere;
+  }
+
+  .button-group {
+    margin-top: 1rem;
+  }
+
+  .btn-formulario {
+    min-height: 44px;
+  }
+
+  .registro-container .modal-confirmacion-caja {
+    max-height: calc(100vh - 2rem);
+    max-height: calc(100dvh - 2rem);
+    padding: 1rem;
+    overflow-y: auto;
+  }
+
+  .registro-container .modal-confirmacion-caja > .d-flex {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem !important;
+  }
+
+  .registro-container .modal-confirmacion-caja > .d-flex .btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 380px) {
+  .card-form {
+    padding: 1rem 0.75rem;
+    border-radius: 16px;
+  }
+
+  .header h1 {
+    font-size: 1.35rem;
+  }
+
+  .header p {
+    font-size: 0.875rem;
+  }
+}

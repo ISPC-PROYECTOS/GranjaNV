@@ -4,7 +4,7 @@
       <h2 id="titulo-usuarios" class="gestion-titulo mb-1">USUARIOS</h2>
       <p class="text-muted mb-0">{{ usuarios().length }} usuarios registrados</p>
     </div>
-    <button type="button" class="btn btn-guardar align-self-start" (click)="altaAbierta.set(true)">
+    <button type="button" class="btn btn-guardar align-self-start usuarios-nuevo" (click)="altaAbierta.set(true)">
       <i class="hgi-stroke hgi-user-add-01" aria-hidden="true"></i>
       Nuevo usuario
     </button>
@@ -21,18 +21,18 @@
       <p class="list-group-item text-center text-muted py-4">Todavía no hay usuarios registrados.</p>
     } @else {
       @for (usuario of usuarios(); track usuario.id_usuario) {
-        <article class="list-group-item d-flex flex-column flex-sm-row align-items-sm-center gap-3">
-          <div class="d-flex align-items-center gap-3 flex-grow-1">
+        <article class="list-group-item d-flex flex-column flex-sm-row align-items-sm-center gap-3 usuario-fila">
+          <div class="d-flex align-items-center gap-3 flex-grow-1 usuario-principal">
             <span class="rounded-circle bg-success-subtle text-success-emphasis d-inline-flex align-items-center justify-content-center flex-shrink-0 fw-bold"
               style="width: 2.75rem; height: 2.75rem" aria-hidden="true">{{ iniciales(usuario) }}</span>
-            <div class="text-break">
+            <div class="text-break usuario-identidad">
               <strong class="d-block">{{ usuario.nombre }} {{ usuario.apellido }}</strong>
               <span class="text-muted small">{{ usuario.email }}</span>
             </div>
           </div>
-          <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 ms-sm-auto">
+          <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 ms-sm-auto usuarios-acciones">
             <span class="badge rounded-pill bg-warning-subtle text-warning-emphasis">{{ usuario.rol }}</span>
-            <div class="d-flex gap-2">
+            <div class="d-flex gap-2 usuarios-acciones-botones">
               <button type="button" class="btn btn-limpiar" aria-label="Editar usuario"
                 title="Editar usuario" (click)="abrirEdicion(usuario)">
               <i class="hgi-stroke hgi-pencil-edit-01" aria-hidden="true"></i>
@@ -51,7 +51,7 @@
 
 @if (altaAbierta()) {
   <div class="modal-confirmacion-backdrop" (click)="altaAbierta.set(false)">
-    <section class="modal-confirmacion-caja position-relative p-0 overflow-auto" role="dialog" aria-modal="true"
+    <section class="modal-confirmacion-caja position-relative overflow-auto usuario-alta-modal" role="dialog" aria-modal="true"
       aria-labelledby="titulo-alta-usuario" (click)="$event.stopPropagation()">
       <button type="button" class="btn-close position-absolute top-0 end-0 m-3" aria-label="Cerrar alta de usuario"
         (click)="altaAbierta.set(false)">
@@ -63,7 +63,7 @@
 
 @if (usuarioAEliminar(); as usuario) {
   <div class="modal-confirmacion-backdrop" (click)="cancelarEliminacion()">
-    <section class="modal-confirmacion-caja text-start" role="alertdialog" aria-modal="true"
+    <section class="modal-confirmacion-caja text-start usuario-eliminar-modal" role="alertdialog" aria-modal="true"
       aria-labelledby="titulo-eliminar-usuario" (click)="$event.stopPropagation()">
       <h4 id="titulo-eliminar-usuario">Eliminar usuario</h4>
       <p class="mb-2">¿Seguro que querés eliminar a este usuario?</p>
@@ -89,7 +89,7 @@
 
 @if (usuarioEditando(); as usuario) {
   <div class="modal-confirmacion-backdrop" (click)="cerrarEdicion()">
-    <section class="modal-confirmacion-caja position-relative text-start" role="dialog" aria-modal="true" aria-labelledby="titulo-editar-usuario"
+    <section class="modal-confirmacion-caja position-relative text-start usuario-edicion-modal" role="dialog" aria-modal="true" aria-labelledby="titulo-editar-usuario"
       (click)="$event.stopPropagation()">
       <header class="position-relative mb-3">
         <h4 id="titulo-editar-usuario">Editar usuario</h4>
