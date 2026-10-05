@@ -75,6 +75,28 @@ def obtener_metricas_comerciales(request):
         # huevos_por_dia = Decimal(total_huevos_mes) / Decimal(dias_transcurridos)
         # porcentaje_postura = round(Decimal(total_huevos_mes) / Decimal(total_gallinas_activas) * Decimal('100.00'), 2)
 
+    # Generar tendencia de producción de los últimos meses reales
+    tendencia_produccion_meses = []
+
+    nombres_meses_es = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
+    
+    # Ejemplo básico para poblar el gráfico con los datos del año actual
+    for m in range(1, mes_actual + 1):
+        # Calculamos el total del mes m
+        maples_mes_m = RegistroProduccion.objects.filter(
+            fecha__year=anio_actual,
+            fecha__month=m
+        ).aggregate(total=Sum('total_maples'))['total'] or 0
+        
+        # Obtenemos el nombre abreviado del mes (ej: 'Ene', 'Feb', etc.)
+        nombre_mes = nombres_meses_es[m - 1]
+        
+        tendencia_produccion_meses.append({
+            'mes': nombre_mes,
+            'promedio': float(maples_mes_m)
+        })
+
+
     # Datos estructurados para el serializador
     datos_calculados = {
         'ventas_del_mes': total_ventas,
@@ -82,12 +104,8 @@ def obtener_metricas_comerciales(request):
         'produccion_diaria_promedio': produccion_diaria_promedio,
         'porcentaje_postura_mes': porcentaje_postura,
         'ganancia_neta_mensual': ganancia_neta,
-        'evolucion_ventas_meses': [
-            {'mes': 'Mes actual', 'total': float(total_ventas)},
-        ],
-        'tendencia_produccion_meses': [
-            {'mes': 'Mes actual', 'promedio': float(produccion_diaria_promedio)},
-        ]
+        'evolucion_ventas_meses': [{'mes': 'Mes actual', 'total': float(total_ventas)}],
+        'tendencia_produccion_meses': tendencia_produccion_meses,
     }
 
     serializer = MetricasComercialesSerializer(data=datos_calculados)
