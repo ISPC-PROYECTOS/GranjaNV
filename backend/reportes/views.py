@@ -194,6 +194,16 @@ def registrar_exportacion(
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated, IsAdminRole])
+def reporte_produccion(request):
+    fecha_desde = request.query_params.get("fecha_desde")
+    fecha_hasta = request.query_params.get("fecha_hasta")
+
+    datos = obtener_datos_produccion(fecha_desde, fecha_hasta)
+
+    return Response(datos)
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated, IsAdminRole])
 def reporte_finanzas(request):
     fecha_desde = request.query_params.get("fecha_desde")
     fecha_hasta = request.query_params.get("fecha_hasta")
@@ -204,11 +214,17 @@ def reporte_finanzas(request):
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated, IsAdminRole])
-def reporte_produccion(request):
+def reporte_completo(request):
     fecha_desde = request.query_params.get("fecha_desde")
     fecha_hasta = request.query_params.get("fecha_hasta")
 
-    datos = obtener_datos_produccion(fecha_desde, fecha_hasta)
+    finanzas = obtener_datos_finanzas(fecha_desde, fecha_hasta)
+    produccion = obtener_datos_produccion(fecha_desde, fecha_hasta)
+
+    datos = {
+        "finanzas": finanzas,
+        "produccion": produccion,
+    }
 
     return Response(datos)
 

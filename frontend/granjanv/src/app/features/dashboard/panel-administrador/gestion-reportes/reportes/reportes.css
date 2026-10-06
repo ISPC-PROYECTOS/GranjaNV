@@ -179,6 +179,69 @@
   line-height: 1;
 }
 
+/* VISTA PREVIA */
+
+.vista-previa {
+  margin-top: 20px;
+  padding: 16px;
+  background-color: var(--color-secundario-claro);
+  border-radius: 10px;
+  border: 1px solid var(--color-primario);
+  text-align: left;
+}
+
+.vista-previa-titulo {
+  margin: 0 0 12px;
+  font-family: var(--font-titulos);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-negro);
+}
+
+.vista-previa-seccion {
+  margin: 14px 0 8px;
+  font-family: var(--font-titulos);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-primario);
+}
+
+.vista-previa-fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 6px 0;
+  font-size: 14px;
+}
+
+.vista-previa-fila span {
+  color: var(--color-negro);
+}
+
+.vista-previa-fila strong {
+  color: var(--color-negro);
+  text-align: right;
+}
+
+/* CONFIRMACIÓN */
+
+.confirmacion-descripcion {
+  font-size: 14px;
+  color: var(--color-gris-oscuro);
+  margin: 4px 0 20px;
+}
+
+.resumen-exportacion {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.resumen-exportacion p {
+  margin: 0;
+}
+
 /* MOBILE */
 @media (max-width: 767px) {
   .reporte-card {
