@@ -59,11 +59,16 @@ export class ProduccionService {
     return this.http.get<Galpon[]>(`${this.apiUrl}galpones/`, { params });
   }
 
-  crearGalpon(galpon: Omit<Galpon, 'id' | 'creado_en' | 'actualizado_en'>): Observable<Galpon> {
+  crearGalpon(
+    galpon: Omit<Galpon, 'id' | 'creado_en' | 'actualizado_en' | 'cantidad_actual_gallinas'>,
+  ): Observable<Galpon> {
     return this.http.post<Galpon>(`${this.apiUrl}galpones/`, galpon);
   }
 
-  actualizarGalpon(id: number, galpon: Partial<Omit<Galpon, 'id' | 'numero_galpon' | 'creado_en' | 'actualizado_en'>>): Observable<Galpon> {
+  actualizarGalpon(
+    id: number,
+    galpon: Partial<Omit<Galpon, 'id' | 'numero_galpon' | 'creado_en' | 'actualizado_en' | 'cantidad_actual_gallinas'>>,
+  ): Observable<Galpon> {
     return this.http.patch<Galpon>(`${this.apiUrl}galpones/${id}/`, galpon);
   }
 

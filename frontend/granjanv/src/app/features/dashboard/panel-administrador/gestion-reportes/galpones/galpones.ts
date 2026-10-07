@@ -29,7 +29,6 @@ export class Galpones implements OnInit {
     nombre: ['', [Validators.required, Validators.maxLength(100)]],
     capacidad_maxima: [1, [Validators.required, Validators.min(1)]],
     cantidad_inicial_gallinas: [0, [Validators.required, Validators.min(0)]],
-    cantidad_actual_gallinas: [0, [Validators.required, Validators.min(0)]],
     descripcion_galpon: [''],
     activo: [true, Validators.required],
   });
@@ -62,7 +61,6 @@ export class Galpones implements OnInit {
       nombre: '',
       capacidad_maxima: 1,
       cantidad_inicial_gallinas: 0,
-      cantidad_actual_gallinas: 0,
       descripcion_galpon: '',
       activo: true,
     });
@@ -77,7 +75,6 @@ export class Galpones implements OnInit {
       nombre: galpon.nombre,
       capacidad_maxima: galpon.capacidad_maxima,
       cantidad_inicial_gallinas: galpon.cantidad_inicial_gallinas,
-      cantidad_actual_gallinas: galpon.cantidad_actual_gallinas,
       descripcion_galpon: galpon.descripcion_galpon,
       activo: galpon.activo,
     });
@@ -103,7 +100,6 @@ export class Galpones implements OnInit {
       nombre: datos.nombre?.trim() ?? '',
       capacidad_maxima: Number(datos.capacidad_maxima),
       cantidad_inicial_gallinas: Number(datos.cantidad_inicial_gallinas),
-      cantidad_actual_gallinas: Number(datos.cantidad_actual_gallinas),
       descripcion_galpon: datos.descripcion_galpon?.trim() ?? '',
       activo: datos.activo ?? true,
     };
@@ -115,7 +111,6 @@ export class Galpones implements OnInit {
           nombre: payload.nombre,
           capacidad_maxima: payload.capacidad_maxima,
           cantidad_inicial_gallinas: payload.cantidad_inicial_gallinas,
-          cantidad_actual_gallinas: payload.cantidad_actual_gallinas,
           descripcion_galpon: payload.descripcion_galpon,
           activo: payload.activo,
         })
@@ -135,8 +130,7 @@ export class Galpones implements OnInit {
         this.produccionService.cargarGalpones();
       },
       error: (respuesta: HttpErrorResponse) => {
-        const detalle = respuesta.error?.cantidad_actual_gallinas?.[0]
-          ?? respuesta.error?.numero_galpon?.[0]
+        const detalle = respuesta.error?.numero_galpon?.[0]
           ?? respuesta.error?.detail;
         this.errorFormulario.set(
           typeof detalle === 'string'

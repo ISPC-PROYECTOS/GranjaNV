@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Cliente } from '../../../../../core/models/cliente.model';
 import { ClientesService } from '../../../../../core/services/clientes.service';
 import { CrearClienteComponent } from '../../../../../shared/clientes/crear-cliente';
+import { Buscador } from '../../../../../shared/buscador/buscador';
 
 @Component({
   selector: 'app-clientes',
   standalone: true,
-  imports: [CommonModule, CrearClienteComponent],
+  imports: [CommonModule, CrearClienteComponent, Buscador],
   templateUrl: './clientes.html',
   styleUrl: './clientes.css',
 })
@@ -19,13 +20,22 @@ export class Clientes implements OnInit {
   readonly error = signal<string | null>(null);
   readonly modalAbierto = signal(false);
   readonly clienteEdicion = signal<Cliente | null>(null);
+  readonly busquedaCliente = signal('');
   readonly filtroEstado = signal<'todos' | 'activos' | 'inactivos'>('todos');
   readonly actualizandoEstadoId = signal<number | null>(null);
   readonly clientesVisibles = computed(() => {
     const filtro = this.filtroEstado();
-    if (filtro === 'activos') return this.clientes().filter((cliente) => cliente.activo);
-    if (filtro === 'inactivos') return this.clientes().filter((cliente) => !cliente.activo);
-    return this.clientes();
+    const busqueda = this.busquedaCliente().trim().toLowerCase();
+    return this.clientes().filter((cliente) => {
+      const coincideEstado = filtro === 'todos'
+        || (filtro === 'activos' && cliente.activo)
+        || (filtro === 'inactivos' && !cliente.activo);
+      if (!coincideEstado) return false;
+      if (!busqueda) return true;
+
+      const textoCliente = `${cliente.nombre} ${cliente.apellido} ${cliente.telefono} ${cliente.email}`;
+      return textoCliente.toLowerCase().includes(busqueda);
+    });
   });
 
   ngOnInit(): void {

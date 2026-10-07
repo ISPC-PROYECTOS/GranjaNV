@@ -4,6 +4,10 @@
   --bs-list-group-border-color: var(--color-gris-medio);
 }
 
+:host-context(body.dark-mode) .text-muted {
+  color: var(--color-primario-oscuro) !important;
+}
+
 :host-context(body.dark-mode) .bg-success-subtle.text-success-emphasis {
   background-color: var(--color-primario-claro) !important;
   color: var(--color-negro) !important;
@@ -43,8 +47,8 @@
 .usuario-alta-modal,
 .usuario-edicion-modal {
   max-width: 800px;
-  color: var(--color-blanco);
-  background-color: var(--color-primario);
+  color: var(--color-negro);
+  background-color: var(--color-crema);
   border: none;
   border-radius: 27px;
   padding: 24px;
@@ -52,7 +56,7 @@
 }
 
 .usuario-edicion-modal > header h4 {
-  color: var(--color-blanco);
+  color: var(--color-primario-oscuro);
   font-family: var(--font-titulos);
   font-size: 30px;
   font-weight: 600;
@@ -65,7 +69,7 @@
 
 .usuario-alta-modal .btn-close,
 .usuario-edicion-modal .btn-close {
-  filter: brightness(0) invert(1);
+  filter: none;
   opacity: 1;
 }
 
@@ -124,8 +128,25 @@
   .usuario-edicion-modal {
     padding: 1rem;
     border-radius: 20px;
+    max-height: calc(100vh - 2rem);
     max-height: calc(100dvh - 2rem);
     overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .usuario-alta-modal {
+    width: min(800px, 100%);
+  }
+
+  .usuario-alta-modal app-registro-usuario {
+    display: block;
+    min-width: 0;
+  }
+
+  .usuario-alta-modal > .btn-close {
+    min-width: 44px;
+    min-height: 44px;
+    margin: 0.5rem !important;
   }
 
   .usuario-edicion-modal .gestion-formulario {
@@ -146,6 +167,17 @@
 
   .usuario-edicion-modal > header h4 {
     font-size: 1.35rem;
+    padding-right: 2.5rem;
+    overflow-wrap: anywhere;
+  }
+
+  .usuario-eliminar-modal .text-muted {
+    overflow-wrap: anywhere;
+  }
+
+  .usuario-edicion-modal .gestion-formulario-acciones .btn,
+  .usuario-eliminar-modal > div:last-child .btn {
+    min-height: 44px;
   }
 }
 
@@ -162,6 +194,12 @@
 
   .usuario-edicion-modal > header h4 {
     font-size: 1.2rem;
+  }
+
+  .usuario-alta-modal,
+  .usuario-edicion-modal,
+  .usuario-eliminar-modal {
+    padding: 0.75rem;
   }
 
   .usuario-principal {

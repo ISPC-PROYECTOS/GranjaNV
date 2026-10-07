@@ -106,7 +106,7 @@
 
 .registro-wrapper-modal .titulo-modal {
   margin: 0;
-  color: var(--color-blanco);
+  color: var(--color-primario-oscuro);
   font-family: var(--font-titulos);
   font-size: 30px;
   font-weight: 600;
@@ -146,6 +146,10 @@
   .registro-wrapper-modal {
     min-height: 0;
     padding: 0;
+  }
+
+  .registro-wrapper-modal .registro-form {
+    padding: 1rem !important;
   }
 
   .card-form {
@@ -227,5 +231,9 @@
 
   .registro-wrapper-modal .titulo-modal {
     font-size: 1.2rem;
+  }
+
+  .registro-wrapper-modal .registro-form {
+    padding: 0.75rem !important;
   }
 }

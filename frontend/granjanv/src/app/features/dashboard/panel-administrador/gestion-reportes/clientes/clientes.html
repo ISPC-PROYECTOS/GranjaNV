@@ -14,20 +14,25 @@
     <div class="alerta-error-modal" role="alert">{{ error() }}</div>
   }
 
-  <div class="btn-group mb-3 clientes-filtros" role="group" aria-label="Filtrar clientes por estado">
-    <button type="button" class="btn btn-sm btn-limpiar" [class.active]="filtroEstado() === 'todos'"
-      (click)="filtroEstado.set('todos')">Todos</button>
-    <button type="button" class="btn btn-sm btn-limpiar" [class.active]="filtroEstado() === 'activos'"
-      (click)="filtroEstado.set('activos')">Activos</button>
-    <button type="button" class="btn btn-sm btn-limpiar" [class.active]="filtroEstado() === 'inactivos'"
-      (click)="filtroEstado.set('inactivos')">Inactivos</button>
+  <div class="clientes-controles">
+    <div class="btn-group clientes-filtros" role="group" aria-label="Filtrar clientes por estado">
+      <button type="button" class="btn btn-sm btn-limpiar" [class.active]="filtroEstado() === 'todos'"
+        (click)="filtroEstado.set('todos')">Todos</button>
+      <button type="button" class="btn btn-sm btn-limpiar" [class.active]="filtroEstado() === 'activos'"
+        (click)="filtroEstado.set('activos')">Activos</button>
+      <button type="button" class="btn btn-sm btn-limpiar" [class.active]="filtroEstado() === 'inactivos'"
+        (click)="filtroEstado.set('inactivos')">Inactivos</button>
+    </div>
+    <app-buscador (buscar)="busquedaCliente.set($event)"></app-buscador>
   </div>
 
   <div class="list-group" aria-live="polite" [attr.aria-busy]="cargando()">
     @if (cargando()) {
       <p class="list-group-item text-center text-muted py-4">Cargando clientes...</p>
-    } @else if (clientesVisibles().length === 0) {
+    } @else if (clientes().length === 0) {
       <p class="list-group-item text-center text-muted py-4">Todavía no hay clientes registrados.</p>
+    } @else if (clientesVisibles().length === 0) {
+      <p class="list-group-item text-center text-muted py-4">No hay clientes que coincidan con la búsqueda o los filtros.</p>
     } @else {
       @for (cliente of clientesVisibles(); track cliente.id) {
         <article class="list-group-item d-flex flex-column flex-sm-row align-items-sm-center gap-3 cliente-fila">

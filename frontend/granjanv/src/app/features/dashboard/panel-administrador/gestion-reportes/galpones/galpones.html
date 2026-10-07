@@ -121,20 +121,16 @@
               <small class="text-danger">El nombre es obligatorio.</small>
             }
           </div>
-          <div class="col-12 col-sm-4">
+          <div class="col-12 col-sm-6">
             <label for="galpon-capacidad" class="form-label">Capacidad máxima</label>
             <input id="galpon-capacidad" class="form-control" type="number" min="1"
               formControlName="capacidad_maxima">
           </div>
-          <div class="col-12 col-sm-4">
+          <div class="col-12 col-sm-6">
             <label for="galpon-inicial" class="form-label">Población inicial</label>
             <input id="galpon-inicial" class="form-control" type="number" min="0"
               formControlName="cantidad_inicial_gallinas">
-          </div>
-          <div class="col-12 col-sm-4">
-            <label for="galpon-actual" class="form-label">Población actual</label>
-            <input id="galpon-actual" class="form-control" type="number" min="0"
-              formControlName="cantidad_actual_gallinas">
+            <small class="d-block text-muted mt-1">El stock actual se registra en Movimientos de gallinas.</small>
           </div>
           <div class="col-12">
             <label for="galpon-descripcion" class="form-label">Descripción</label>
@@ -149,11 +145,6 @@
           </div>
         </div>
 
-        @if (formulario.controls.cantidad_actual_gallinas.value !== null &&
-          formulario.controls.capacidad_maxima.value !== null &&
-          formulario.controls.cantidad_actual_gallinas.value > formulario.controls.capacidad_maxima.value) {
-          <p class="text-danger small mt-2 mb-0">La población actual no puede superar la capacidad máxima.</p>
-        }
         @if (errorFormulario()) {
           <div class="alerta-error-modal mt-3" role="alert">{{ errorFormulario() }}</div>
         }
