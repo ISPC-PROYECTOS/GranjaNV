@@ -1,5 +1,6 @@
 import re
 from django.db import models
+from django.db.models import Q
 from django.core.exceptions import ValidationError
 
 
@@ -8,7 +9,7 @@ class Cliente(models.Model):
         MAYORISTA = 'MAYORISTA', 'Mayorista'
         MINORISTA = 'MINORISTA', 'Minorista'
 
-    nombre = models.CharField(max_length=120, unique=True)
+    nombre = models.CharField(max_length=120)
     apellido = models.CharField(max_length=120, blank=True, default='')
     telefono = models.CharField(max_length=30)
     direccion = models.CharField(max_length=255)
@@ -26,25 +27,32 @@ class Cliente(models.Model):
         ordering = ['nombre', 'apellido']
         verbose_name = 'Cliente'
         verbose_name_plural = 'Clientes'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['nombre', 'apellido'],
+                condition=Q(activo=True),
+                name='unique_cliente_nombre_apellido_activo',
+            )
+        ]
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self.apellido:
             return f"{self.nombre} {self.apellido}"
         return self.nombre
 
-    def clean(self):
+    def clean(self) -> None:
         super().clean()
 
         if self.nombre:
             nombre_limpio = self.nombre.strip()
-            if not re.match(r'^[A-ZÁÉÍÓÚÑa-záéíóúñ\s]+$', nombre_limpio):
+            if not re.match(r'^[A-ZÁÉÍÓÚÑa-záéíóúñ0-9\s\.\,\-]+$', nombre_limpio):
                 raise ValidationError({
-                    'nombre': 'El nombre solo puede contener letras y espacios (sin números).'
+                    'nombre': 'El nombre contiene caracteres inválidos.'
                 })
             
         if self.apellido:
             apellido_limpio = self.apellido.strip()
-            if not re.match(r'^[A-ZÁÉÍÓÚÑa-záéíóúñ\s]+$', apellido_limpio):
+            if not re.match(r'^[A-ZÁÉÍÓÚÑa-záéíóúñ\s\.\-]+$', apellido_limpio):
                 raise ValidationError({
                     'apellido': 'El apellido solo puede contener letras y espacios.'
                 })
@@ -62,7 +70,7 @@ class Cliente(models.Model):
                     'telefono': 'El teléfono debe contener al menos 7 dígitos numéricos.'
                 })
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         if self.nombre:
             self.nombre = self.nombre.strip().upper()
         if self.apellido:
