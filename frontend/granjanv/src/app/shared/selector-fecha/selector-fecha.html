@@ -31,8 +31,14 @@
     </div>
     }
 
+    @if (modoSeleccion()) {
+    <button type="button" class="btn-restablecer-filtro" (click)="confirmarSeleccion()">
+      Seleccionar
+    </button>
+    } @else {
     <button type="button" class="btn-restablecer-filtro" (click)="restablecerFiltro()">
       Restablecer
     </button>
+    }
   </div>
 </div>

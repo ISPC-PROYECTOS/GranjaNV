@@ -1,4 +1,4 @@
-import { Component, OnInit, output } from '@angular/core';
+import { Component, OnInit, output, input, ElementRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { obtenerRangoMesActual } from '../../core/utils/date.utils';
@@ -16,7 +16,10 @@ export interface RangoFechaSeleccionado {
   styleUrl: './selector-fecha.css',
 })
 export class SelectorFecha implements OnInit {
+  private elementRef = inject(ElementRef);
   cambioRango = output<RangoFechaSeleccionado>();
+  modoSeleccion = input(false);
+  seleccionar = output<void>();
 
   tipoFiltro: 'mes' | 'rango' = 'mes';
   mesSeleccionado: string = '';
@@ -65,5 +68,12 @@ export class SelectorFecha implements OnInit {
     this.fechaHasta = rango.fechaHasta;
 
     this.cambioRango.emit(rango);
+  }
+
+  confirmarSeleccion(): void {
+    this.seleccionar.emit();
+
+    const boton = this.elementRef.nativeElement.querySelector('.selector-fecha-caja');
+    boton?.click();
   }
 }

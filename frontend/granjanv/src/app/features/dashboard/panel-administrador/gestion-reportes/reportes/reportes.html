@@ -78,7 +78,8 @@
                     </div>
 
                     <div class="selector-reporte">
-                        <app-selector-fecha (cambioRango)="onCambioRango($event)">
+                        <app-selector-fecha [modoSeleccion]="true" (cambioRango)="onCambioRango($event)"
+                            (seleccionar)="seleccionarRango()">
                         </app-selector-fecha>
                     </div>
                 </div>
@@ -142,7 +143,7 @@
 
                 @if (cargandoVistaPrevia()) {
                 <p class="vista-previa-cargando">
-                    Cargando vista previa...
+                    Cargando resumen...
                 </p>
                 }
 

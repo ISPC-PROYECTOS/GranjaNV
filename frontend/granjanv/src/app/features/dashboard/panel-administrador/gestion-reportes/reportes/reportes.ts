@@ -27,6 +27,7 @@ export class Reportes {
   mostrarModal = signal(false);
   reporteSeleccionado = signal<TipoReporte | null>(null);
   rangoSeleccionado = signal<RangoFechaSeleccionado>(obtenerRangoMesActual());
+  rangoTemporal = signal<RangoFechaSeleccionado>(obtenerRangoMesActual());
   formatoSeleccionado = signal<FormatoReporte>('pdf');
 
   confirmandoExportacion = signal(false);
@@ -56,7 +57,11 @@ export class Reportes {
   }
 
   onCambioRango(rango: RangoFechaSeleccionado): void {
-    this.rangoSeleccionado.set(rango);
+    this.rangoTemporal.set(rango);
+  }
+
+  seleccionarRango(): void {
+    this.rangoSeleccionado.set(this.rangoTemporal());
   }
 
   onCambioFormato(formato: FormatoReporte): void {
