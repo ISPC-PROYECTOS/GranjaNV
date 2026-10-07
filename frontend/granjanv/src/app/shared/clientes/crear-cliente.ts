@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ClientesService } from '../../core/services/clientes.service';
 import { Cliente, TipoCliente } from '../../core/models/cliente.model';
-import { ClienteSugerenciasComponent } from '../clientes-sugerencias/clientes-sugerencias';
 
 const PATRON_TEXTO_PERSONA = '^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]{2,}$';
 const PATRON_TEXTO_COMERCIO = '^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ\\s\\.\\,\\-]{3,}$';
@@ -14,7 +13,7 @@ export type TipoEntidadCliente = 'PERSONA' | 'NEGOCIO';
 
 @Component({
   selector: 'app-crear-cliente',
-  imports: [CommonModule, ReactiveFormsModule, ClienteSugerenciasComponent],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './crear-cliente.html',
   styleUrl: './crear-cliente.css'
 })
@@ -59,7 +58,6 @@ export class CrearClienteComponent {
   readonly isLoading = signal<boolean>(false);
   readonly mostrarConfirmacion = signal<boolean>(false);
   readonly tipoEntidad = signal<TipoEntidadCliente>('PERSONA');
-  readonly mostrarSugerencias = signal<boolean>(false);
 
   readonly clientesExistentes = signal<Cliente[]>([]);
 
@@ -124,17 +122,7 @@ export class CrearClienteComponent {
     apellidoCtrl?.updateValueAndValidity();
   }
 
-  readonly coincidenciasNombre = computed(() => {
-    const nomOriginal = (this.nombreValue() || '').trim();
-    const nom = nomOriginal.toLowerCase();
-    if (!nom || nom.length < 2) return [];
-
-    return this.clientesExistentes().filter(c => 
-      c.nombre.toLowerCase().includes(nom) &&
-      c.id !== this.clienteId()
-    );
-  });
-
+  // Aviso preventivo: homónimos que tienen el mismo nombre pero distinto apellido
   readonly homonimosMismoNombre = computed(() => {
     const nom = (this.nombreValue() || '').trim().toLowerCase();
     const ape = (this.apellidoValue() || '').trim().toLowerCase();
@@ -148,6 +136,7 @@ export class CrearClienteComponent {
     );
   });
 
+  // Bloqueo estricto: coincidencia exacta de nombre y apellido
   readonly esHomonimoExacto = computed(() => {
     const nom = (this.nombreValue() || '').trim().toLowerCase();
     const ape = (this.apellidoValue() || '').trim().toLowerCase();
@@ -160,18 +149,6 @@ export class CrearClienteComponent {
       c.id !== this.clienteId()
     );
   });
-
-  onInputNombre(): void {
-    this.mostrarSugerencias.set(true);
-  }
-
-  onSeleccionarSugerencia(cliente: Cliente): void {
-    this.formularioCliente.patchValue({
-      nombre: cliente.nombre,
-      apellido: cliente.apellido || ''
-    });
-    this.mostrarSugerencias.set(false);
-  }
 
   solicitarConfirmacion(): void {
     if (this.formularioCliente.invalid || this.esHomonimoExacto()) {
@@ -234,7 +211,6 @@ export class CrearClienteComponent {
     this.errorBackend.set(null);
     this.mensajeExito.set(null);
     this.mostrarConfirmacion.set(false);
-    this.mostrarSugerencias.set(false);
   }
 
   cerrarFormulario(): void {
