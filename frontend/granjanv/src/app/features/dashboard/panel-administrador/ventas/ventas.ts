@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 
 import { PedidosService } from '../../../../core/services/pedidos.service';
 import { ClientesService } from '../../../../core/services/clientes.service';
@@ -46,6 +46,7 @@ export class Ventas implements OnInit {
   private readonly pedidosService = inject(PedidosService);
   private readonly clientesService = inject(ClientesService);
   private readonly produccionService = inject(ProduccionService);
+  private readonly route = inject(ActivatedRoute);
 
   readonly vistaMobile = signal<'pedidos' | 'formulario'>('formulario');
 
@@ -251,6 +252,15 @@ export class Ventas implements OnInit {
     this.cargarPedidosPendientes();
     this.cargarPedidosCerrados();
     this.cargarClientes();
+
+    this.route.queryParams.subscribe((params) => {
+      const seccion = params['seccion'];
+      if (seccion === 'pendientes') {
+        this.vistaMobile.set('pedidos');
+      }else if (seccion === 'nuevo') {
+        this.vistaMobile.set('formulario');
+      }
+    });
   }
 
   cargarPedidosPendientes(): void {
