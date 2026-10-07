@@ -49,6 +49,7 @@
 
   .btn-buscador-popup i {
     font-size: 25px;
+    color: var(--color-primario);
   }
 
   .panel-buscador-popup {

@@ -5,7 +5,7 @@
 }
 
 :host-context(body.dark-mode) .text-muted {
-  color: var(--color-primario-oscuro) !important;
+  color: var(--color-gris-oscuro) !important;
 }
 
 :host-context(body.dark-mode) .bg-success-subtle.text-success-emphasis {
