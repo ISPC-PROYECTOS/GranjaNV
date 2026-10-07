@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReportesService } from '../../../../../core/services/reporte.service';
 import { MetricasComerciales } from '../../../../../core/models/reporte.model';
 import { CarruselComponent } from '../../../../../shared/carrusel/carrusel';
+import { SelectorFecha } from '../../../../../shared/selector-fecha/selector-fecha';
 
 
 export interface IndicadorClave {
@@ -15,7 +16,7 @@ export interface IndicadorClave {
 @Component({
   selector: 'app-metricas',
   standalone: true,
-  imports: [CommonModule, CarruselComponent],
+  imports: [CommonModule, CarruselComponent, SelectorFecha],
   templateUrl: './metricas.html',
   styleUrl: './metricas.css'
 })
@@ -28,28 +29,33 @@ export class Metricas implements OnInit {
   readonly porcentajePosturaMes = signal<number>(0);
   readonly gananciaNetaMes = signal<number>(0);
   readonly tendenciaProduccion = signal<Array<{ mes: string; promedio: number }>>([]);
+  readonly nivelDescripcion = signal<string>('Vista mensual');
 
 
   ngOnInit(): void {
     this.cargarMetricasDesdeBackend();
   }
 
-  cargarMetricasDesdeBackend() {
-    this.reportesService.getMetricasComerciales().subscribe({
-      next: (data) => {
-        // Actualizamos las señales con los valores reales que devuelve Django
-        this.totalVentasMes.set(Number(data.ventas_del_mes));
-        this.porcentajeVentasVsMesAnterior.set(Number(data.porcentaje_cambio_ventas));
-        this.produccionDiariaPromedio.set(Number(data.produccion_diaria_promedio));
-        this.porcentajePosturaMes.set(Number(data.porcentaje_postura_mes));
-        this.gananciaNetaMes.set(Number(data.ganancia_neta_mensual));
-        this.tendenciaProduccion.set(data.tendencia_produccion_meses || []);
-        },
-      error: (err) => {
-        console.error('Error al cargar las métricas desde la API:', err);
-      }
-    });
-  }
+ cargarMetricasDesdeBackend(fechaDesde?: string, fechaHasta?: string) {
+  this.reportesService.getMetricasComerciales(fechaDesde, fechaHasta).subscribe({
+    next: (data) => {
+      this.totalVentasMes.set(Number(data.ventas_del_mes));
+      this.porcentajeVentasVsMesAnterior.set(Number(data.porcentaje_cambio_ventas));
+      this.produccionDiariaPromedio.set(Number(data.produccion_diaria_promedio));
+      this.porcentajePosturaMes.set(Number(data.porcentaje_postura_mes));
+      this.gananciaNetaMes.set(Number(data.ganancia_neta_mensual));
+      this.tendenciaProduccion.set(data.tendencia_produccion_meses || []);
+      this.nivelDescripcion.set(data.nivel_descripcion || 'Vista mensual');
+    },
+    error: (err) => {
+      console.error('Error al cargar las métricas desde la API:', err);
+    }
+  });
+}
+
+onCambioRango(rango: { fechaDesde: string; fechaHasta: string }) {
+  this.cargarMetricasDesdeBackend(rango.fechaDesde, rango.fechaHasta);
+}
 
   // Lista armada para dibujar las 3 tarjetas superiores de forma limpia
   readonly tarjetasKpi = computed<IndicadorClave[]>(() => [
@@ -84,6 +90,28 @@ export class Metricas implements OnInit {
     return valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   }
 
+  
+  esPicoMaximo(punto: { mes: string; promedio: number }): boolean {
+    const puntos = this.tendenciaProduccion();
+    if (!puntos.length) return false;
+    const max = Math.max(...puntos.map(p => p.promedio));
+    const index = puntos.findIndex(p => p.promedio === max);
+    return puntos[index] === punto;
+  }
+
+  
+  esPicoMinimo(punto: { mes: string; promedio: number }): boolean {
+    const puntos = this.tendenciaProduccion();
+    if (!puntos.length) return false;
+    const max = Math.max(...puntos.map(p => p.promedio));
+    const min = Math.min(...puntos.map(p => p.promedio));
+    if (min === max) return false; 
+    
+    const index = puntos.findIndex(p => p.promedio === min);
+    return puntos[index] === punto;
+  }
+
+  
   // Calcula la posición horizontal X en base al índice del mes
   calcularX(index: number, total: number): number {
     if (total <= 1) return 250;
