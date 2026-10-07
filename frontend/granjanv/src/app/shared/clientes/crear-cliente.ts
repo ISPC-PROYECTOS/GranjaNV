@@ -1,25 +1,27 @@
-import { Component, EventEmitter,Input, Output, inject, signal, computed } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ClientesService } from '../../core/services/clientes.service';
-import { Cliente } from '../../core/models/cliente.model';
+import { Cliente, TipoCliente } from '../../core/models/cliente.model';
 import { ClienteSugerenciasComponent } from '../clientes-sugerencias/clientes-sugerencias';
 
-const PATRON_TEXTO = '^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]{3,}$';
-const PATRON_TELEFONO = '^[0-9]{10,}$';
+const PATRON_TEXTO_PERSONA = '^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]{2,}$';
+const PATRON_TEXTO_COMERCIO = '^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ\\s\\.\\,\\-]{3,}$';
+const PATRON_TELEFONO = '^[0-9\\+\\-\\s]{7,}$';
+
+export type TipoEntidadCliente = 'PERSONA' | 'NEGOCIO';
+
 @Component({
   selector: 'app-crear-cliente',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ClienteSugerenciasComponent, ClienteSugerenciasComponent],
+  imports: [CommonModule, ReactiveFormsModule, ClienteSugerenciasComponent],
   templateUrl: './crear-cliente.html',
   styleUrl: './crear-cliente.css'
 })
 export class CrearClienteComponent {
-  private fb = inject(FormBuilder); 
-  private clientesService = inject(ClientesService);
+  private readonly fb = inject(FormBuilder); 
+  private readonly clientesService = inject(ClientesService);
 
-  
   @Input() set nombreInicial(valor: string) {
     if (valor && !this.clienteId()) {
       this.formularioCliente.patchValue({ nombre: valor });
@@ -37,6 +39,12 @@ export class CrearClienteComponent {
         email: cliente.email || '',
         tipo: cliente.tipo
       });
+
+      if (!cliente.apellido) {
+        this.cambiarTipoEntidad('NEGOCIO');
+      } else {
+        this.cambiarTipoEntidad('PERSONA');
+      }
     } else {
       this.clienteId.set(null);
     }
@@ -45,87 +53,146 @@ export class CrearClienteComponent {
   @Output() clienteGuardado = new EventEmitter<Cliente>();
   @Output() cerrar = new EventEmitter<void>();
 
-  clienteId = signal<number | null>(null);
-  errorBackend = signal<string | null>(null);
-  mensajeExito = signal<string | null>(null);
-  isLoading = signal<boolean>(false);
-  mostrarConfirmacion = signal<boolean>(false);
+  readonly clienteId = signal<number | null>(null);
+  readonly errorBackend = signal<string | null>(null);
+  readonly mensajeExito = signal<string | null>(null);
+  readonly isLoading = signal<boolean>(false);
+  readonly mostrarConfirmacion = signal<boolean>(false);
+  readonly tipoEntidad = signal<TipoEntidadCliente>('PERSONA');
+  readonly mostrarSugerencias = signal<boolean>(false);
 
-  // Signal para guardar la lista de clientes registrados
-  clientesExistentes = signal<Cliente[]>([]);
+  readonly clientesExistentes = signal<Cliente[]>([]);
 
-  constructor() {
-    this.clientesService.obtenerClientes().subscribe({
-      next: (data) => this.clientesExistentes.set(data),
-      error: (err) => console.error('Error al cargar clientes:', err)
-    });
-  }
-
-  formularioCliente: FormGroup = this.fb.group({
-    nombre: ['', [Validators.required, Validators.minLength(3), Validators.pattern(PATRON_TEXTO)]],
-    apellido: ['', [Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]{3,}$')]],
-    telefono: ['', [Validators.required, Validators.pattern(PATRON_TELEFONO), Validators.minLength(10)]],
+  readonly formularioCliente: FormGroup = this.fb.group({
+    nombre: ['', [Validators.required, Validators.minLength(2), Validators.pattern(PATRON_TEXTO_PERSONA)]],
+    apellido: ['', [Validators.required, Validators.minLength(2), Validators.pattern(PATRON_TEXTO_PERSONA)]],
+    telefono: ['', [Validators.required, Validators.pattern(PATRON_TELEFONO), Validators.minLength(7)]],
     direccion: ['', [Validators.required, Validators.minLength(5)]],
     email: ['', [Validators.email]],
-    tipo: ['MINORISTA', [Validators.required]]
+    tipo: [TipoCliente.MINORISTA, [Validators.required]]
   });
 
-  // Escuchamos en tiempo real los cambios de nombre y apellido
-  private nombreValue = toSignal(this.formularioCliente.get('nombre')!.valueChanges, {
+  private readonly nombreValue = toSignal(this.formularioCliente.get('nombre')!.valueChanges, {
     initialValue: this.formularioCliente.get('nombre')?.value || ''
   });
 
-  private apellidoValue = toSignal(this.formularioCliente.get('apellido')!.valueChanges, {
+  private readonly apellidoValue = toSignal(this.formularioCliente.get('apellido')!.valueChanges, {
     initialValue: this.formularioCliente.get('apellido')?.value || ''
   });
 
-  // Lista de coincidencia en tiempo real mientras escribe el nombre
-  coincidenciasNombre = computed(() => {
-    const nomOriginal = this.nombreValue() || '';
-    const nom = (this.nombreValue() || '').trim().toLowerCase();
+  constructor() {
+    this.cargarClientes();
+  }
+
+  private cargarClientes(): void {
+    this.clientesService.obtenerClientes().subscribe({
+      next: (data) => this.clientesExistentes.set(data),
+      error: (err) => console.error('Error al cargar clientes existentes:', err)
+    });
+  }
+
+  cambiarTipoEntidad(tipo: TipoEntidadCliente): void {
+    this.tipoEntidad.set(tipo);
+    const nombreCtrl = this.formularioCliente.get('nombre');
+    const apellidoCtrl = this.formularioCliente.get('apellido');
+
+    if (tipo === 'PERSONA') {
+      nombreCtrl?.setValidators([
+        Validators.required,
+        Validators.minLength(2),
+        Validators.pattern(PATRON_TEXTO_PERSONA)
+      ]);
+      apellidoCtrl?.setValidators([
+        Validators.required,
+        Validators.minLength(2),
+        Validators.pattern(PATRON_TEXTO_PERSONA)
+      ]);
+    } else {
+      nombreCtrl?.setValidators([
+        Validators.required,
+        Validators.minLength(3),
+        Validators.pattern(PATRON_TEXTO_COMERCIO)
+      ]);
+      apellidoCtrl?.setValidators([
+        Validators.required,
+        Validators.minLength(2),
+        Validators.pattern(PATRON_TEXTO_PERSONA)
+      ]);
+    }
+
+    nombreCtrl?.updateValueAndValidity();
+    apellidoCtrl?.updateValueAndValidity();
+  }
+
+  readonly coincidenciasNombre = computed(() => {
+    const nomOriginal = (this.nombreValue() || '').trim();
+    const nom = nomOriginal.toLowerCase();
     if (!nom || nom.length < 2) return [];
 
-    if (nomOriginal.includes(' ')) return [];
+    return this.clientesExistentes().filter(c => 
+      c.nombre.toLowerCase().includes(nom) &&
+      c.id !== this.clienteId()
+    );
+  });
 
-    const existeExacto = this.clientesExistentes().some(c => c.nombre.trim().toLowerCase() === nom);
-    if (existeExacto) return [];
+  readonly homonimosMismoNombre = computed(() => {
+    const nom = (this.nombreValue() || '').trim().toLowerCase();
+    const ape = (this.apellidoValue() || '').trim().toLowerCase();
+
+    if (!nom || nom.length < 2) return [];
 
     return this.clientesExistentes().filter(c => 
-      c.nombre.toLowerCase().includes(nom)
+      c.nombre.trim().toLowerCase() === nom &&
+      (c.apellido || '').trim().toLowerCase() !== ape &&
+      c.id !== this.clienteId()
     );
   });
 
-  // Detección inmediata si el NOMBRE ya existe en la base de datos
-  esNombreIdentico = computed(() => {
+  readonly esHomonimoExacto = computed(() => {
     const nom = (this.nombreValue() || '').trim().toLowerCase();
+    const ape = (this.apellidoValue() || '').trim().toLowerCase();
 
-    if (!nom || nom.length < 3) return false;
+    if (!nom || nom.length < 2 || !ape) return false;
 
     return this.clientesExistentes().some(c => 
-      c.nombre.trim().toLowerCase() === nom
+      c.nombre.trim().toLowerCase() === nom &&
+      (c.apellido || '').trim().toLowerCase() === ape &&
+      c.id !== this.clienteId()
     );
   });
 
+  onInputNombre(): void {
+    this.mostrarSugerencias.set(true);
+  }
+
+  onSeleccionarSugerencia(cliente: Cliente): void {
+    this.formularioCliente.patchValue({
+      nombre: cliente.nombre,
+      apellido: cliente.apellido || ''
+    });
+    this.mostrarSugerencias.set(false);
+  }
+
   solicitarConfirmacion(): void {
-    if (this.formularioCliente.invalid || this.esNombreIdentico()) {
+    if (this.formularioCliente.invalid || this.esHomonimoExacto()) {
       this.formularioCliente.markAllAsTouched();
       return;
     }
   
     this.errorBackend.set(null);
     this.mostrarConfirmacion.set(true);
-}
+  }
 
-cancelarConfirmacion(): void {
-  this.mostrarConfirmacion.set(false);
-}
+  cancelarConfirmacion(): void {
+    this.mostrarConfirmacion.set(false);
+  }
 
-confirmarYGuardar(): void {
-  this.isLoading.set(true);
-  this.errorBackend.set(null);
-  this.mensajeExito.set(null);
+  confirmarYGuardar(): void {
+    this.isLoading.set(true);
+    this.errorBackend.set(null);
+    this.mensajeExito.set(null);
 
-  const datosCliente: Partial<Cliente> = this.formularioCliente.value;
+    const datosCliente: Partial<Cliente> = this.formularioCliente.value;
     const id = this.clienteId();
 
     const operacion$ = id
@@ -142,29 +209,32 @@ confirmarYGuardar(): void {
 
         this.clienteGuardado.emit(clienteResultado);
 
-      setTimeout(() => {
-        this.cerrar.emit();
-      }, 2000);
-    },
-    error: (err) => {
-      this.isLoading.set(false);
-      this.mostrarConfirmacion.set(false);
-      if (err.error && err.error.nombre) {
-        this.errorBackend.set(err.error.nombre[0]);
-      } else {
-        this.errorBackend.set('Ocurrió un error al intentar guardar el cliente.');
+        setTimeout(() => {
+          this.cerrar.emit();
+        }, 1500);
+      },
+      error: (err) => {
+        this.isLoading.set(false);
+        this.mostrarConfirmacion.set(false);
+        const errorMsg =
+          err.error?.nombre?.[0] ||
+          err.error?.apellido?.[0] ||
+          err.error?.detail ||
+          'Ocurrió un error al intentar guardar el cliente.';
+        this.errorBackend.set(errorMsg);
       }
-    }
-  });
-}
+    });
+  }
 
   limpiar(): void {
     this.formularioCliente.reset({
-      tipo: 'MINORISTA'
+      tipo: TipoCliente.MINORISTA
     });
+    this.cambiarTipoEntidad('PERSONA');
     this.errorBackend.set(null);
     this.mensajeExito.set(null);
     this.mostrarConfirmacion.set(false);
+    this.mostrarSugerencias.set(false);
   }
 
   cerrarFormulario(): void {
