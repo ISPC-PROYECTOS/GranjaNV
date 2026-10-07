@@ -6,4 +6,5 @@ export interface MetricasComerciales {
   ganancia_neta_mensual: number;
   evolucion_ventas_meses: Array<{ mes: string; total: number }>;
   tendencia_produccion_meses: Array<{ mes: string; promedio: number}>;
+  nivel_descripcion?: string;
 }

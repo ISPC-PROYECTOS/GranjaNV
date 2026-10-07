@@ -1,5 +1,5 @@
 from decimal import Decimal
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from io import BytesIO
 import pymongo
 
@@ -59,42 +59,101 @@ def obtener_metricas_comerciales(request):
     total_maples_mes = registros_mes.aggregate(total=Sum('total_maples'))['total'] or 0
     
     # Producción diaria promedio de maples
-    produccion_diaria_promedio = Decimal(total_maples_mes) / Decimal(dias_transcurridos)   # Total de gallinas activas en la granja
+    produccion_diaria_promedio = round( Decimal(total_maples_mes) / Decimal(dias_transcurridos), 2)   # Total de gallinas activas en la granja
     total_gallinas_activas = Galpon.objects.filter(activo=True).aggregate(
         total=Sum('cantidad_actual_gallinas')
     )['total'] or 0
 
-    # Cálculo del Porcentaje de Postura: 
-    # (Total de Huevos Producidos / Total de Gallinas Vivas) * 100
-    # Cada maple equivale a 30 huevos.
     porcentaje_postura = Decimal('0.00')
     if total_gallinas_activas > 0 and dias_transcurridos > 0:
         total_huevos_mes = total_maples_mes * 30
-        #huevos_por_ave_dia = Decimal(total_huevos_mes) / Decimal(total_gallinas_activas * dias_transcurridos)
+        
         porcentaje_postura = round(Decimal(total_huevos_mes) / (Decimal(total_gallinas_activas * dias_transcurridos)) * Decimal('100.00'), 2)
-        # huevos_por_dia = Decimal(total_huevos_mes) / Decimal(dias_transcurridos)
-        # porcentaje_postura = round(Decimal(total_huevos_mes) / Decimal(total_gallinas_activas) * Decimal('100.00'), 2)
+        
 
-    # Generar tendencia de producción de los últimos meses reales
+# 1. Capturar parámetros de fecha opcionales desde el query string (?fecha_desde=...&fecha_hasta=...)
+    str_fecha_desde = request.GET.get('fecha_desde')
+    str_fecha_hasta = request.GET.get('fecha_hasta')
+
     tendencia_produccion_meses = []
-
     nombres_meses_es = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
-    
-    # Ejemplo básico para poblar el gráfico con los datos del año actual
-    for m in range(1, mes_actual + 1):
-        # Calculamos el total del mes m
-        maples_mes_m = RegistroProduccion.objects.filter(
-            fecha__year=anio_actual,
-            fecha__month=m
-        ).aggregate(total=Sum('total_maples'))['total'] or 0
-        
-        # Obtenemos el nombre abreviado del mes (ej: 'Ene', 'Feb', etc.)
-        nombre_mes = nombres_meses_es[m - 1]
-        
-        tendencia_produccion_meses.append({
-            'mes': nombre_mes,
-            'promedio': float(maples_mes_m)
-        })
+    nivel_descripcion = "Vista mensual"
+    if str_fecha_desde and str_fecha_hasta:
+        try:
+            f_desde = datetime.strptime(str_fecha_desde, '%Y-%m-%d').date()
+            f_hasta = datetime.strptime(str_fecha_hasta, '%Y-%m-%d').date()
+            delta_dias = (f_hasta - f_desde).days
+
+            # NIVEL 1: Por Día (Rango corto <= 31 días)
+            if delta_dias <= 31:
+                nivel_descripcion = "Vista diaria"
+                fecha_cursor = f_desde
+                while fecha_cursor <= f_hasta:
+                    maples_dia = RegistroProduccion.objects.filter(fecha=fecha_cursor).aggregate(total=Sum('total_maples'))['total'] or 0
+                    tendencia_produccion_meses.append({
+                        'mes': fecha_cursor.strftime('%d/%m'),
+                        'promedio': float(maples_dia)
+                    })
+                    fecha_cursor += timedelta(days=1)
+
+            # NIVEL 2: Por Semana / Intervalos de 7 días (Rango intermedio entre 32 y 120 días)
+            elif delta_dias <= 120:
+                nivel_descripcion = "Vista semanal"
+                fecha_cursor = f_desde
+                semana_num = 1
+                while fecha_cursor <= f_hasta:
+                    fin_semana = min(fecha_cursor + timedelta(days=6), f_hasta)
+                    maples_semana = RegistroProduccion.objects.filter(
+                        fecha__gte=fecha_cursor,
+                        fecha__lte=fin_semana
+                    ).aggregate(total=Sum('total_maples'))['total'] or 0
+                    
+                    tendencia_produccion_meses.append({
+                        'mes': fecha_cursor.strftime("%d/%m"),
+                        'promedio': float(maples_semana)
+                    })
+                    fecha_cursor = fin_semana + timedelta(days=1)
+                    semana_num += 1
+
+            # NIVEL 3: Por Mes (Rango largo > 120 días)
+            else:
+                nivel_descripcion = "Vista mensual"
+                fecha_cursor = f_desde.replace(day=1)
+                while fecha_cursor <= f_hasta:
+                    m_year = fecha_cursor.year
+                    m_month = fecha_cursor.month
+                    maples_m = RegistroProduccion.objects.filter(
+                        fecha__year=m_year,
+                        fecha__month=m_month
+                    ).aggregate(total=Sum('total_maples'))['total'] or 0
+                    
+                    nombre_etiqueta = f"{nombres_meses_es[m_month - 1]} {m_year}" if m_year != anio_actual else nombres_meses_es[m_month - 1]
+                    tendencia_produccion_meses.append({
+                        'mes': nombre_etiqueta,
+                        'promedio': float(maples_m)
+                    })
+                    # Avanzar al siguiente mes
+                    if m_month == 12:
+                        fecha_cursor = fecha_cursor.replace(year=m_year + 1, month=1)
+                    else:
+                        fecha_cursor = fecha_cursor.replace(month=m_month + 1)
+
+        except ValueError:
+            # Fallback por seguridad si el formato de fecha no es válido
+            pass
+
+    # Si no se mandaron fechas o falló el parseo, se mantiene el comportamiento por defecto (año actual mes a mes)
+    if not tendencia_produccion_meses:
+        for m in range(1, mes_actual + 1):
+            maples_mes_m = RegistroProduccion.objects.filter(
+                fecha__year=anio_actual,
+                fecha__month=m
+            ).aggregate(total=Sum('total_maples'))['total'] or 0
+            
+            tendencia_produccion_meses.append({
+                'mes': nombres_meses_es[m - 1],
+                'promedio': float(maples_mes_m)
+            })
 
 
     # Datos estructurados para el serializador
@@ -106,6 +165,7 @@ def obtener_metricas_comerciales(request):
         'ganancia_neta_mensual': ganancia_neta,
         'evolucion_ventas_meses': [{'mes': 'Mes actual', 'total': float(total_ventas)}],
         'tendencia_produccion_meses': tendencia_produccion_meses,
+        'nivel_descripcion': nivel_descripcion,
     }
 
     serializer = MetricasComercialesSerializer(data=datos_calculados)

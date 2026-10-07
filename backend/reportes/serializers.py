@@ -16,3 +16,5 @@ class MetricasComercialesSerializer(serializers.Serializer):
         child=serializers.DictField(),
         help_text="Lista con el promedio de producción agrupado por mes"
     )
+    nivel_descripcion = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+                                              
