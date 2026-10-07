@@ -19,8 +19,8 @@
       (click)="filtroEstado.set('todos')">Todos</button>
     <button type="button" class="btn btn-sm btn-limpiar" [class.active]="filtroEstado() === 'activos'"
       (click)="filtroEstado.set('activos')">Activos</button>
-    <button type="button" class="btn btn-sm btn-limpiar" [class.active]="filtroEstado() === 'suspendidos'"
-      (click)="filtroEstado.set('suspendidos')">Suspendidos</button>
+    <button type="button" class="btn btn-sm btn-limpiar" [class.active]="filtroEstado() === 'inactivos'"
+      (click)="filtroEstado.set('inactivos')">Inactivos</button>
   </div>
 
   <div class="list-group" aria-live="polite" [attr.aria-busy]="cargando()">
@@ -43,7 +43,7 @@
                 <span class="badge rounded-pill" [class.bg-success-subtle]="cliente.activo"
                   [class.text-success-emphasis]="cliente.activo" [class.bg-secondary-subtle]="!cliente.activo"
                   [class.text-secondary-emphasis]="!cliente.activo">
-                  {{ cliente.activo ? 'Activo' : 'Suspendido' }}
+                  {{ cliente.activo ? 'Activo' : 'Inactivo' }}
                 </span>
               </div>
             </div>
@@ -59,7 +59,7 @@
             <button type="button" class="btn" [class.btn-guardar]="!cliente.activo"
               [class.btn-modal-cancelar]="cliente.activo" [disabled]="actualizandoEstadoId() !== null"
               (click)="cambiarEstado(cliente)">
-              {{ actualizandoEstadoId() === cliente.id ? 'Actualizando...' : (cliente.activo ? 'Suspender' : 'Activar') }}
+              {{ actualizandoEstadoId() === cliente.id ? 'Actualizando...' : (cliente.activo ? 'Desactivar' : 'Activar') }}
             </button>
           </div>
         </article>

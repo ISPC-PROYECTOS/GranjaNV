@@ -11,6 +11,49 @@
   line-height: 1;
 }
 
+.galpon-modal {
+  max-width: 800px;
+  color: var(--color-blanco);
+  background-color: var(--color-primario);
+  border: none;
+  border-radius: 27px;
+  padding: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  text-align: left;
+}
+
+.galpon-modal > header h4 {
+  color: var(--color-blanco);
+  font-family: var(--font-titulos);
+  font-size: 30px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.galpon-modal .btn-close {
+  filter: brightness(0) invert(1);
+  opacity: 1;
+}
+
+.galpon-modal .galpon-formulario {
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .galpon-modal {
+  color: var(--color-negro);
+  background-color: var(--color-blanco);
+  border: 1px solid var(--color-gris-medio);
+}
+
+:host-context(body.dark-mode) .galpon-modal > header h4 {
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .galpon-modal .btn-close {
+  filter: none;
+  opacity: 1;
+}
+
 @media (max-width: 380px) {
   section[aria-labelledby="titulo-galpones"] > header {
     gap: 0.75rem !important;
@@ -116,6 +159,7 @@
     max-height: calc(100vh - 2rem);
     max-height: calc(100dvh - 2rem);
     padding: 1rem;
+    border-radius: 20px;
     overflow-y: auto;
     overscroll-behavior: contain;
   }
@@ -127,7 +171,7 @@
 
   .galpon-modal > header h4 {
     padding-right: 2rem;
-    font-size: 1rem;
+    font-size: 1.35rem;
     overflow-wrap: anywhere;
   }
 
@@ -151,9 +195,14 @@
 @media (max-width: 380px) {
   .galpon-modal {
     padding: 0.75rem;
+    border-radius: 16px;
   }
 
   .galpon-modal .galpon-formulario {
     padding: 0.625rem !important;
+  }
+
+  .galpon-modal > header h4 {
+    font-size: 1.2rem;
   }
 }

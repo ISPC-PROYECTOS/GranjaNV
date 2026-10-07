@@ -40,6 +40,52 @@
   z-index: 2;
 }
 
+.usuario-alta-modal,
+.usuario-edicion-modal {
+  max-width: 800px;
+  color: var(--color-blanco);
+  background-color: var(--color-primario);
+  border: none;
+  border-radius: 27px;
+  padding: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.usuario-edicion-modal > header h4 {
+  color: var(--color-blanco);
+  font-family: var(--font-titulos);
+  font-size: 30px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.usuario-edicion-modal .gestion-formulario {
+  color: var(--color-negro);
+}
+
+.usuario-alta-modal .btn-close,
+.usuario-edicion-modal .btn-close {
+  filter: brightness(0) invert(1);
+  opacity: 1;
+}
+
+:host-context(body.dark-mode) .usuario-alta-modal,
+:host-context(body.dark-mode) .usuario-edicion-modal {
+  color: var(--color-negro);
+  background-color: var(--color-blanco);
+  border: 1px solid var(--color-gris-medio);
+}
+
+:host-context(body.dark-mode) .usuario-edicion-modal > header h4 {
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .usuario-alta-modal .btn-close,
+:host-context(body.dark-mode) .usuario-edicion-modal .btn-close {
+  filter: none;
+  opacity: 1;
+}
+
 @media (max-width: 575px) {
   .usuarios-nuevo {
     align-self: stretch !important;
@@ -77,6 +123,7 @@
   .usuario-eliminar-modal,
   .usuario-edicion-modal {
     padding: 1rem;
+    border-radius: 20px;
     max-height: calc(100dvh - 2rem);
     overflow-y: auto;
   }
@@ -96,11 +143,25 @@
     width: 100%;
     min-width: 0;
   }
+
+  .usuario-edicion-modal > header h4 {
+    font-size: 1.35rem;
+  }
 }
 
 @media (max-width: 380px) {
+  .usuario-alta-modal,
+  .usuario-edicion-modal {
+    padding: 0.75rem;
+    border-radius: 16px;
+  }
+
   .usuario-fila {
     padding: 0.625rem;
+  }
+
+  .usuario-edicion-modal > header h4 {
+    font-size: 1.2rem;
   }
 
   .usuario-principal {

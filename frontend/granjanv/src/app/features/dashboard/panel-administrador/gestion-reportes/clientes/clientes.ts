@@ -19,12 +19,12 @@ export class Clientes implements OnInit {
   readonly error = signal<string | null>(null);
   readonly modalAbierto = signal(false);
   readonly clienteEdicion = signal<Cliente | null>(null);
-  readonly filtroEstado = signal<'todos' | 'activos' | 'suspendidos'>('todos');
+  readonly filtroEstado = signal<'todos' | 'activos' | 'inactivos'>('todos');
   readonly actualizandoEstadoId = signal<number | null>(null);
   readonly clientesVisibles = computed(() => {
     const filtro = this.filtroEstado();
     if (filtro === 'activos') return this.clientes().filter((cliente) => cliente.activo);
-    if (filtro === 'suspendidos') return this.clientes().filter((cliente) => !cliente.activo);
+    if (filtro === 'inactivos') return this.clientes().filter((cliente) => !cliente.activo);
     return this.clientes();
   });
 
@@ -82,7 +82,7 @@ export class Clientes implements OnInit {
         this.actualizandoEstadoId.set(null);
       },
       error: () => {
-        this.error.set(`No se pudo ${cliente.activo ? 'suspender' : 'activar'} el cliente.`);
+        this.error.set(`No se pudo ${cliente.activo ? 'desactivar' : 'activar'} el cliente.`);
         this.actualizandoEstadoId.set(null);
       },
     });
