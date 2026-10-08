@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     "produccion",
     "home",
     "reportes",
+    "notificaciones",
 ]
 
 MIDDLEWARE = [

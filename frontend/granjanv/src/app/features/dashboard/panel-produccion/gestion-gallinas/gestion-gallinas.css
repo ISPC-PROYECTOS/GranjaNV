@@ -45,8 +45,12 @@
 .header-subtexto {
   font-family: var(--font-textos);
   font-size: 12px;
-  color: var(--color-gris-oscuro);
+  color: var(--color-negro);
   margin-top: 2px;
+}
+/*Modo oscuro*/
+body.dark-mode .header-subtexto{
+  color: var(--color-gris-oscuro);
 }
 
 .icono-chevron.rotado {

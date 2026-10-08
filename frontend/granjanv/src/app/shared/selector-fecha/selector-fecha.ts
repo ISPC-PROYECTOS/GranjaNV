@@ -1,4 +1,4 @@
-import { Component, OnInit, output, input, ElementRef, inject } from '@angular/core';
+import { Component, OnInit, Input, output, input, ElementRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { obtenerRangoMesActual } from '../../core/utils/date.utils';
@@ -17,25 +17,36 @@ export interface RangoFechaSeleccionado {
 })
 export class SelectorFecha implements OnInit {
   private elementRef = inject(ElementRef);
+  @Input() permitirTodos: boolean = false;
   cambioRango = output<RangoFechaSeleccionado>();
   modoSeleccion = input(false);
   seleccionar = output<void>();
 
-  tipoFiltro: 'mes' | 'rango' = 'mes';
+  tipoFiltro: 'todos' | 'mes' | 'rango' = 'mes';
   mesSeleccionado: string = '';
   fechaDesde: string = '';
   fechaHasta: string = '';
 
   ngOnInit(): void {
-    const rango = obtenerRangoMesActual();
-    this.mesSeleccionado = rango.fechaDesde.slice(0, 7);
-    this.fechaDesde = rango.fechaDesde;
-    this.fechaHasta = rango.fechaHasta;
-    this.cambioRango.emit(rango);
+    if (this.permitirTodos) {
+      this.tipoFiltro = 'todos';
+      this.cambioRango.emit({ fechaDesde: '', fechaHasta: '' });
+    } else {
+      const rango = obtenerRangoMesActual();
+      this.mesSeleccionado = rango.fechaDesde.slice(0, 7);
+      this.fechaDesde = rango.fechaDesde;
+      this.fechaHasta = rango.fechaHasta;
+      this.cambioRango.emit(rango);
+    }
   }
 
   onCambioTipo(): void {
-    if (this.tipoFiltro === 'mes') {
+    if (this.tipoFiltro === 'todos') {
+      this.cambioRango.emit({ fechaDesde: '', fechaHasta: '' });
+    } else if (this.tipoFiltro === 'mes') {
+      if (!this.mesSeleccionado) {
+        this.mesSeleccionado = obtenerRangoMesActual().fechaDesde.slice(0, 7);
+      }
       this.onCambioMes();
     } else {
       this.aplicarRango();
@@ -60,14 +71,21 @@ export class SelectorFecha implements OnInit {
   }
 
   restablecerFiltro(): void {
-    const rango = obtenerRangoMesActual();
+    if (this.permitirTodos) {
+      this.tipoFiltro = 'todos';
+      this.fechaDesde = '';
+      this.fechaHasta = '';
+      this.cambioRango.emit({ fechaDesde: '', fechaHasta: '' });
+    } else {
+      const rango = obtenerRangoMesActual();
 
-    this.tipoFiltro = 'mes';
-    this.mesSeleccionado = rango.fechaDesde.slice(0, 7);
-    this.fechaDesde = rango.fechaDesde;
-    this.fechaHasta = rango.fechaHasta;
+      this.tipoFiltro = 'mes';
+      this.mesSeleccionado = rango.fechaDesde.slice(0, 7);
+      this.fechaDesde = rango.fechaDesde;
+      this.fechaHasta = rango.fechaHasta;
 
-    this.cambioRango.emit(rango);
+      this.cambioRango.emit(rango);
+    }
   }
 
   confirmarSeleccion(): void {

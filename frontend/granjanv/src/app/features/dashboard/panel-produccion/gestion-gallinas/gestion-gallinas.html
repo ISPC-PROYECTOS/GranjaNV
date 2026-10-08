@@ -113,15 +113,14 @@
 
           <!-- Detalle o Causa -->
           <div class="mb-3">
-            <label for="mov-desc" class="form-label">Causa o detalle del incidente *</label>
+            <label for="descripcion-movimiento" class="form-label">Descripción / Detalle *</label>
             <input
-              id="mov-desc"
+              id="descripcion-movimiento"
               type="text"
               class="form-control"
-              placeholder="Ej. Incidente térmico, predación, lote nuevo, etc."
-              [ngModel]="descripcionIncidente()"
-              (ngModelChange)="descripcionIncidente.set($event)"
-              name="descripcionIncidente"
+              placeholder="Ej: Muerte natural, descarte, etc."
+              [value]="descripcionIncidente()"
+              (input)="actualizarDescripcion($event)"
             />
           </div>
 

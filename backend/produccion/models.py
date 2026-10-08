@@ -3,6 +3,7 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils import timezone
 from pedidos.models import ItemPedido
+from django.conf import settings
 
 
 class Galpon(models.Model):
@@ -66,11 +67,19 @@ class MovimientoGallina(models.Model):
         related_name="movimientos_gallinas",
         db_index=True,
     )
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='movimientos_gallinas',
+        db_index=True,
+    )
     fecha = models.DateField(default=timezone.localdate, db_index=True)
     tipo_movimiento = models.CharField(max_length=10, choices=TipoMovimiento.choices)
     motivo_movimiento = models.CharField(max_length=20, choices=MotivoMovimiento.choices)
     cantidad_gallinas = models.PositiveIntegerField(validators=[MinValueValidator(1)])
-    descripcion_movimiento = models.CharField(max_length=255, blank=True, default="")
+    descripcion_movimiento = models.CharField(max_length=255, help_text="Detalle o motivo específico del movimiento de aves.",)
     creado_en = models.DateTimeField(auto_now_add=True)
     actualizado_en = models.DateTimeField(auto_now=True)
 

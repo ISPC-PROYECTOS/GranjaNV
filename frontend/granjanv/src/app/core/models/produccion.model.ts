@@ -44,7 +44,7 @@ export interface MovimientoGallinaPayload {
   tipo_movimiento: TipoMovimientoGallina;
   motivo_movimiento: MotivoMovimientoGallina;
   cantidad_gallinas: number;
-  descripcion_movimiento?: string;
+  descripcion_movimiento: string;
 }
 
 export interface DatosProduccion {
