@@ -45,14 +45,16 @@ def verificar_pedidos_pendientes_del_dia(usuario: Usuario) -> None:
 
 
 def notificar_movimiento_gallinas_a_admins(movimiento, usuario_creador: Usuario) -> None:
-    """Notifica a todos los administradores cuando un empleado registra un movimiento."""
-    if usuario_creador.rol == 'Administrador' or usuario_creador.is_superuser:
-        return
-
+    """
+    Notifica a los administradores activos excepto al propio usuario que realizó la carga.
+    """
     administradores = Usuario.objects.filter(
-        models.Q(rol='Administrador') | models.Q(is_superuser=True),
+        models.Q(rol__iexact='Administrador') | models.Q(is_superuser=True),
         is_active=True,
-    ).distinct()
+    ).exclude(pk=usuario_creador.pk).distinct()
+
+    if not administradores.exists():
+        return
 
     notificaciones = [
         Notificacion(
@@ -73,5 +75,4 @@ def notificar_movimiento_gallinas_a_admins(movimiento, usuario_creador: Usuario)
         for admin in administradores
     ]
 
-    if notificaciones:
-        Notificacion.objects.bulk_create(notificaciones)
+    Notificacion.objects.bulk_create(notificaciones)

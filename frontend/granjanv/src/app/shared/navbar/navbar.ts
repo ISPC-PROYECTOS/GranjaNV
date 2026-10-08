@@ -5,6 +5,7 @@ import {
   inject,
   signal,
   computed,
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -52,6 +53,15 @@ export class NavbarComponent implements OnInit {
   cargandoClima = signal<boolean>(true);
   detallesAbiertos = signal<boolean>(false);
 
+  constructor() {
+    // Reacciona en tiempo real cuando cambia el estado de autenticación/rol
+    effect(() => {
+      if (this.isAdmin()) {
+        this.notificacionesService.cargarNotificaciones();
+      }
+    });
+  }
+
   ngOnInit(): void {
     const modoGuardado = localStorage.getItem('modoOscuro') === 'true';
     this.modoOscuro.set(modoGuardado);
@@ -59,10 +69,6 @@ export class NavbarComponent implements OnInit {
 
     this.obtenerFechaFormateada();
     this.cargarDatosClima();
-
-    if (this.isAdmin()) {
-      this.notificacionesService.cargarNotificaciones();
-    }
   }
 
   togglePanelNotificaciones(): void {
