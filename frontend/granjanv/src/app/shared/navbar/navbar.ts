@@ -54,13 +54,14 @@ export class NavbarComponent implements OnInit {
   detallesAbiertos = signal<boolean>(false);
 
   constructor() {
-    // Reacciona en tiempo real cuando cambia el estado de autenticación/rol
-    effect(() => {
-      if (this.isAdmin()) {
-        this.notificacionesService.cargarNotificaciones();
-      }
-    });
-  }
+  effect(() => {
+    if (this.isAdmin()) {
+      this.notificacionesService.iniciarPolling();
+    } else {
+      this.notificacionesService.detenerPolling();
+    }
+  });
+}
 
   ngOnInit(): void {
     const modoGuardado = localStorage.getItem('modoOscuro') === 'true';
@@ -167,6 +168,7 @@ export class NavbarComponent implements OnInit {
   }
 
   cerrarSesion(): void {
+    this.notificacionesService.detenerPolling();
     this.authService.logout();
   }
 }

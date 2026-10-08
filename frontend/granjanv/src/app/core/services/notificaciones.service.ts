@@ -1,6 +1,7 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Injectable, computed, inject, signal, DestroyRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, Subscription, timer, tap, switchMap, filter } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Notificacion } from '../models/notificacion.model';
 
 @Injectable({
@@ -8,7 +9,11 @@ import { Notificacion } from '../models/notificacion.model';
 })
 export class NotificacionesService {
   private readonly http = inject(HttpClient);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly apiUrl = 'http://localhost:8000/api/notificaciones/';
+
+  private pollingSub: Subscription | null = null;
+  private readonly INTERVALO_POLLING_MS = 15000; // 15 segundos
 
   readonly notificaciones = signal<Notificacion[]>([]);
   readonly cargando = signal<boolean>(false);
@@ -16,6 +21,32 @@ export class NotificacionesService {
   readonly noLeidasCount = computed<number>(() =>
     this.notificaciones().filter((n) => !n.leida).length
   );
+
+  /**
+   * Inicia la sincronización periódica en segundo plano.
+   */
+  iniciarPolling(): void {
+    if (this.pollingSub) return;
+
+    this.pollingSub = timer(0, this.INTERVALO_POLLING_MS)
+      .pipe(
+        // Pausa las peticiones si la pestaña del navegador no está visible
+        filter(() => document.visibilityState === 'visible'),
+        switchMap(() => this.http.get<Notificacion[]>(this.apiUrl)),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        next: (items) => this.notificaciones.set(items),
+        error: (err: unknown) => console.error('Error en polling de notificaciones:', err)
+      });
+  }
+
+  detenerPolling(): void {
+    if (this.pollingSub) {
+      this.pollingSub.unsubscribe();
+      this.pollingSub = null;
+    }
+  }
 
   cargarNotificaciones(): void {
     this.cargando.set(true);
