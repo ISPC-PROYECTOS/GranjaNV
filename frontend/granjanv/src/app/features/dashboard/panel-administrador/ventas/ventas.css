@@ -268,7 +268,7 @@
 
 .btn-toggle-cerrados {
   display: grid;
-  grid-template-columns: 48px minmax(0, 1fr) auto 20px;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 12px;
   background-color: var(--color-primario-claro);
@@ -358,7 +358,7 @@
 
 @media (max-width: 575px) {
   .btn-toggle-cerrados {
-    grid-template-columns: 40px minmax(0, 1fr) auto 16px;
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: 8px;
     padding: 10px;
   }
