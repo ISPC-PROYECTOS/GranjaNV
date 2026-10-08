@@ -20,6 +20,11 @@ from pedidos.models import Pedido, ItemPedido
 from produccion.models import ItemProduccionHuevo, RegistroProduccion, Galpon, MovimientoGallina
 from users.permissions import IsAdminRole
 
+from pathlib import Path
+from reportlab.lib.utils import ImageReader
+
+from openpyxl.drawing.image import Image as ExcelImage
+
 def obtener_datos_finanzas(fecha_desde, fecha_hasta):
     ventas = Pedido.objects.filter(estado_pago=True)
     gastos = Gasto.objects.all()
@@ -160,10 +165,33 @@ def obtener_datos_produccion(fecha_desde, fecha_hasta):
     }
 
 def verificar_espacio_pdf(pdf, y, espacio_necesario=60):
-    if y < espacio_necesario:
+    margen_inferior = 50
+
+    if y - espacio_necesario < margen_inferior:
+        pdf.showPage()
         return 800
 
     return y
+
+def agregar_logo_pdf(pdf):
+    ruta_logo = Path(__file__).resolve().parent / "assets" / "logo-granja.png"
+
+    pdf.drawImage(
+        ImageReader(str(ruta_logo)),
+        480, 755,
+        width=60,
+        height=60,
+        mask="auto",
+    )
+
+def agregar_logo_excel(hoja):
+    ruta_logo = Path(__file__).resolve().parent / "assets" / "logo-granja.png"
+
+    imagen = ExcelImage(str(ruta_logo))
+    imagen.width = 65
+    imagen.height = 65
+
+    hoja.add_image(imagen, "D1")
 
 def agregar_finanzas_pdf(pdf, datos, y):
     pdf.setFont("Helvetica-Bold", 12)
@@ -484,6 +512,8 @@ def exportar_produccion_pdf(request):
     pdf = canvas.Canvas(buffer, pagesize=A4)
     pdf.setTitle("Reporte de Producción")
 
+    agregar_logo_pdf(pdf)
+
     pdf.setFont("Helvetica-Bold", 18)
     pdf.drawString(50, 790, "Reporte de Producción")
 
@@ -530,6 +560,8 @@ def exportar_produccion_excel(request):
     workbook = Workbook()
     hoja = workbook.active
     hoja.title = "Producción"
+
+    agregar_logo_excel(hoja)
 
     hoja.append(["Reporte de Producción"])
     hoja.append(["Período", f"{fecha_desde} al {fecha_hasta}"])
@@ -579,6 +611,8 @@ def exportar_finanzas_pdf(request):
     pdf = canvas.Canvas(buffer, pagesize=A4)
     pdf.setTitle("Reporte de Finanzas")
 
+    agregar_logo_pdf(pdf)
+
     pdf.setFont("Helvetica-Bold", 18)
     pdf.drawString(50, 790, "Reporte de Finanzas")
 
@@ -625,6 +659,8 @@ def exportar_finanzas_excel(request):
     workbook = Workbook()
     hoja = workbook.active
     hoja.title = "Finanzas"
+
+    agregar_logo_excel(hoja)
 
     hoja.append(["Reporte de Finanzas"])
     hoja.append(["Período", f"{fecha_desde} al {fecha_hasta}"])
@@ -679,6 +715,8 @@ def exportar_completo_pdf(request):
 
     pdf = canvas.Canvas(buffer, pagesize=A4)
     pdf.setTitle("INFORME COMPLETO")
+
+    agregar_logo_pdf(pdf)
 
     pdf.setFont("Helvetica-Bold", 18)
     pdf.drawString(50, 790, "INFORME COMPLETO")
@@ -740,6 +778,8 @@ def exportar_completo_excel(request):
     hoja_finanzas = workbook.active
     hoja_finanzas.title = "Finanzas"
 
+    agregar_logo_excel(hoja_finanzas)
+
     hoja_finanzas.append(["Informe Completo - Finanzas"])
     hoja_finanzas.append(
         ["Período", f"{fecha_desde} al {fecha_hasta}"]
@@ -750,6 +790,8 @@ def exportar_completo_excel(request):
 
     # Hoja Producción
     hoja_produccion = workbook.create_sheet("Producción")
+
+    agregar_logo_excel(hoja_produccion)
 
     hoja_produccion.append(["Informe Completo - Producción"])
     hoja_produccion.append(
