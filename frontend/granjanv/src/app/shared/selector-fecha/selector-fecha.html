@@ -1,14 +1,21 @@
 <div class="dropdown">
-  <button type="button" class="selector-fecha-caja" data-bs-toggle="dropdown" data-bs-auto-close="outside"
-    aria-expanded="false" title="Filtrar por fecha">
-    <i class="hgi-stroke hgi-calendar-01"> </i>
+  <button
+    type="button"
+    class="selector-fecha-caja"
+    data-bs-toggle="dropdown"
+    data-bs-auto-close="outside"
+    aria-expanded="false"
+    title="Filtrar por fecha"
+  >
+    <i class="hgi-stroke hgi-calendar-01"></i>
   </button>
 
   <div class="dropdown-menu dropdown-menu-end p-3 panel-filtro-fechas shadow">
     <div class="mb-2">
       <label class="form-label mb-1">Tipo de filtro</label>
+
       <select class="form-select form-select-sm" [(ngModel)]="tipoFiltro" (change)="onCambioTipo()">
-        @if (permitirTodos){
+        @if (permitirTodos) {
           <option value="todos">Todos</option>
         }
         <option value="mes">Por mes</option>
@@ -17,31 +24,32 @@
     </div>
 
     @if (tipoFiltro === 'mes') {
-    <div>
-      <label class="form-label mb-1">Mes</label>
-      <input type="month" class="form-control form-control-sm" [(ngModel)]="mesSeleccionado" (change)="onCambioMes()" />
-    </div>
-    } @else if(tipoFiltro === 'rango'){
-    <div class="d-flex flex-column gap-2">
       <div>
-        <label class="form-label mb-1">Desde</label>
-        <input type="date" class="form-control form-control-sm" [(ngModel)]="fechaDesde" (change)="aplicarRango()" />
+        <label class="form-label mb-1">Mes</label>
+        <input type="month" class="form-control form-control-sm" [(ngModel)]="mesSeleccionado" />
       </div>
-      <div>
-        <label class="form-label mb-1">Hasta</label>
-        <input type="date" class="form-control form-control-sm" [(ngModel)]="fechaHasta" (change)="aplicarRango()" />
+    } @else if (tipoFiltro === 'rango') {
+      <div class="d-flex flex-column gap-2">
+        <div>
+          <label class="form-label mb-1">Desde</label>
+          <input type="date" class="form-control form-control-sm" [(ngModel)]="fechaDesde" />
+        </div>
+
+        <div>
+          <label class="form-label mb-1">Hasta</label>
+          <input type="date" class="form-control form-control-sm" [(ngModel)]="fechaHasta" />
+        </div>
       </div>
-    </div>
     }
 
-    @if (modoSeleccion()) {
-    <button type="button" class="btn-restablecer-filtro" (click)="confirmarSeleccion()">
-      Seleccionar
-    </button>
-    } @else {
-    <button type="button" class="btn-restablecer-filtro" (click)="restablecerFiltro()">
-      Restablecer
-    </button>
-    }
+    <div class="d-flex gap-2 mt-3">
+      <button type="button" class="btn-restablecer-filtro" (click)="restablecerFiltro()">
+        Restablecer
+      </button>
+
+      <button type="button" class="btn-restablecer-filtro" (click)="confirmarSeleccion()">
+        Seleccionar
+      </button>
+    </div>
   </div>
 </div>
