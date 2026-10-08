@@ -1,18 +1,10 @@
-import {
-  Component,
-  OnInit,
-  ElementRef,
-  inject,
-  signal,
-  computed,
-  effect,
-} from '@angular/core';
+import { Component, OnInit, ElementRef, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/services/auth-service';
 import { WeatherService } from '../../core/services/weather-service';
 import { NotificacionesService } from '../../core/services/notificaciones.service';
-import { WeatherData } from '../../core/models/weather';
+import { WeatherData, PronosticoDiario } from '../../core/models/weather';
 import { Notificacion } from '../../core/models/notificacion.model';
 
 @Component({
@@ -53,15 +45,19 @@ export class NavbarComponent implements OnInit {
   cargandoClima = signal<boolean>(true);
   detallesAbiertos = signal<boolean>(false);
 
+  pronosticoSemanal = signal<PronosticoDiario[]>([]);
+  pronosticoAbierto = signal<boolean>(false);
+  cargandoPronostico = signal<boolean>(false);
+
   constructor() {
-  effect(() => {
-    if (this.isAdmin()) {
-      this.notificacionesService.iniciarPolling();
-    } else {
-      this.notificacionesService.detenerPolling();
-    }
-  });
-}
+    effect(() => {
+      if (this.isAdmin()) {
+        this.notificacionesService.iniciarPolling();
+      } else {
+        this.notificacionesService.detenerPolling();
+      }
+    });
+  }
 
   ngOnInit(): void {
     const modoGuardado = localStorage.getItem('modoOscuro') === 'true';
@@ -155,6 +151,33 @@ export class NavbarComponent implements OnInit {
     if (!this.cargandoClima() && this.clima()) {
       this.detallesAbiertos.update((v) => !v);
     }
+  }
+
+  togglePronosticoSemanal(): void {
+    this.pronosticoAbierto.update((abierto) => !abierto);
+
+    if (this.pronosticoAbierto() && this.pronosticoSemanal().length === 0) {
+      this.cargandoPronostico.set(true);
+
+      this.weatherService.getPronosticoSemanal().subscribe({
+        next: (datos) => {
+          this.pronosticoSemanal.set(datos);
+          this.cargandoPronostico.set(false);
+        },
+        error: () => {
+          this.cargandoPronostico.set(false);
+        },
+      });
+    }
+  }
+
+  formatearFechaPronostico(fecha: string): string {
+    const [anio, mes, dia] = fecha.split('-').map(Number);
+    const fechaLocal = new Date(anio, mes - 1, dia);
+
+    const dias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+
+    return `${dias[fechaLocal.getDay()]} ${String(dia).padStart(2, '0')}/${String(mes).padStart(2, '0')}`;
   }
 
   esVistaLogin(): boolean {

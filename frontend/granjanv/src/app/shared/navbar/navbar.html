@@ -1,6 +1,5 @@
 <header class="navbar-wrapper my-3 mx-3">
   <nav class="navbar-card p-2 px-3 shadow-sm">
-
     <!-- BLOQUE IZQUIERDO: Logo -->
     <div class="navbar-logo">
       <a class="navbar-brand m-0" href="#">
@@ -10,77 +9,127 @@
 
     <!-- BLOQUE CENTRAL: Clima Interactivo + Fecha -->
     <div class="navbar-info">
-
       <!-- Widget de Clima Expandible -->
       <div class="weather-widget-container position-relative">
-        <button type="button" class="info-pill weather-pill btn border-0 px-3 py-1 d-flex align-items-center gap-2"
-          [class.active]="detallesAbiertos()" (click)="toggleDetallesClima()" [disabled]="cargandoClima()"
-          aria-label="Ver detalles del clima">
-
+        <button
+          type="button"
+          class="info-pill weather-pill btn border-0 px-3 py-1 d-flex align-items-center gap-2"
+          [class.active]="detallesAbiertos()"
+          (click)="toggleDetallesClima()"
+          [disabled]="cargandoClima()"
+          aria-label="Ver detalles del clima"
+        >
           @if (cargandoClima()) {
-          <span class="spinner-border spinner-border-sm text-secondary" role="status"></span>
-          <span class="weather-text">Cargando...</span>
+            <span class="spinner-border spinner-border-sm text-secondary" role="status"></span>
+            <span class="weather-text">Cargando...</span>
           } @else if (clima()) {
-          <i class="hgi-stroke {{ clima()?.iconClass }}"></i>
-          <span class="weather-text">{{ clima()?.temperature }}°C {{ clima()?.description }}</span>
-          <i class="hgi-stroke hgi-arrow-down-01 weather-arrow" [class.rotated]="detallesAbiertos()"></i>
+            <i class="hgi-stroke {{ clima()?.iconClass }}"></i>
+            <span class="weather-text"
+              >{{ clima()?.temperature }}°C {{ clima()?.description }}</span
+            >
+            <i
+              class="hgi-stroke hgi-arrow-down-01 weather-arrow"
+              [class.rotated]="detallesAbiertos()"
+            ></i>
           } @else {
-          <i class="hgi-stroke hgi-work-alert"></i>
-          <span class="weather-text">Clima no disponible</span>
+            <i class="hgi-stroke hgi-work-alert"></i>
+            <span class="weather-text">Clima no disponible</span>
           }
         </button>
 
         <!-- Popover responsivo de detalles meteorológicos -->
         @if (detallesAbiertos() && clima()) {
-        <div class="weather-dropdown-card shadow p-3 animate-fade-in">
-          <div
-            class="weather-dropdown-header pb-2 mb-2 border-bottom d-flex justify-content-between align-items-center">
-            <span class="fw-bold text-secondary-custom">Condiciones Actuales</span>
-            <span class="badge badge-temp">{{ clima()?.temperature }}°C</span>
-          </div>
-
-          <div class="weather-details-grid">
-            <div class="weather-detail-item">
-              <i class="hgi-stroke hgi-rain text-primary-custom"></i>
-              <div>
-                <small>Lluvia</small>
-                <p class="m-0 fw-semibold">{{ clima()?.precipitationProbability }}%</p>
-              </div>
+          <div class="weather-dropdown-card shadow p-3 animate-fade-in">
+            <div
+              class="weather-dropdown-header pb-2 mb-2 border-bottom d-flex justify-content-between align-items-center"
+            >
+              <span class="fw-bold text-secondary-custom">Condiciones Actuales</span>
+              <span class="badge badge-temp">{{ clima()?.temperature }}°C</span>
             </div>
 
-            <div class="weather-detail-item">
-              <i class="hgi-stroke hgi-humidity text-primary-custom"></i>
-              <div>
-                <small>Humedad</small>
-                <p class="m-0 fw-semibold">{{ clima()?.humidity }}%</p>
+            <div class="weather-details-grid">
+              <div class="weather-detail-item">
+                <i class="hgi-stroke hgi-rain text-primary-custom"></i>
+                <div>
+                  <small>Lluvia</small>
+                  <p class="m-0 fw-semibold">{{ clima()?.precipitationProbability }}%</p>
+                </div>
               </div>
-            </div>
 
-            <div class="weather-detail-item">
-              <i class="hgi-stroke hgi-wind-power text-primary-custom"></i>
-              <div>
-                <small>Viento</small>
-                <div class="d-flex align-items-center gap-1">
-                  <p class="m-0 fw-semibold">{{ clima()?.windSpeed }} km/h</p>
-                  <span class="wind-badge d-inline-flex align-items-center gap-1">
-                    <i class="hgi-stroke hgi-arrow-up-02 wind-direction-icon"
-                      [style.transform]="'rotate(' + clima()?.windFlowRotation + 'deg)'">
-                    </i>
-                    {{ clima()?.windDirectionText }}
-                  </span>
+              <div class="weather-detail-item">
+                <i class="hgi-stroke hgi-humidity text-primary-custom"></i>
+                <div>
+                  <small>Humedad</small>
+                  <p class="m-0 fw-semibold">{{ clima()?.humidity }}%</p>
+                </div>
+              </div>
+
+              <div class="weather-detail-item">
+                <i class="hgi-stroke hgi-wind-power text-primary-custom"></i>
+                <div>
+                  <small>Viento</small>
+                  <div class="d-flex align-items-center gap-1">
+                    <p class="m-0 fw-semibold">{{ clima()?.windSpeed }} km/h</p>
+                    <span class="wind-badge d-inline-flex align-items-center gap-1">
+                      <i
+                        class="hgi-stroke hgi-arrow-up-02 wind-direction-icon"
+                        [style.transform]="'rotate(' + clima()?.windFlowRotation + 'deg)'"
+                      >
+                      </i>
+                      {{ clima()?.windDirectionText }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="weather-detail-item">
+                <i class="hgi-stroke {{ clima()?.iconClass }} text-primary-custom"></i>
+                <div>
+                  <small>Estado</small>
+                  <p class="m-0 fw-semibold">{{ clima()?.description }}</p>
                 </div>
               </div>
             </div>
+            <!-- Pronóstico extendido -->
+            <div class="mt-3 pt-2 border-top">
+              <button
+                type="button"
+                class="btn w-100 d-flex align-items-center justify-content-between px-0"
+                (click)="togglePronosticoSemanal()"
+                [attr.aria-expanded]="pronosticoAbierto()"
+              >
+                <span class="pronostico-titulo">Pronóstico semanal</span>
+                <i
+                  class="hgi-stroke hgi-arrow-down-01 weather-arrow"
+                  [class.rotated]="pronosticoAbierto()"
+                ></i>
+              </button>
 
-            <div class="weather-detail-item">
-              <i class="hgi-stroke {{ clima()?.iconClass }} text-primary-custom"></i>
-              <div>
-                <small>Estado</small>
-                <p class="m-0 fw-semibold">{{ clima()?.description }}</p>
-              </div>
+              @if (pronosticoAbierto()) {
+                @if (cargandoPronostico()) {
+                  <p class="text-center my-2">Cargando pronóstico...</p>
+                } @else if (pronosticoSemanal().length > 0) {
+                  <div class="pronostico-lista mt-2">
+                    @for (dia of pronosticoSemanal(); track dia.fecha) {
+                      <div class="pronostico-dia">
+                        <span>{{ formatearFechaPronostico(dia.fecha) }}</span>
+                        <i class="hgi-stroke {{ dia.iconClass }}"></i>
+
+                        <span>{{ dia.temperaturaMinima }}° / {{ dia.temperaturaMaxima }}°</span>
+
+                        <span>
+                          <i class="hgi-stroke hgi-rain"></i>
+                          {{ dia.probabilidadLluvia }}%
+                        </span>
+                      </div>
+                    }
+                  </div>
+                } @else {
+                  <p class="text-center my-2">Pronóstico no disponible.</p>
+                }
+              }
             </div>
           </div>
-        </div>
         }
       </div>
 
@@ -92,114 +141,126 @@
     </div>
 
     <!-- BLOQUE DERECHO: Acciones de usuario -->
-@if (!esVistaLogin()) {
-<div class="navbar-acciones">
+    @if (!esVistaLogin()) {
+      <div class="navbar-acciones">
+        <!-- Componente de Notificaciones (Exclusivo Administrador) -->
+        @if (isAdmin()) {
+          <div class="notificaciones-container position-relative">
+            <button
+              class="btn btn-icon p-1 position-relative"
+              type="button"
+              aria-label="Abrir panel de notificaciones"
+              [attr.aria-expanded]="panelNotificacionesAbierto()"
+              (click)="togglePanelNotificaciones()"
+            >
+              <i class="hgi-stroke hgi-notification-01 fs-5"></i>
+              @if (noLeidasCount() > 0) {
+                <span class="badge-notif-contador" aria-label="Notificaciones no leídas">
+                  {{ noLeidasCount() }}
+                </span>
+              }
+            </button>
 
-  <!-- Componente de Notificaciones (Exclusivo Administrador) -->
-  @if (isAdmin()) {
-  <div class="notificaciones-container position-relative">
-    <button
-      class="btn btn-icon p-1 position-relative"
-      type="button"
-      aria-label="Abrir panel de notificaciones"
-      [attr.aria-expanded]="panelNotificacionesAbierto()"
-      (click)="togglePanelNotificaciones()"
-    >
-      <i class="hgi-stroke hgi-notification-01 fs-5"></i>
-      @if (noLeidasCount() > 0) {
-      <span class="badge-notif-contador" aria-label="Notificaciones no leídas">
-        {{ noLeidasCount() }}
-      </span>
-      }
-    </button>
+            @if (panelNotificacionesAbierto()) {
+              <section
+                class="notificaciones-dropdown-card shadow animate-fade-in"
+                aria-label="Notificaciones"
+              >
+                <header
+                  class="notificaciones-header d-flex justify-content-between align-items-center"
+                >
+                  <h4 class="m-0 fs-6 fw-bold">Notificaciones</h4>
+                  @if (noLeidasCount() > 0) {
+                    <button type="button" class="btn-marcar-todas" (click)="marcarTodasLeidas()">
+                      Marcar todas leídas
+                    </button>
+                  }
+                </header>
 
-    @if (panelNotificacionesAbierto()) {
-    <section class="notificaciones-dropdown-card shadow animate-fade-in" aria-label="Notificaciones">
-      <header class="notificaciones-header d-flex justify-content-between align-items-center">
-        <h4 class="m-0 fs-6 fw-bold">Notificaciones</h4>
-        @if (noLeidasCount() > 0) {
-        <button
-          type="button"
-          class="btn-marcar-todas"
-          (click)="marcarTodasLeidas()"
-        >
-          Marcar todas leídas
-        </button>
+                <ul class="notificaciones-lista list-unstyled m-0" role="list">
+                  @for (item of notificaciones(); track item.id) {
+                    <li
+                      class="notificacion-item"
+                      [class.no-leida]="!item.leida"
+                      tabindex="0"
+                      role="button"
+                      [attr.aria-label]="item.titulo + ': ' + item.mensaje"
+                      (click)="seleccionarNotificacion(item)"
+                      (keydown.enter)="seleccionarNotificacion(item)"
+                    >
+                      <div class="notif-icono-wrapper" aria-hidden="true">
+                        <i class="hgi-stroke {{ obtenerIconoNotificacion(item.tipo) }}"></i>
+                      </div>
+
+                      <div class="notif-contenido">
+                        <div class="d-flex justify-content-between align-items-baseline">
+                          <strong class="notif-titulo">{{ item.titulo }}</strong>
+                          <small class="notif-tiempo">{{
+                            formatearFechaRelativa(item.creada_en)
+                          }}</small>
+                        </div>
+                        <p class="notif-mensaje m-0">{{ item.mensaje }}</p>
+                      </div>
+
+                      <button
+                        type="button"
+                        class="btn-eliminar-notif"
+                        aria-label="Eliminar notificación"
+                        (click)="borrarNotificacion($event, item.id)"
+                      >
+                        <i class="hgi-stroke hgi-delete-02" aria-hidden="true"></i>
+                      </button>
+                    </li>
+                  } @empty {
+                    <li class="notificaciones-vacio text-center py-4 text-muted">
+                      <i class="hgi-stroke hgi-notification-01 fs-3 d-block mb-1"></i>
+                      <p class="m-0 small">No tenés notificaciones pendientes</p>
+                    </li>
+                  }
+                </ul>
+              </section>
+            }
+          </div>
         }
-      </header>
 
-      <ul class="notificaciones-lista list-unstyled m-0" role="list">
-        @for (item of notificaciones(); track item.id) {
-        <li
-          class="notificacion-item"
-          [class.no-leida]="!item.leida"
-          tabindex="0"
-          role="button"
-          [attr.aria-label]="item.titulo + ': ' + item.mensaje"
-          (click)="seleccionarNotificacion(item)"
-          (keydown.enter)="seleccionarNotificacion(item)"
-        >
-          <div class="notif-icono-wrapper" aria-hidden="true">
-            <i class="hgi-stroke {{ obtenerIconoNotificacion(item.tipo) }}"></i>
-          </div>
-
-          <div class="notif-contenido">
-            <div class="d-flex justify-content-between align-items-baseline">
-              <strong class="notif-titulo">{{ item.titulo }}</strong>
-              <small class="notif-tiempo">{{ formatearFechaRelativa(item.creada_en) }}</small>
-            </div>
-            <p class="notif-mensaje m-0">{{ item.mensaje }}</p>
-          </div>
-
+        <!-- Dropdown de Perfil -->
+        <div class="dropdown">
           <button
+            class="btn profile-pill d-flex align-items-center gap-2 py-1 px-2 border-0 dropdown-toggle"
             type="button"
-            class="btn-eliminar-notif"
-            aria-label="Eliminar notificación"
-            (click)="borrarNotificacion($event, item.id)"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
           >
-            <i class="hgi-stroke hgi-delete-02" aria-hidden="true"></i>
+            <span class="avatar-circle">{{ usuarioInicial() }}</span>
           </button>
-        </li>
-        } @empty {
-        <li class="notificaciones-vacio text-center py-4 text-muted">
-          <i class="hgi-stroke hgi-notification-01 fs-3 d-block mb-1"></i>
-          <p class="m-0 small">No tenés notificaciones pendientes</p>
-        </li>
-        }
-      </ul>
-    </section>
+          <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+            <li>
+              <a class="dropdown-item" href="#"
+                ><i class="hgi-stroke hgi-settings-02 me-2"></i>Configuración</a
+              >
+            </li>
+            <li>
+              <button type="button" class="dropdown-item" (click)="toggleModoOscuro()">
+                @if (modoOscuro()) {
+                  <i class="hgi-stroke hgi-sun-02 me-2"></i>
+                  Modo claro
+                } @else {
+                  <i class="hgi-stroke hgi-moon-02 me-2"></i>
+                  Modo oscuro
+                }
+              </button>
+            </li>
+            <li>
+              <hr class="dropdown-divider" />
+            </li>
+            <li>
+              <button class="dropdown-item text-danger" (click)="cerrarSesion()">
+                <i class="hgi-stroke hgi-logout-01 me-2"></i>Cerrar sesión
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
     }
-  </div>
-  }
-
-  <!-- Dropdown de Perfil -->
-  <div class="dropdown">
-    <button class="btn profile-pill d-flex align-items-center gap-2 py-1 px-2 border-0 dropdown-toggle"
-      type="button" data-bs-toggle="dropdown" aria-expanded="false">
-      <span class="avatar-circle">{{ usuarioInicial() }}</span>
-    </button>
-    <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
-      <li><a class="dropdown-item" href="#"><i class="hgi-stroke hgi-settings-02 me-2"></i>Configuración</a></li>
-      <li>
-        <button type="button" class="dropdown-item" (click)="toggleModoOscuro()">
-          @if (modoOscuro()) {
-          <i class="hgi-stroke hgi-sun-02 me-2"></i>
-          Modo claro
-          } @else {
-          <i class="hgi-stroke hgi-moon-02 me-2"></i>
-          Modo oscuro
-          }
-        </button>
-      </li>
-      <li>
-        <hr class="dropdown-divider">
-      </li>
-      <li>
-        <button class="dropdown-item text-danger" (click)="cerrarSesion()">
-          <i class="hgi-stroke hgi-logout-01 me-2"></i>Cerrar sesión
-        </button>
-      </li>
-    </ul>
-  </div>
-</div>
-}
+  </nav>
+</header>
