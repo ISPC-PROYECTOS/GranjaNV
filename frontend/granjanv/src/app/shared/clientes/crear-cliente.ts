@@ -29,21 +29,7 @@ export class CrearClienteComponent {
 
   @Input() set clienteEdicion(cliente: Cliente | null) {
     if (cliente) {
-      this.clienteId.set(cliente.id ?? null);
-      this.formularioCliente.patchValue({
-        nombre: cliente.nombre,
-        apellido: cliente.apellido || '',
-        telefono: cliente.telefono,
-        direccion: cliente.direccion,
-        email: cliente.email || '',
-        tipo: cliente.tipo
-      });
-
-      if (!cliente.apellido) {
-        this.cambiarTipoEntidad('NEGOCIO');
-      } else {
-        this.cambiarTipoEntidad('PERSONA');
-      }
+      this.cargarClienteParaModificar(cliente);
     } else {
       this.clienteId.set(null);
     }
@@ -122,7 +108,25 @@ export class CrearClienteComponent {
     apellidoCtrl?.updateValueAndValidity();
   }
 
-  // Aviso preventivo: homónimos que tienen el mismo nombre pero distinto apellido
+  // Detección del cliente existente con coincidencia exacta (Nombre Y Apellido)
+  readonly clienteHomonimoExacto = computed<Cliente | null>(() => {
+    const nom = (this.nombreValue() || '').trim().toLowerCase();
+    const ape = (this.apellidoValue() || '').trim().toLowerCase();
+
+    if (!nom || nom.length < 2 || !ape) return null;
+
+    const encontrado = this.clientesExistentes().find(c => 
+      c.nombre.trim().toLowerCase() === nom &&
+      (c.apellido || '').trim().toLowerCase() === ape &&
+      c.id !== this.clienteId()
+    );
+
+    return encontrado ?? null;
+  });
+
+  readonly esHomonimoExacto = computed(() => this.clienteHomonimoExacto() !== null);
+
+  // Aviso preventivo: personas que comparten el mismo nombre pero tienen diferente apellido
   readonly homonimosMismoNombre = computed(() => {
     const nom = (this.nombreValue() || '').trim().toLowerCase();
     const ape = (this.apellidoValue() || '').trim().toLowerCase();
@@ -136,19 +140,26 @@ export class CrearClienteComponent {
     );
   });
 
-  // Bloqueo estricto: coincidencia exacta de nombre y apellido
-  readonly esHomonimoExacto = computed(() => {
-    const nom = (this.nombreValue() || '').trim().toLowerCase();
-    const ape = (this.apellidoValue() || '').trim().toLowerCase();
+  // Carga un cliente existente directamente en el formulario pasando a modo edición
+  cargarClienteParaModificar(cliente: Cliente): void {
+    this.clienteId.set(cliente.id ?? null);
+    this.formularioCliente.patchValue({
+      nombre: cliente.nombre,
+      apellido: cliente.apellido || '',
+      telefono: cliente.telefono,
+      direccion: cliente.direccion,
+      email: cliente.email || '',
+      tipo: cliente.tipo
+    });
 
-    if (!nom || nom.length < 2 || !ape) return false;
+    if (!cliente.apellido) {
+      this.cambiarTipoEntidad('NEGOCIO');
+    } else {
+      this.cambiarTipoEntidad('PERSONA');
+    }
 
-    return this.clientesExistentes().some(c => 
-      c.nombre.trim().toLowerCase() === nom &&
-      (c.apellido || '').trim().toLowerCase() === ape &&
-      c.id !== this.clienteId()
-    );
-  });
+    this.errorBackend.set(null);
+  }
 
   solicitarConfirmacion(): void {
     if (this.formularioCliente.invalid || this.esHomonimoExacto()) {
@@ -204,6 +215,7 @@ export class CrearClienteComponent {
   }
 
   limpiar(): void {
+    this.clienteId.set(null);
     this.formularioCliente.reset({
       tipo: TipoCliente.MINORISTA
     });
