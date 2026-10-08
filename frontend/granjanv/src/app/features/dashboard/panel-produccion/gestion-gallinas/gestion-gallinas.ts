@@ -140,6 +140,11 @@ export class GestionGallinas {
     return motivo ? (motivos[motivo] ?? motivo) : '';
   }
 
+  actualizarDescripcion(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  this.descripcionIncidente.set(input.value);
+}
+
   private mostrarNotificacion(mensaje: string): void {
     this.mensajeExito.set(mensaje);
     setTimeout(() => this.mensajeExito.set(null), 3000);

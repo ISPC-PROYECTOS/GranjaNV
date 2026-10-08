@@ -29,15 +29,6 @@ class Galpon(models.Model):
     creado_en = models.DateTimeField(auto_now_add=True)
     actualizado_en = models.DateTimeField(auto_now=True)
 
-    usuario = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='movimientos_gallinas',
-        db_index=True,
-    )
-
     class Meta:
         ordering = ["numero_galpon"]
         verbose_name = "Galpón"
@@ -74,6 +65,14 @@ class MovimientoGallina(models.Model):
         Galpon,
         on_delete=models.PROTECT,
         related_name="movimientos_gallinas",
+        db_index=True,
+    )
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='movimientos_gallinas',
         db_index=True,
     )
     fecha = models.DateField(default=timezone.localdate, db_index=True)

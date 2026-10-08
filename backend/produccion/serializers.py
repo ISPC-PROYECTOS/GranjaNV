@@ -42,6 +42,7 @@ class MovimientoGallinaSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "galpon",
+            "usuario",
             "fecha",
             "tipo_movimiento",
             "tipo_movimiento_display",
@@ -52,7 +53,7 @@ class MovimientoGallinaSerializer(serializers.ModelSerializer):
             "creado_en",
             "actualizado_en",
         ]
-        read_only_fields = ["id", "creado_en", "actualizado_en"]
+        read_only_fields = ["id", "usuario","creado_en", "actualizado_en"]
 
     def validate_descripcion_movimiento(self, value: str) -> str:
         valor_limpio = value.strip()

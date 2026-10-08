@@ -113,21 +113,16 @@
 
           <!-- Detalle o Causa -->
           <div class="mb-3">
-              <label for="desc-movimiento" class="form-label">
-                Descripción / Detalle *
-              </label>
-              <input
-                id="desc-movimiento"
-                type="text"
-                class="form-control"
-                placeholder="Ej: Aislamiento preventivo por decaimiento"
-                [ngModel]="descripcionIncidente()"
-                (ngModelChange)="descripcionIncidente.set($event)"
-                required
-                aria-required="true"
-                [attr.aria-invalid]="errorMensaje() !== null"
-              />
-            </div>
+            <label for="descripcion-movimiento" class="form-label">Descripción / Detalle *</label>
+            <input
+              id="descripcion-movimiento"
+              type="text"
+              class="form-control"
+              placeholder="Ej: Muerte natural, descarte, etc."
+              [value]="descripcionIncidente()"
+              (input)="actualizarDescripcion($event)"
+            />
+          </div>
 
           <!-- Acciones -->
           <div class="gestion-formulario-acciones pt-2">
