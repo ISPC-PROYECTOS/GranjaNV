@@ -10,7 +10,7 @@
         <h1>GRANJA NV</h1>
         <p id="titulo-alta-usuario">Alta de nuevo usuario</p>
         } @else {
-        <h2 id="titulo-alta-usuario" class="titulo-modal">Nuevo usuario</h2>
+        <h2 id="titulo-alta-usuario" class="gestion-titulo titulo-modal">Nuevo usuario</h2>
         }
       </div>
 
@@ -28,19 +28,21 @@
 
       <form class="gestion-formulario m-0 registro-form" [formGroup]="registroForm" (ngSubmit)="onSubmit()" novalidate>
 
-        <div class="row g-2">
-          <div class="col-md-6 form-group">
-            <label for="reg-nombre">Nombre</label>
+        <div class="row g-3">
+          <div class="col-sm-6 form-group">
+            <label for="reg-nombre" [class.form-label]="modoModal">Nombre</label>
             <input id="reg-nombre" type="text" formControlName="nombre" placeholder="Ej. Juan"
+              [class.form-control]="modoModal"
               [class.is-invalid]="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched" />
             @if (registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched) {
             <span class="error-msg">El nombre es requerido.</span>
             }
           </div>
 
-          <div class="col-md-6 form-group">
-            <label for="reg-apellido">Apellido</label>
+          <div class="col-sm-6 form-group">
+            <label for="reg-apellido" [class.form-label]="modoModal">Apellido</label>
             <input id="reg-apellido" type="text" formControlName="apellido" placeholder="Ej. Pérez"
+              [class.form-control]="modoModal"
               [class.is-invalid]="registroForm.get('apellido')?.invalid && registroForm.get('apellido')?.touched" />
             @if (registroForm.get('apellido')?.invalid && registroForm.get('apellido')?.touched) {
             <span class="error-msg">El apellido es requerido.</span>
@@ -49,8 +51,9 @@
         </div>
 
         <div class="form-group">
-          <label for="reg-email">Correo electrónico</label>
+          <label for="reg-email" [class.form-label]="modoModal">Correo electrónico</label>
           <input id="reg-email" type="email" formControlName="email" placeholder="usuario@granjanv.com"
+            [class.form-control]="modoModal"
             [class.is-invalid]="registroForm.get('email')?.invalid && registroForm.get('email')?.touched" />
           @if (registroForm.get('email')?.invalid && registroForm.get('email')?.touched) {
           <span class="error-msg">Ingrese un correo válido.</span>
@@ -58,8 +61,9 @@
         </div>
 
         <div class="form-group">
-          <label for="reg-password">Contraseña temporal</label>
+          <label for="reg-password" [class.form-label]="modoModal">Contraseña temporal</label>
           <input id="reg-password" type="password" formControlName="password" placeholder="Mínimo 8 caracteres"
+            [class.form-control]="modoModal"
             [class.is-invalid]="registroForm.get('password')?.invalid && registroForm.get('password')?.touched" />
           @if (registroForm.get('password')?.invalid && registroForm.get('password')?.touched) {
           <span class="error-msg">La contraseña debe tener al menos 8 caracteres.</span>
@@ -67,15 +71,17 @@
         </div>
 
         <div class="form-group">
-          <label for="reg-rol">Rol asignado</label>
-          <select id="reg-rol" formControlName="rol" class="custom-select">
+          <label for="reg-rol" [class.form-label]="modoModal">Rol asignado</label>
+          <select id="reg-rol" formControlName="rol" class="custom-select"
+            [class.form-select]="modoModal">
             <option value="Empleado">Empleado</option>
             <option value="Administrador">Administrador</option>
           </select>
         </div>
 
-        <div class="button-group">
-          <button type="submit" class="btn-formulario" [disabled]="registroForm.invalid">
+        <div class="button-group" [class.gestion-formulario-acciones]="modoModal">
+          <button type="submit" [class.btn-formulario]="!modoModal" [class.btn-guardar]="modoModal"
+            [disabled]="registroForm.invalid">
             Registrar usuario
           </button>
         </div>

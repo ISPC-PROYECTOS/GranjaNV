@@ -33,8 +33,8 @@ export class Clientes implements OnInit {
       if (!coincideEstado) return false;
       if (!busqueda) return true;
 
-      const textoCliente = `${cliente.nombre} ${cliente.apellido} ${cliente.telefono} ${cliente.email}`;
-      return textoCliente.toLowerCase().includes(busqueda);
+      const nombreCompleto = `${cliente.nombre} ${cliente.apellido ?? ''}`;
+      return nombreCompleto.toLowerCase().includes(busqueda);
     });
   });
 

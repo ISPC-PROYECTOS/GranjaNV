@@ -54,6 +54,39 @@
   white-space: nowrap;
 }
 
+@media (min-width: 576px) and (max-width: 767px) {
+  .cliente-fila {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .cliente-principal {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .cliente-identidad {
+    overflow-wrap: anywhere;
+  }
+
+  .clientes-acciones {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    margin-left: 0 !important;
+    gap: 0.75rem;
+  }
+
+  .clientes-acciones .btn,
+  .clientes-acciones > button:last-child {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    white-space: normal;
+  }
+}
+
 @media (max-width: 575px) {
   .cliente-form-modal {
     max-height: calc(100vh - 2rem);

@@ -95,6 +95,14 @@
   max-width: none;
 }
 
+.registro-wrapper-modal,
+.registro-wrapper-modal .registro-container,
+.registro-wrapper-modal .card-form,
+.registro-wrapper-modal .registro-form {
+  width: 100%;
+  min-width: 0;
+}
+
 .registro-wrapper-modal .registro-form {
   color: var(--color-negro);
 }
@@ -106,7 +114,7 @@
 
 .registro-wrapper-modal .titulo-modal {
   margin: 0;
-  color: var(--color-primario-oscuro);
+  color: var(--color-blanco);
   font-family: var(--font-titulos);
   font-size: 30px;
   font-weight: 600;
@@ -117,8 +125,16 @@
   color: var(--color-negro);
 }
 
+.registro-wrapper-modal .button-group {
+  justify-content: flex-end;
+}
+
 .registro-wrapper-modal .form-group label {
   color: var(--color-negro);
+}
+
+.registro-wrapper-modal .form-group {
+  min-width: 0;
 }
 
 .registro-wrapper-modal .form-group .error-msg {
@@ -133,6 +149,17 @@
 .registro-wrapper-modal .btn-formulario:hover:not(:disabled) {
   background-color: var(--color-primario-oscuro);
   border-color: var(--color-primario-oscuro);
+}
+
+:host-context(body.dark-mode) .registro-wrapper-modal .registro-form .form-group input.form-control,
+:host-context(body.dark-mode) .registro-wrapper-modal .registro-form .form-group select.form-select {
+  border: 1px solid var(--color-gris-medio);
+  background-color: var(--color-blanco);
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .registro-wrapper-modal .registro-form .form-group input.form-control::placeholder {
+  color: var(--color-gris-oscuro);
 }
 
 @media (max-width: 575px) {
@@ -152,6 +179,19 @@
     padding: 1rem !important;
   }
 
+  .registro-wrapper-modal .registro-form .row {
+    --bs-gutter-x: 0.75rem;
+    --bs-gutter-y: 0.75rem;
+  }
+
+  .registro-wrapper-modal .registro-form .row > .form-group {
+    margin-bottom: 0;
+  }
+
+  .registro-wrapper-modal .registro-form > .form-group {
+    margin-bottom: 0.875rem;
+  }
+
   .card-form {
     padding: 1.25rem 1rem;
     border-radius: 20px;
@@ -167,6 +207,20 @@
 
   .registro-wrapper-modal .titulo-modal {
     font-size: 1.35rem;
+    padding-right: 2.5rem;
+  }
+
+  .registro-wrapper-modal .button-group .btn-guardar {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .registro-wrapper-modal .form-group .form-control,
+  .registro-wrapper-modal .form-group .form-select {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    font-size: 16px;
   }
 
   .form-group {

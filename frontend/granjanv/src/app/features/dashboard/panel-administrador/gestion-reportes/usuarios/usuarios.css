@@ -37,6 +37,12 @@
 }
 
 .usuario-identidad {
+  flex: 1;
+}
+
+.usuario-email {
+  display: block;
+  max-width: 100%;
   overflow-wrap: anywhere;
 }
 
@@ -46,20 +52,20 @@
 
 .usuario-alta-modal,
 .usuario-edicion-modal {
+  width: 100%;
+  height: auto;
+  max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
   max-width: 800px;
+  min-width: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   color: var(--color-negro);
-  background-color: var(--color-crema);
-  border: none;
-  border-radius: 27px;
-  padding: 24px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
-.usuario-edicion-modal > header h4 {
-  color: var(--color-primario-oscuro);
+.titulo-usuario-form {
+  color: var(--color-blanco);
   font-family: var(--font-titulos);
-  font-size: 30px;
-  font-weight: 600;
   text-transform: uppercase;
 }
 
@@ -69,7 +75,7 @@
 
 .usuario-alta-modal .btn-close,
 .usuario-edicion-modal .btn-close {
-  filter: none;
+  filter: invert(1);
   opacity: 1;
 }
 
@@ -80,7 +86,7 @@
   border: 1px solid var(--color-gris-medio);
 }
 
-:host-context(body.dark-mode) .usuario-edicion-modal > header h4 {
+:host-context(body.dark-mode) .titulo-usuario-form {
   color: var(--color-negro);
 }
 
@@ -88,6 +94,39 @@
 :host-context(body.dark-mode) .usuario-edicion-modal .btn-close {
   filter: none;
   opacity: 1;
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+  .usuario-fila {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .usuario-principal {
+    width: 100%;
+    min-width: 0;
+    gap: 0.75rem !important;
+  }
+
+  .usuario-identidad {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .usuarios-acciones {
+    width: auto !important;
+    min-width: max-content;
+    margin-left: 0 !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-end;
+    gap: 0.75rem !important;
+  }
+
+  .usuarios-acciones-botones {
+    flex-wrap: nowrap;
+  }
 }
 
 @media (max-width: 575px) {
@@ -128,10 +167,6 @@
   .usuario-edicion-modal {
     padding: 1rem;
     border-radius: 20px;
-    max-height: calc(100vh - 2rem);
-    max-height: calc(100dvh - 2rem);
-    overflow-y: auto;
-    overscroll-behavior: contain;
   }
 
   .usuario-alta-modal {
@@ -150,34 +185,55 @@
   }
 
   .usuario-edicion-modal .gestion-formulario {
-    padding: 1rem !important;
+    padding: clamp(0.75rem, 3vw, 1rem) !important;
+  }
+
+  .usuario-edicion-modal .form-label,
+  .usuario-edicion-modal .form-control,
+  .usuario-edicion-modal .form-select {
+    min-width: 0;
+    max-width: 100%;
   }
 
   .usuario-edicion-modal .gestion-formulario-acciones {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
+    gap: 0.75rem;
   }
 
-  .usuario-edicion-modal .gestion-formulario-acciones .btn,
+  .usuario-edicion-modal .gestion-formulario-acciones .btn-limpiar,
+  .usuario-edicion-modal .gestion-formulario-acciones .btn-guardar,
   .usuario-eliminar-modal > div:last-child .btn {
-    width: 100%;
+    flex: 1;
     min-width: 0;
   }
 
-  .usuario-edicion-modal > header h4 {
+  .titulo-usuario-form {
     font-size: 1.35rem;
     padding-right: 2.5rem;
     overflow-wrap: anywhere;
+  }
+
+  .usuario-edicion-modal .btn-close {
+    min-width: 44px;
+    min-height: 44px;
+    margin: 0;
   }
 
   .usuario-eliminar-modal .text-muted {
     overflow-wrap: anywhere;
   }
 
-  .usuario-edicion-modal .gestion-formulario-acciones .btn,
+  .usuario-edicion-modal .gestion-formulario-acciones .btn-limpiar,
+  .usuario-edicion-modal .gestion-formulario-acciones .btn-guardar,
   .usuario-eliminar-modal > div:last-child .btn {
+    width: 100%;
+    flex: initial;
     min-height: 44px;
+  }
+
+  .usuario-edicion-modal .gestion-formulario-acciones {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
   }
 }
 
@@ -192,7 +248,7 @@
     padding: 0.625rem;
   }
 
-  .usuario-edicion-modal > header h4 {
+  .titulo-usuario-form {
     font-size: 1.2rem;
   }
 
