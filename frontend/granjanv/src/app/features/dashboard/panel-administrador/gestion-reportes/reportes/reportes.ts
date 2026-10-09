@@ -54,39 +54,33 @@ export class Reportes {
   }
 
   exportarReporte(): void {
-    if (this.reporteSeleccionado !== 'finanzas') {
-      console.log('Reporte todavía no conectado:', this.reporteSeleccionado);
+    if (!this.reporteSeleccionado) {
       return;
     }
 
-    const solicitud =
-      this.formatoSeleccionado === 'pdf'
-        ? this.reportesService.exportarFinanzasPdf(
-            this.rangoSeleccionado.fechaDesde,
-            this.rangoSeleccionado.fechaHasta,
-          )
-        : this.reportesService.exportarFinanzasExcel(
-            this.rangoSeleccionado.fechaDesde,
-            this.rangoSeleccionado.fechaHasta,
-          );
+    const fechaDesde = this.rangoSeleccionado.fechaDesde;
+    const fechaHasta = this.rangoSeleccionado.fechaHasta;
 
-    solicitud.subscribe({
-      next: (archivo) => {
-        const extension = this.formatoSeleccionado === 'pdf' ? 'pdf' : 'xlsx';
+    this.reportesService
+      .exportarReporte(this.reporteSeleccionado, this.formatoSeleccionado, fechaDesde, fechaHasta)
+      .subscribe({
+        next: (archivo) => {
+          const extension = this.formatoSeleccionado === 'pdf' ? 'pdf' : 'xlsx';
 
-        const url = URL.createObjectURL(archivo);
+          const url = URL.createObjectURL(archivo);
 
-        const enlace = document.createElement('a');
-        enlace.href = url;
-        enlace.download = `reporte_finanzas.${extension}`;
-        enlace.click();
+          const enlace = document.createElement('a');
+          enlace.href = url;
+          enlace.download = `reporte_${this.reporteSeleccionado}.${extension}`;
 
-        URL.revokeObjectURL(url);
-        this.cerrarModal();
-      },
-      error: (error) => {
-        console.error('Error al exportar el reporte:', error);
-      },
-    });
+          enlace.click();
+
+          URL.revokeObjectURL(url);
+          this.cerrarModal();
+        },
+        error: (error) => {
+          console.error('Error al exportar el reporte:', error);
+        },
+      });
   }
 }

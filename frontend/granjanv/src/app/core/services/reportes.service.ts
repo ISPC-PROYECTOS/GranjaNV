@@ -15,26 +15,32 @@ export class ReportesService {
   private apiUrl = 'http://localhost:8000/api/reportes/';
 
   obtenerReporteFinanzas(fechaDesde: string, fechaHasta: string) {
-    const params = new HttpParams().set('fecha_desde', fechaDesde).set('fecha_hasta', fechaHasta);
+    const params = new HttpParams()
+      .set('fecha_desde', fechaDesde)
+      .set('fecha_hasta', fechaHasta);
 
-    return this.http.get<ReporteFinanzas>(`${this.apiUrl}finanzas/`, { params });
+    return this.http.get<ReporteFinanzas>(
+      `${this.apiUrl}finanzas/`,
+      { params }
+    );
   }
 
-  exportarFinanzasPdf(fechaDesde: string, fechaHasta: string) {
-    const params = new HttpParams().set('fecha_desde', fechaDesde).set('fecha_hasta', fechaHasta);
+  exportarReporte(
+    tipo: 'finanzas' | 'produccion' | 'completo',
+    formato: 'pdf' | 'excel',
+    fechaDesde: string,
+    fechaHasta: string
+  ) {
+    const params = new HttpParams()
+      .set('fecha_desde', fechaDesde)
+      .set('fecha_hasta', fechaHasta);
 
-    return this.http.get(`${this.apiUrl}finanzas/pdf/`, {
-      params,
-      responseType: 'blob',
-    });
-  }
-
-  exportarFinanzasExcel(fechaDesde: string, fechaHasta: string) {
-    const params = new HttpParams().set('fecha_desde', fechaDesde).set('fecha_hasta', fechaHasta);
-
-    return this.http.get(`${this.apiUrl}finanzas/excel/`, {
-      params,
-      responseType: 'blob',
-    });
+    return this.http.get(
+      `${this.apiUrl}${tipo}/${formato}/`,
+      {
+        params,
+        responseType: 'blob',
+      }
+    );
   }
 }

@@ -62,6 +62,26 @@
   content: '㮇';
 }
 
+.hgi-stroke.hgi-arrow-down-03:before {
+  content: '㭜';
+}
+
+.hgi-stroke.hgi-file-export:before {
+  content: '䀇';
+}
+
+.hgi-stroke.hgi-chart-average:before {
+  content: '㶂';
+}
+
+.hgi-stroke.hgi-plus-minus:before {
+  content: '䕉';
+}
+
+.hgi-stroke.hgi-file-dollar:before {
+  content: '䀃';
+}
+
 .hgi-stroke.hgi-location-01:before {
   content: '䊟';
 }
