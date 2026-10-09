@@ -51,6 +51,7 @@ class MovimientoGallinaSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "galpon",
+            "usuario",
             "fecha",
             "tipo_movimiento",
             "tipo_movimiento_display",
@@ -61,7 +62,15 @@ class MovimientoGallinaSerializer(serializers.ModelSerializer):
             "creado_en",
             "actualizado_en",
         ]
-        read_only_fields = ["id", "creado_en", "actualizado_en"]
+        read_only_fields = ["id", "usuario","creado_en", "actualizado_en"]
+
+    def validate_descripcion_movimiento(self, value: str) -> str:
+        valor_limpio = value.strip()
+        if not valor_limpio:
+            raise serializers.ValidationError("La descripción del movimiento es obligatoria.")
+        if len(valor_limpio) < 3:
+            raise serializers.ValidationError("La descripción debe contener al menos 3 caracteres.")
+        return valor_limpio
 
     def validate(self, attrs: dict[str, Any]) -> dict[str, Any]:
         galpon: Galpon = attrs["galpon"]

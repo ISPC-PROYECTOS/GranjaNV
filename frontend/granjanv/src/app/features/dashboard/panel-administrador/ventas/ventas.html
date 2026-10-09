@@ -29,7 +29,7 @@
             <h2 class="gestion-titulo mb-0">PENDIENTES</h2>
           </div>
           <div class="d-flex align-items-center gap-2">
-            <app-selector-fecha (cambioRango)="onCambioRangoPendientes($event)"></app-selector-fecha>
+            <app-selector-fecha [permitirTodos]="true" (cambioRango)="onCambioRangoPendientes($event)"></app-selector-fecha>
             <app-buscador (buscar)="onBuscarPendientes($event)"></app-buscador>
           </div>
         </header>

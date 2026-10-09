@@ -8,6 +8,7 @@
                 <div 
                     class="card-acciones" 
                     routerLink="/dashboard/admin/ventas" 
+                    [queryParams]="{ seccion: 'nuevo' }"
                     role="link" 
                     tabindex="0"
                     aria-label="Registrar un nuevo pedido">
@@ -21,7 +22,8 @@
             <div class="col-4">
                 <div 
                     class="card-acciones" 
-                    routerLink="/dashboard/admin/ventas" 
+                    routerLink="/dashboard/admin/ventas"
+                    [queryParams]="{ seccion: 'pendientes' }"
                     role="link" 
                     tabindex="0"
                     aria-label="Ir a ventas y pedidos">
@@ -77,6 +79,7 @@
                             class="btn metrica-btn" 
                             type="button" 
                             [routerLink]="metrica.ruta"
+                            [queryParams]="metrica.queryParams"
                             [attr.aria-label]="'Ir a la sección de ' + metrica.titulo">
                             <i class="hgi-stroke hgi-arrow-right-02" aria-hidden="true"></i>
                         </button>

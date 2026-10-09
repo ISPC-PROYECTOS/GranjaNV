@@ -14,6 +14,7 @@ from .serializers import (
     RegistroProduccionWriteSerializer,
     DatosProduccionResponseSerializer,
 )
+from notificaciones.services import notificar_movimiento_gallinas_a_admins
 
 
 class GalponViewSet(viewsets.ModelViewSet):
@@ -38,9 +39,13 @@ class GalponViewSet(viewsets.ModelViewSet):
 
 
 class MovimientoGallinaViewSet(viewsets.ModelViewSet):
-    queryset = MovimientoGallina.objects.select_related("galpon").all()
+    queryset = MovimientoGallina.objects.select_related('galpon').all()
     serializer_class = MovimientoGallinaSerializer
     permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        movimiento = serializer.save(usuario=self.request.user)
+        notificar_movimiento_gallinas_a_admins(movimiento, self.request.user)
 
 
 class ProduccionViewSet(viewsets.GenericViewSet):

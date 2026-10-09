@@ -25,16 +25,20 @@ export class Clientes implements OnInit {
   readonly actualizandoEstadoId = signal<number | null>(null);
   readonly clientesVisibles = computed(() => {
     const filtro = this.filtroEstado();
-    const busqueda = this.busquedaCliente().trim().toLowerCase();
+    const normalizar = (texto: string) => texto
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
+    const terminos = normalizar(this.busquedaCliente()).trim().split(/\s+/).filter(Boolean);
     return this.clientes().filter((cliente) => {
       const coincideEstado = filtro === 'todos'
         || (filtro === 'activos' && cliente.activo)
         || (filtro === 'inactivos' && !cliente.activo);
       if (!coincideEstado) return false;
-      if (!busqueda) return true;
+      if (!terminos.length) return true;
 
-      const nombreCompleto = `${cliente.nombre} ${cliente.apellido ?? ''}`;
-      return nombreCompleto.toLowerCase().includes(busqueda);
+      const nombreCompleto = normalizar(`${cliente.nombre} ${cliente.apellido ?? ''}`);
+      return terminos.every((termino) => nombreCompleto.includes(termino));
     });
   });
 

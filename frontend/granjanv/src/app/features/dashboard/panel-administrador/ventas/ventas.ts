@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 import { interval, Subscription } from 'rxjs';
 
 import { PedidosService } from '../../../../core/services/pedidos.service';
@@ -48,6 +48,7 @@ export class Ventas implements OnInit, OnDestroy {
   private readonly clientesService = inject(ClientesService);
   private readonly actualizadorHora: Subscription;
   private readonly produccionService = inject(ProduccionService);
+  private readonly route = inject(ActivatedRoute);
 
   readonly vistaMobile = signal<'pedidos' | 'formulario'>('formulario');
 
@@ -63,6 +64,7 @@ export class Ventas implements OnInit, OnDestroy {
   // Filtros independientes
   readonly busquedaPendientes = signal<string>('');
   readonly rangoPendientes = signal<RangoFechaSeleccionado>(obtenerRangoMesActual());
+  readonly filtroFechaPendientesActivo = signal<boolean>(false);
 
   readonly busquedaCerrados = signal<string>('');
   readonly rangoCerrados = signal<RangoFechaSeleccionado>(obtenerRangoMesActual());
@@ -271,17 +273,29 @@ export class Ventas implements OnInit, OnDestroy {
     this.cargarPedidosPendientes();
     this.cargarPedidosCerrados();
     this.cargarClientes();
+
+    this.route.queryParams.subscribe((params) => {
+      const seccion = params['seccion'];
+      if (seccion === 'pendientes') {
+        this.vistaMobile.set('pedidos');
+      }else if (seccion === 'nuevo') {
+        this.vistaMobile.set('formulario');
+      }
+    });
   }
 
   cargarPedidosPendientes(): void {
     this.isLoading.set(true);
+    const payloadFiltro: any = {
+      search: this.busquedaPendientes() || undefined,
+      pendientes: true,
+    };
+    if (this.filtroFechaPendientesActivo()) {
+      payloadFiltro.fechaDesde = this.rangoPendientes().fechaDesde;
+      payloadFiltro.fechaHasta = this.rangoPendientes().fechaHasta;
+    }
     this.pedidosService
-      .obtenerPedidos({
-        search: this.busquedaPendientes(),
-        fechaDesde: this.rangoPendientes().fechaDesde,
-        fechaHasta: this.rangoPendientes().fechaHasta,
-        pendientes: true,
-      })
+      .obtenerPedidos(payloadFiltro)
       .subscribe({
         next: (pedidos) => {
           this.pedidosPendientes.set(pedidos);
@@ -316,6 +330,8 @@ export class Ventas implements OnInit, OnDestroy {
   }
 
   onCambioRangoPendientes(rango: RangoFechaSeleccionado): void {
+    const tieneFecha = Boolean(rango.fechaDesde && rango.fechaHasta);
+    this.filtroFechaPendientesActivo.set(tieneFecha);
     this.rangoPendientes.set(rango);
     this.cargarPedidosPendientes();
   }
