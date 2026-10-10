@@ -1,6 +1,9 @@
+import calendar
+from datetime import timedelta
 from decimal import Decimal
 from django.db import transaction
 from django.db.models import Q, QuerySet, Sum
+from django.utils import timezone
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -57,25 +60,51 @@ class PedidoViewSet(RangoFechaMixin, viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], url_path='metricas')
     def metricas(self, request) -> Response:
         """
-        Calcula las métricas operativas para el dashboard mediante agregación SQL:
-        1. Cantidad de pedidos pendientes (sin pagar o sin entregar).
-        2. Total acumulado de ventas cobradas (estado_pago=True).
+        Calcula las métricas operativas para el panel administrativo:
+        1. Pedidos pendientes de entrega o cobro.
+        2. Ventas cobradas del mes en curso.
+        3. Ventas cobradas del mes anterior.
         """
-        base_qs = Pedido.objects.all()
+        base_qs: QuerySet[Pedido] = Pedido.objects.all()
 
         pendientes_count: int = base_qs.filter(
             Q(estado_pago=False) | Q(estado_entrega=False)
         ).count()
 
-        ventas_del_periodo = self.get_queryset()
-        ventas_cobradas_total: Decimal = ventas_del_periodo.filter(
-            estado_pago=True
-        ).aggregate(total=Sum('total'))['total'] or Decimal('0.00')
+        hoy = timezone.localdate()
+
+        # Rango del mes en curso
+        inicio_mes_actual = hoy.replace(day=1)
+        _, ultimo_dia_actual = calendar.monthrange(hoy.year, hoy.month)
+        fin_mes_actual = hoy.replace(day=ultimo_dia_actual)
+
+        # Rango del mes inmediatamente anterior
+        fin_mes_anterior = inicio_mes_actual - timedelta(days=1)
+        inicio_mes_anterior = fin_mes_anterior.replace(day=1)
+
+        pedidos_cobrados = base_qs.filter(estado_pago=True)
+
+        ventas_mes_actual: Decimal = (
+            pedidos_cobrados.filter(
+                fecha_entrega__gte=inicio_mes_actual,
+                fecha_entrega__lte=fin_mes_actual,
+            ).aggregate(total=Sum('total'))['total'] or Decimal('0.00')
+        )
+
+        ventas_mes_anterior: Decimal = (
+            pedidos_cobrados.filter(
+                fecha_entrega__gte=inicio_mes_anterior,
+                fecha_entrega__lte=fin_mes_anterior,
+            ).aggregate(total=Sum('total'))['total'] or Decimal('0.00')
+        )
 
         data = {
             'pedidos_pendientes': pendientes_count,
-            'total_ventas_cobradas': str(ventas_cobradas_total),
+            'total_ventas_cobradas': str(ventas_mes_actual),
+            'ventas_mes_actual': str(ventas_mes_actual),
+            'ventas_mes_anterior': str(ventas_mes_anterior),
         }
+
         serializer = MetricasDashboardSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
