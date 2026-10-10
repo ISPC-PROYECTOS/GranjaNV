@@ -11,6 +11,7 @@ export interface MetricaDashboard {
   icono: string;
   color: 'naranja' | 'verde';
   ruta: string | null;
+  queryParams?: {[key: string]: string};
 }
 
 @Component({
@@ -35,6 +36,7 @@ export class PanelDeControl implements OnInit {
       icono: 'hgi-task-01',
       color: 'naranja',
       ruta: '/dashboard/admin/ventas',
+      queryParams: {seccion: 'pendientes'},
     },
     {
       titulo: 'VENTAS',
@@ -42,6 +44,7 @@ export class PanelDeControl implements OnInit {
       icono: 'hgi-money-receive-02',
       color: 'verde',
       ruta: '/dashboard/admin/ventas',
+      queryParams: {seccion: 'nuevo'},
     },
     {
       titulo: 'COMPRAS',
@@ -51,7 +54,7 @@ export class PanelDeControl implements OnInit {
       ruta: '/dashboard/admin/finanzas',
     },
     {
-      titulo: 'PRODUCCIÓN',
+      titulo: 'STOCK HUEVOS',
       valor: this.formatearNumero(this.produccionService.datosProduccion().total_maples),
       icono: 'hgi-eggs',
       color: 'verde',

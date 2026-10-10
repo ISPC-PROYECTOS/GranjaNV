@@ -1,20 +1,23 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, catchError, of } from 'rxjs';
-import { OpenMeteoResponse, WeatherData } from '../models/weather';
+import { OpenMeteoResponse, WeatherData, PronosticoDiario } from '../models/weather';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class WeatherService {
   private http = inject(HttpClient);
 
-//Localización: Forres, Santiago del Estero, Argentina
+  //Localización: Forres, Santiago del Estero, Argentina
   private readonly DEFAULT_LAT = -27.8525;
   private readonly DEFAULT_LON = -63.9609;
   private readonly BASE_URL = 'https://api.open-meteo.com/v1/forecast';
 
-  getClimaActual(lat: number = this.DEFAULT_LAT, lon: number = this.DEFAULT_LON): Observable<WeatherData | null> {
+  getClimaActual(
+    lat: number = this.DEFAULT_LAT,
+    lon: number = this.DEFAULT_LON,
+  ): Observable<WeatherData | null> {
     const url = `${this.BASE_URL}?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,wind_direction_10m&hourly=precipitation_probability&timezone=auto&forecast_days=1`;
 
     return this.http.get<OpenMeteoResponse>(url).pipe(
@@ -33,14 +36,52 @@ export class WeatherService {
           windDirectionText: this.getWindCardinalDirection(windDeg),
           precipitationProbability: rainProb,
           description: condition.description,
-          iconClass: condition.iconClass
+          iconClass: condition.iconClass,
         };
       }),
       catchError((error) => {
         console.error('Error al consultar Open-Meteo:', error);
         return of(null);
-      })
+      }),
     );
+  }
+
+  getPronosticoSemanal(
+    lat: number = this.DEFAULT_LAT,
+    lon: number = this.DEFAULT_LON,
+  ): Observable<PronosticoDiario[]> {
+    const url = `${this.BASE_URL}?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=7`;
+
+    return this.http
+      .get<{
+        daily: {
+          time: string[];
+          weather_code: number[];
+          temperature_2m_max: number[];
+          temperature_2m_min: number[];
+          precipitation_probability_max: number[];
+        };
+      }>(url)
+      .pipe(
+        map((res) =>
+          res.daily.time.map((fecha, i) => {
+            const condicion = this.mapWeatherCode(res.daily.weather_code[i]);
+
+            return {
+              fecha,
+              temperaturaMaxima: Math.round(res.daily.temperature_2m_max[i]),
+              temperaturaMinima: Math.round(res.daily.temperature_2m_min[i]),
+              probabilidadLluvia: res.daily.precipitation_probability_max[i],
+              descripcion: condicion.description,
+              iconClass: condicion.iconClass,
+            };
+          }),
+        ),
+        catchError((error) => {
+          console.error('Error al consultar el pronóstico semanal:', error);
+          return of([]);
+        }),
+      );
   }
 
   private getWindCardinalDirection(degrees: number): string {

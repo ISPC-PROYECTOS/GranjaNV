@@ -131,11 +131,13 @@
   color: var(--color-secundario-oscuro);
   font-size: 12px;
   font-weight: 600;
+  text-align: center;
   padding: 4px 8px;
   border-radius: 12px;
   white-space: nowrap;
-  width: 100px;
+  width: 125px;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .chip-producto b {

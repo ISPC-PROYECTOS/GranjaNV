@@ -1,44 +1,75 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   RangoFechaSeleccionado,
   SelectorFecha,
 } from '../../../../../shared/selector-fecha/selector-fecha';
 import { obtenerRangoMesActual } from '../../../../../core/utils/date.utils';
-import { FormsModule } from '@angular/forms';
 import { ReportesService } from '../../../../../core/services/reportes.service';
+import { CerrarConEscapeDirective } from '../../../../../shared/directives/cerrar-con-escape.directive';
+import {
+  ReporteCompleto,
+  ReporteFinanzas,
+  ReporteProduccion,
+} from '../../../../../core/models/reporte.model';
 
 type TipoReporte = 'produccion' | 'finanzas' | 'completo';
+type FormatoReporte = 'pdf' | 'excel';
 
 @Component({
   selector: 'app-reportes',
-  imports: [SelectorFecha, FormsModule],
+  imports: [SelectorFecha, CerrarConEscapeDirective],
   templateUrl: './reportes.html',
   styleUrl: './reportes.css',
 })
 export class Reportes {
   private reportesService = inject(ReportesService);
 
-  mostrarModal = false;
-  reporteSeleccionado: TipoReporte | null = null;
-  rangoSeleccionado: RangoFechaSeleccionado = obtenerRangoMesActual();
-  formatoSeleccionado: 'pdf' | 'excel' = 'pdf';
+  mostrarModal = signal(false);
+  reporteSeleccionado = signal<TipoReporte | null>(null);
+  rangoSeleccionado = signal<RangoFechaSeleccionado>(obtenerRangoMesActual());
+  rangoTemporal = signal<RangoFechaSeleccionado>(obtenerRangoMesActual());
+  formatoSeleccionado = signal<FormatoReporte>('pdf');
+
+  confirmandoExportacion = signal(false);
+  exportando = signal(false);
+
+  cargandoVistaPrevia = signal(false);
+
+  vistaPreviaFinanzas = signal<ReporteFinanzas | null>(null);
+  vistaPreviaProduccion = signal<ReporteProduccion | null>(null);
+  vistaPreviaCompleto = signal<ReporteCompleto | null>(null);
 
   abrirModal(tipo: TipoReporte): void {
-    this.reporteSeleccionado = tipo;
-    this.mostrarModal = true;
+    this.reporteSeleccionado.set(tipo);
+    this.confirmandoExportacion.set(false);
+    this.exportando.set(false);
+    this.mostrarModal.set(true);
   }
 
   cerrarModal(): void {
-    this.mostrarModal = false;
-    this.reporteSeleccionado = null;
+    if (this.exportando()) {
+      return;
+    }
+
+    this.mostrarModal.set(false);
+    this.reporteSeleccionado.set(null);
+    this.confirmandoExportacion.set(false);
   }
 
   onCambioRango(rango: RangoFechaSeleccionado): void {
-    this.rangoSeleccionado = rango;
+    this.rangoTemporal.set(rango);
+  }
+
+  seleccionarRango(): void {
+    this.rangoSeleccionado.set(this.rangoTemporal());
+  }
+
+  onCambioFormato(formato: FormatoReporte): void {
+    this.formatoSeleccionado.set(formato);
   }
 
   obtenerTituloModal(): string {
-    switch (this.reporteSeleccionado) {
+    switch (this.reporteSeleccionado()) {
       case 'produccion':
         return 'Exportar reporte de Producción';
 
@@ -53,33 +84,111 @@ export class Reportes {
     }
   }
 
-  exportarReporte(): void {
-    if (!this.reporteSeleccionado) {
+  solicitarExportacion(): void {
+    this.vistaPreviaFinanzas.set(null);
+    this.vistaPreviaProduccion.set(null);
+    this.vistaPreviaCompleto.set(null);
+
+    this.confirmandoExportacion.set(true);
+    this.cargarVistaPrevia();
+  }
+
+  volverAConfiguracion(): void {
+    this.confirmandoExportacion.set(false);
+  }
+
+  formatearFecha(fecha: string): string {
+    const [anio, mes, dia] = fecha.split('-');
+    return `${dia}/${mes}/${anio}`;
+  }
+
+  cargarVistaPrevia(): void {
+    const tipoReporte = this.reporteSeleccionado();
+
+    if (!tipoReporte) {
       return;
     }
 
-    const fechaDesde = this.rangoSeleccionado.fechaDesde;
-    const fechaHasta = this.rangoSeleccionado.fechaHasta;
+    const rango = this.rangoSeleccionado();
+
+    this.cargandoVistaPrevia.set(true);
+
+    if (tipoReporte === 'finanzas') {
+      this.reportesService.obtenerReporteFinanzas(rango.fechaDesde, rango.fechaHasta).subscribe({
+        next: (datos) => {
+          this.vistaPreviaFinanzas.set(datos);
+          this.cargandoVistaPrevia.set(false);
+        },
+        error: (error) => {
+          console.error('Error al cargar la vista previa:', error);
+          this.cargandoVistaPrevia.set(false);
+        },
+      });
+
+      return;
+    }
+
+    if (tipoReporte === 'produccion') {
+      this.reportesService.obtenerReporteProduccion(rango.fechaDesde, rango.fechaHasta).subscribe({
+        next: (datos) => {
+          this.vistaPreviaProduccion.set(datos);
+          this.cargandoVistaPrevia.set(false);
+        },
+        error: (error) => {
+          console.error('Error al cargar la vista previa:', error);
+          this.cargandoVistaPrevia.set(false);
+        },
+      });
+
+      return;
+    }
+
+    this.reportesService.obtenerReporteCompleto(rango.fechaDesde, rango.fechaHasta).subscribe({
+      next: (datos) => {
+        this.vistaPreviaCompleto.set(datos);
+        this.cargandoVistaPrevia.set(false);
+      },
+      error: (error) => {
+        console.error('Error al cargar la vista previa:', error);
+        this.cargandoVistaPrevia.set(false);
+      },
+    });
+  }
+
+  exportarReporte(): void {
+    const tipoReporte = this.reporteSeleccionado();
+
+    if (!tipoReporte || this.exportando()) {
+      return;
+    }
+
+    const rango = this.rangoSeleccionado();
+    const formato = this.formatoSeleccionado();
+
+    this.exportando.set(true);
 
     this.reportesService
-      .exportarReporte(this.reporteSeleccionado, this.formatoSeleccionado, fechaDesde, fechaHasta)
+      .exportarReporte(tipoReporte, formato, rango.fechaDesde, rango.fechaHasta)
       .subscribe({
         next: (archivo) => {
-          const extension = this.formatoSeleccionado === 'pdf' ? 'pdf' : 'xlsx';
+          const extension = formato === 'pdf' ? 'pdf' : 'xlsx';
 
           const url = URL.createObjectURL(archivo);
 
           const enlace = document.createElement('a');
           enlace.href = url;
-          enlace.download = `reporte_${this.reporteSeleccionado}.${extension}`;
+          enlace.download = `reporte_${tipoReporte}.${extension}`;
 
           enlace.click();
 
           URL.revokeObjectURL(url);
+
+          this.exportando.set(false);
           this.cerrarModal();
         },
         error: (error) => {
           console.error('Error al exportar el reporte:', error);
+          this.exportando.set(false);
         },
       });
   }
