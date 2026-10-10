@@ -74,6 +74,12 @@
                         {{ metrica.valor }}
                     </p>
 
+                    @if (metrica.subtexto) {
+                        <p class="metrica-subtexto">
+                            {{ metrica.subtexto }}
+                        </p>
+                    }
+
                     @if (metrica.ruta) {
                         <button 
                             class="btn metrica-btn" 
