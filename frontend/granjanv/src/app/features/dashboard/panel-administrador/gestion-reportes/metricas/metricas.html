@@ -24,103 +24,133 @@
   </div>
 
   <!-- Fila principal de gráficos -->
-  <div class="row g-4">
-    
-    <!-- Panel Gráfico de Barras: Ventas -->
-    <div class="col-12 col-lg-6">
-      <article class="bloque blanco panel-grafico">
-        <div class="grafico-marcador-posicion" aria-label="Evolución mensual de ventas">
-          <svg viewBox="0 0 300 200" class="svg-ilustracion" aria-hidden="true">
-            <rect x="30" y="40" width="22" height="140" rx="4" fill="none" stroke="currentColor" stroke-width="8" />
-            <rect x="75" y="70" width="22" height="110" rx="4" fill="none" stroke="currentColor" stroke-width="8" />
-            <rect x="120" y="110" width="22" height="70" rx="4" fill="none" stroke="currentColor" stroke-width="8" />
-            <rect x="165" y="150" width="22" height="30" rx="4" fill="none" stroke="currentColor" stroke-width="8" />
-            <line x1="20" y1="180" x2="280" y2="180" stroke="currentColor" stroke-width="8" stroke-linecap="round" />
-          </svg>
-        </div>
-      </article>
-    </div>
-
-    <!-- Panel Gráfico de Tendencia de Producción -->
-    <div class="col-12 col-lg-6">
-      <article class="bloque-blanco p-4 shadow-sm rounded-4 h-100 d-flex flex-column justify-content-between">
+  <div class="bloque-blanco p-4 p-md-5 mb-4">
+    <app-carrusel [items]="graficosSlides" [visibleDesktop]="2" [visibleMobile]="1">
+      <ng-template #itemTemplate let-slide>
         
-        <!-- Cabecera de la tarjeta -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <div class="d-flex align-items-center gap-2">
-            <i class="bi bi-egg-fill text-success fs-5"></i>
-            <h3 class="tarjeta-kpi-titulo m-0 fw-bold" style="font-size: 1rem;">TENDENCIA DE PRODUCCIÓN</h3>
-            <span class="badge bg-light text-secondary border fw-normal" style="font-size: 0.75rem;">
-                {{ nivelDescripcion() }}
-            </span>
-        </div>
-          <app-selector-fecha (cambioRango)="onCambioRango($event)"></app-selector-fecha>
-        </div>
+        <!-- SLIDE 1: Panel Gráfico de Barras: Ventas -->
+        @if (slide.id === 'ventas') {
+          <article class="bloque-blanco panel-grafico h-100 p-4 border border-secondary-subtle rounded-4">
+            <div class="grafico-marcador-posicion" aria-label="Evolución mensual de ventas">
+              <svg viewBox="0 0 300 200" class="svg-ilustracion" aria-hidden="true">
+                <rect x="30" y="40" width="22" height="140" rx="4" fill="none" stroke="currentColor" stroke-width="8" />
+                <rect x="75" y="70" width="22" height="110" rx="4" fill="none" stroke="currentColor" stroke-width="8" />
+                <rect x="120" y="110" width="22" height="70" rx="4" fill="none" stroke="currentColor" stroke-width="8" />
+                <rect x="165" y="150" width="22" height="30" rx="4" fill="none" stroke="currentColor" stroke-width="8" />
+                <line x1="20" y1="180" x2="280" y2="180" stroke="currentColor" stroke-width="8" stroke-linecap="round" />
+              </svg>
+            </div>
+          </article>
+        }
 
-        <!-- Contenedor con proporción fluida (Ratio de Bootstrap) para que crezca bien en altura -->
-        <div class="ratio ratio-21x9 my-2 w-100" aria-label="Tendencia de recolección de producción">
-          <svg viewBox="0 0 550 220" class="w-100 h-100 overflow-visible" aria-hidden="true">
-            <!-- Líneas de guía horizontales de fondo -->
-            <line x1="30" y1="30" x2="530" y2="30" stroke="currentColor" stroke-width="1" opacity="0.08" />
-            <line x1="30" y1="80" x2="530" y2="80" stroke="currentColor" stroke-width="1" opacity="0.08" />
-            <line x1="30" y1="130" x2="530" y2="130" stroke="currentColor" stroke-width="1" opacity="0.08" />
-
-            <!-- Ejes cartesianos principales -->
-            <line x1="30" y1="15" x2="30" y2="175" stroke="currentColor" stroke-width="2" opacity="0.15" />
-            <line x1="30" y1="175" x2="530" y2="175" stroke="currentColor" stroke-width="2" opacity="0.15" />
+        <!-- SLIDE 2: Panel Gráfico de Tendencia de Producción -->
+        @if (slide.id === 'tendencia') {
+          <article class="bloque-blanco p-4 border border-secondary-subtle rounded-4 h-100 d-flex flex-column justify-content-between">
             
-            
-            <!-- Línea de tendencia dinámica -->
-            <polyline 
-              [attr.points]="obtenerPuntosPolyline()" 
-              fill="none" 
-              stroke="var(--color-primario, #28a745)" 
-              stroke-width="3.5" 
-              stroke-linecap="round" 
-              stroke-linejoin="round" />
+            <!-- Cabecera de la tarjeta con su selector de fechas independiente -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-egg-fill text-success fs-5"></i>
+                <h3 class="tarjeta-kpi-titulo m-0 fw-bold" style="font-size: 1rem;">TENDENCIA DE PRODUCCIÓN</h3>
+                <span class="badge bg-light text-secondary border fw-normal" style="font-size: 0.75rem;">
+                    {{ nivelDescripcion() }}
+                </span>
+              </div>
+              <app-selector-fecha 
+                [emitirAlIniciar]="false" 
+                [maxFecha]="fechaHoy" 
+                (cambioRango)="onCambioRango($event)">
+              </app-selector-fecha>
+            </div>
 
-            <!-- Nodos y etiquetas de los 12 meses -->
-            @for (punto of tendenciaProduccion(); track punto.mes; let i = $index) {
-              <g>
-                <circle 
-                  [attr.cx]="calcularX(i, tendenciaProduccion().length)" 
-                  [attr.cy]="calcularY(punto.promedio)" 
-                  r="5" 
-                  fill="var(--color-primario, #28a745)" />
+            <!-- Contenedor con proporción fluida para el gráfico -->
+            <div class="ratio ratio-21x9 my-2 w-100" aria-label="Tendencia de recolección de producción">
+              @if (tendenciaProduccion().length > 0) {
+              <svg viewBox="0 0 550 220" class="w-100 h-100 overflow-visible" aria-hidden="true">
+                <line x1="30" y1="30" x2="530" y2="30" stroke="currentColor" stroke-width="1" opacity="0.08" />
+                <line x1="30" y1="175" x2="530" y2="175" stroke="currentColor" stroke-width="1" opacity="0.08" />
+                <line x1="30" y1="15" x2="30" y2="175" stroke="currentColor" stroke-width="2" opacity="0.15" />
+                <line x1="30" y1="175" x2="530" y2="175" stroke="currentColor" stroke-width="2" opacity="0.15" />
                 
-                @if (esPicoMaximo(punto) || esPicoMinimo(punto)) {
-                  <text 
-                    [attr.cx || attr.x]="calcularX(i, tendenciaProduccion().length)" 
-                    [attr.x]="calcularX(i, tendenciaProduccion().length)" 
-                    [attr.y]="calcularY(punto.promedio) - 12" 
-                    font-size="10" 
-                    font-weight="700"
-                    text-anchor="middle" 
-                    fill="currentColor">
-                    {{ punto.promedio }}
-                  </text>
-                }
-
-                @if (tendenciaProduccion().length <= 15 || i % 2 === 0) {
-                 <text 
-                  [attr.x]="calcularX(i, tendenciaProduccion().length)" 
-                  y="195" 
-                  font-size="9.5"
-                  font-family="inherit"
-                  text-anchor="middle" 
+                <!-- ETIQUETA DINÁMICA MÁXIMA -->
+                <text 
+                  x="25" 
+                  [attr.y]="calcularY(getMaxPromedio()) + 4" 
+                  font-size="9" 
+                  font-family="inherit" 
+                  text-anchor="end" 
                   fill="currentColor" 
-                  opacity="0.85">{{ punto.mes }}</text>
-            }  
-              </g>
-            }
-          </svg>
-        </div>
+                  opacity="0.8">
+                  {{ getMaxPromedio() }}
+                </text>
 
-        
+                <!-- ETIQUETA DINÁMICA MÍNIMA -->
+                <text 
+                  x="25" 
+                  [attr.y]="calcularY(getMinPromedio()) + 4" 
+                  font-size="9" 
+                  font-family="inherit" 
+                  text-anchor="end" 
+                  fill="currentColor" 
+                  opacity="0.8">
+                  {{ getMinPromedio() }}
+                </text>           
+                
+                <!-- Línea de tendencia dinámica -->
+                <polyline 
+                  [attr.points]="obtenerPuntosPolyline()" 
+                  fill="none" 
+                  stroke="var(--color-primario, #28a745)" 
+                  stroke-width="3.5" 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round" />
 
-      </article>
-    </div>
+                <!-- Nodos y etiquetas -->
+                @for (punto of tendenciaProduccion(); track punto.mes; let i = $index) {
+                  <g>
+                    <circle 
+                      [attr.cx]="calcularX(i, tendenciaProduccion().length)" 
+                      [attr.cy]="calcularY(punto.promedio)" 
+                      r="5" 
+                      fill="var(--color-primario, #28a745)" />
+                    
+                    @if (esPicoMaximo(punto) || esPicoMinimo(punto)) {
+                      <text 
+                        [attr.x]="calcularX(i, tendenciaProduccion().length)" 
+                        [attr.y]="calcularY(punto.promedio) - 12" 
+                        font-size="10" 
+                        font-weight="700"
+                        text-anchor="middle" 
+                        fill="currentColor">
+                        {{ punto.promedio }}
+                      </text>
+                    }
 
+                    @if (tendenciaProduccion().length <= 15 || i % 2 === 0) {
+                     <text 
+                      [attr.x]="calcularX(i, tendenciaProduccion().length)" 
+                      y="195" 
+                      font-size="9.5"
+                      font-family="inherit"
+                      text-anchor="middle" 
+                      fill="currentColor" 
+                      opacity="0.85">{{ punto.mes }}</text>
+                    }  
+                  </g>
+                }
+              </svg>
+              } @else {
+                <div class="d-flex justify-content-center align-items-center" style="height: 180px;">
+                  <span class="text-muted small">Cargando tendencia...</span>
+                </div>
+              }
+            </div>
+
+          </article>
+        }
+
+      </ng-template>
+    </app-carrusel>
   </div> 
 
 </section> 
