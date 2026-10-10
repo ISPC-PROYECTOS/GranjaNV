@@ -100,6 +100,26 @@
   font-size: 22px;
 }
 
+.gastos-total {
+  background-color: var(--color-primario-claro);
+  border-radius: 10px;
+  margin-top: auto;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.gastos-total-texto,
+.gastos-total-monto {
+  font-family: var(--font-titulos);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-primario);
+  margin: 0;
+}
+
 /* CARGAR GASTO */
 
 .cargar-gasto-titulo {
@@ -185,6 +205,18 @@
   .gasto-acciones {
     margin-left: auto;
     gap: 2px;
+  }
+
+  .gastos-total {
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  .gastos-total-texto,
+  .gastos-total-monto {
+    font-size: 18px;
+    white-space: nowrap;
   }
 
   .btn-gasto-editar,

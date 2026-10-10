@@ -360,10 +360,15 @@ export class Ventas implements OnInit, OnDestroy {
     this.actualizarFechaEntrega(valor);
   }
 
+  fechaPasadaAntesDeLas20(): boolean {
+    const fecha = this.fechaEntregaSeleccionada();
+    return Boolean(fecha && fecha < this.fechaMinima && this.horaActual() < 20);
+  }
+
   private actualizarFechaEntrega(valor: string): void {
     this.fechaEntregaSeleccionada.set(valor);
     this.errorBackend.set(
-      valor && valor < this.fechaMinima && this.horaActual() < 20
+      this.fechaPasadaAntesDeLas20()
         ? 'La fecha de reparto no puede ser anterior al día de hoy hasta las 20:00.'
         : null,
     );
@@ -401,8 +406,8 @@ export class Ventas implements OnInit, OnDestroy {
       this.errorBackend.set('La fecha de entrega programada es obligatoria.');
       return;
     }
-    if (this.fechaEntregaSeleccionada() < this.fechaMinima) {
-      this.errorBackend.set('No se puede programar un reparto con una fecha pasada.');
+    if (this.fechaPasadaAntesDeLas20()) {
+      this.errorBackend.set('La fecha de reparto no puede ser anterior al día de hoy hasta las 20:00.');
       return;
     }
 
