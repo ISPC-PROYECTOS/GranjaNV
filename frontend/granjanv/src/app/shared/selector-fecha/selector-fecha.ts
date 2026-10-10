@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, output, input, ElementRef, inject } from '@angular/core';
+import { Component, OnInit, Input, output, input, ElementRef, inject, EventEmitter} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { obtenerRangoMesActual } from '../../core/utils/date.utils';
@@ -19,6 +19,8 @@ export class SelectorFecha implements OnInit {
   private elementRef = inject(ElementRef);
 
   @Input() permitirTodos: boolean = false;
+  @Input() emitirAlIniciar: boolean = true;
+  @Input() maxFecha?: string;
 
   cambioRango = output<RangoFechaSeleccionado>();
   modoSeleccion = input(false);
@@ -36,11 +38,13 @@ export class SelectorFecha implements OnInit {
     this.fechaDesde = rango.fechaDesde;
     this.fechaHasta = rango.fechaHasta;
 
-    if (this.permitirTodos) {
-      this.tipoFiltro = 'todos';
-      this.cambioRango.emit({ fechaDesde: '', fechaHasta: '' });
-    } else {
-      this.cambioRango.emit(rango);
+    if (this.emitirAlIniciar) {
+      if (this.permitirTodos) {
+        this.tipoFiltro = 'todos';
+        this.cambioRango.emit({ fechaDesde: '', fechaHasta: '' });
+      } else {
+        this.cambioRango.emit(rango);
+      }
     }
   }
 
