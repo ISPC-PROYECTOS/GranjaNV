@@ -4,6 +4,7 @@ import { Gastos } from '../../../../core/services/gastos';
 import { PedidosService } from '../../../../core/services/pedidos.service';
 import { ProduccionService } from '../../../../core/services/produccion.service';
 import { obtenerRangoMesActual } from '../../../../core/utils/date.utils';
+import { Spinner } from '../../../../shared/spinner/spinner';
 
 export interface MetricaItem {
   titulo: string;
@@ -18,11 +19,12 @@ export interface MetricaItem {
 
 @Component({
   selector: 'app-panel-de-control',
-  imports: [RouterLink],
+  imports: [RouterLink, Spinner],
   templateUrl: './panel-de-control.html',
   styleUrl: './panel-de-control.css',
 })
 export class PanelDeControl implements OnInit {
+  readonly cargando = signal(true);
   private readonly gastosService = inject(Gastos);
   private readonly pedidosService = inject(PedidosService);
   private readonly produccionService = inject(ProduccionService);
@@ -73,12 +75,15 @@ export class PanelDeControl implements OnInit {
 
   cargarMetricasDashboard(): void {
     const rangoMesActual = obtenerRangoMesActual();
+    this.cargando.set(true);
 
     this.gastosService.obtenerTotalGastos(rangoMesActual).subscribe({
       next: (respuesta) => {
         this.totalCompras.set(Number(respuesta.total) || 0);
+        this.cargando.set(false);
       },
       error: (error: unknown) => {
+        this.cargando.set(false);
         console.error('Error al obtener el total de compras:', error);
       },
     });
@@ -88,8 +93,12 @@ export class PanelDeControl implements OnInit {
         this.pedidosPendientesCount.set(data.pedidos_pendientes);
         this.ventasMesActual.set(Number(data.ventas_mes_actual ?? data.total_ventas_cobradas));
         this.ventasMesAnterior.set(Number(data.ventas_mes_anterior ?? 0));
+        this.cargando.set(false);
       },
-      error: (err) => console.error('Error al cargar métricas de pedidos:', err),
+      error: (err) => {
+        this.cargando.set(false);
+        console.error('Error al cargar pedidos:', err);
+      }
     });
 
     this.produccionService.cargarMetricasProduccion();

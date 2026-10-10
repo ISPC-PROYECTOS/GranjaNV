@@ -11,13 +11,14 @@ import {
   ReporteFinanzas,
   ReporteProduccion,
 } from '../../../../../core/models/reporte.model';
+import { Spinner } from '../../../../../shared/spinner/spinner';
 
 type TipoReporte = 'produccion' | 'finanzas' | 'completo';
 type FormatoReporte = 'pdf' | 'excel';
 
 @Component({
   selector: 'app-reportes',
-  imports: [SelectorFecha, CerrarConEscapeDirective],
+  imports: [SelectorFecha, CerrarConEscapeDirective, Spinner],
   templateUrl: './reportes.html',
   styleUrl: './reportes.css',
 })

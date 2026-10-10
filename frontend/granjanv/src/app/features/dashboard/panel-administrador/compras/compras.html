@@ -34,6 +34,11 @@
                 </div>
 
                 <div class="gastos-lista">
+                    @if (cargando()) {
+                    <div class="py-4">
+                      <app-spinner />
+                    </div>
+                  } @else {
                     @for (gasto of gastos; track gasto.id) {
                     <div class="gasto-item">
 
@@ -41,6 +46,7 @@
                             <p class="gasto-concepto">
                                 {{ gasto.descripcion }} - {{ gasto.categoria_display }}
                             </p>
+                            
                         </div>
 
                         <p class="gasto-monto">
@@ -61,7 +67,10 @@
 
                         </div>
                     </div>
+                    } @empty {
+                      <p class="text-center text-muted py-3">No hay gastos registrados en este período.</p>
                     }
+                  }
                 </div>
 
                 <div class="gastos-total">
