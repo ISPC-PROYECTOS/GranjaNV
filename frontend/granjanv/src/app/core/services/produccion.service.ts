@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpParams } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import {
   Galpon,
@@ -53,23 +53,20 @@ export class ProduccionService {
     });
   }
 
-  obtenerGalpones(incluirInactivos = false): Observable<Galpon[]> {
-    const parametro = incluirInactivos ? 'incluir_inactivos' : 'solo_activos';
-    const params = new HttpParams().set(parametro, 'true');
+  obtenerGalpones(soloActivos = false): Observable<Galpon[]> {
+    let params = new HttpParams();
+    if (soloActivos) {
+      params = params.set('solo_activos', 'true');
+    }
     return this.http.get<Galpon[]>(`${this.apiUrl}galpones/`, { params });
   }
 
-  crearGalpon(
-    galpon: Omit<Galpon, 'id' | 'creado_en' | 'actualizado_en' | 'cantidad_actual_gallinas'>,
-  ): Observable<Galpon> {
-    return this.http.post<Galpon>(`${this.apiUrl}galpones/`, galpon);
+  crearGalpon(payload: Partial<Galpon>): Observable<Galpon> {
+    return this.http.post<Galpon>(`${this.apiUrl}galpones/`, payload);
   }
 
-  actualizarGalpon(
-    id: number,
-    galpon: Partial<Omit<Galpon, 'id' | 'numero_galpon' | 'creado_en' | 'actualizado_en' | 'cantidad_actual_gallinas'>>,
-  ): Observable<Galpon> {
-    return this.http.patch<Galpon>(`${this.apiUrl}galpones/${id}/`, galpon);
+  actualizarGalpon(id: number, payload: Partial<Galpon>): Observable<Galpon> {
+    return this.http.patch<Galpon>(`${this.apiUrl}galpones/${id}/`, payload);
   }
 
   cargarMetricasProduccion(): void {

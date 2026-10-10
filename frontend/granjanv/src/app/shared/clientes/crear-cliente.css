@@ -112,6 +112,13 @@
   transform: translateY(-1px);
 }
 
+.contenedor-crear-cliente .btn-guardar:disabled,
+.contenedor-crear-cliente .btn-guardar[disabled] {
+  border: 3px solid var(--color-primario-oscuro) !important;
+  opacity: 0.85;
+  filter: none;
+}
+
 /* AVISO PREVENTIVO EN ZONA VERDE */
 .alerta-aviso {
   background-color: rgba(0, 0, 0, 0.22);

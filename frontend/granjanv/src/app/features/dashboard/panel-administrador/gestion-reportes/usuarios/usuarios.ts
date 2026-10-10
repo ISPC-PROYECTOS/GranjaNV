@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Usuario } from '../../../../../core/models/user.model';
 import { UsuariosService } from '../../../../../core/services/usuarios.service';
-import { RegistroUsuarioComponent } from '../../registro-usuario/registro-usuario';
+import { RegistroUsuarioComponent } from '../registro-usuario/registro-usuario';
 
 @Component({
   selector: 'app-usuarios',

@@ -15,9 +15,8 @@ class ClienteViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = super().get_queryset()
         incluir_inactivos = self.request.query_params.get('incluir_inactivos', '').lower() == 'true'
-
-        if self.action == 'list' and not incluir_inactivos:
-            queryset = queryset.filter(activo=True)
+        if incluir_inactivos:
+            queryset = Cliente.objects.all()
 
         search = self.request.query_params.get('search', None)
 

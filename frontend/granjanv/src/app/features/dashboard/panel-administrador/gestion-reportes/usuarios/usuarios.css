@@ -36,14 +36,30 @@
   min-width: 0;
 }
 
+.list-group {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.usuario-fila {
+  flex: 0 0 auto;
+  width: max-content;
+  min-width: 100%;
+}
+
+.usuario-principal,
+.usuario-identidad,
+.usuarios-acciones {
+  min-width: max-content;
+}
+
 .usuario-identidad {
   flex: 1;
 }
 
 .usuario-email {
   display: block;
-  max-width: 100%;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
 }
 
 .usuario-alta-modal > .btn-close {
@@ -99,7 +115,7 @@
 @media (min-width: 576px) and (max-width: 767px) {
   .usuario-fila {
     display: grid !important;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: max-content auto;
     align-items: center;
     gap: 0.75rem;
   }

@@ -153,8 +153,8 @@
               <i class="hgi-stroke hgi-checkmark-circle-02" aria-hidden="true"></i>
               Pedidos cerrados ({{ pedidosCerrados().length }})
             </span>
-            <span class="total-ventas-toggle">
-              Total: ${{ formatearMoneda(totalVentas()) }}
+            <span class="d-flex align-items-center gap-2 fw-semibold">
+              Total: ${{ formatearMoneda(totalRecaudadoCerrados()) }}
               <i class="hgi-stroke hgi-arrow-down-01 icono-chevron" [class.rotado]="mostrarCerrados()"
                 aria-hidden="true"></i>
             </span>

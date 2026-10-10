@@ -110,12 +110,11 @@ export class Ventas implements OnInit, OnDestroy {
     this.productos().reduce((acc, p) => acc + p.maples * p.precioMaple, 0),
   );
 
-  readonly fechaPasadaAntesDeLas20 = computed(
-    () => this.fechaEntregaSeleccionada() < this.fechaMinima && this.horaActual() < 20,
-  );
-
-  readonly totalVentas = computed(() =>
-    this.pedidosCerrados().reduce((acc, pedido) => acc + Number(pedido.total), 0),
+  readonly totalRecaudadoCerrados = computed(() =>
+    this.pedidosCerrados().reduce(
+      (total, pedido) => total + (pedido.estado_pago ? Number(pedido.total) || 0 : 0),
+      0,
+    ),
   );
 
   readonly cantidadTotalMaples = computed(() =>

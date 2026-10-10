@@ -40,7 +40,7 @@ export class Galpones implements OnInit {
   cargarGalpones(): void {
     this.cargando.set(true);
     this.error.set(false);
-    this.produccionService.obtenerGalpones(true).subscribe({
+    this.produccionService.obtenerGalpones().subscribe({
       next: (galpones) => {
         this.galpones.set(galpones);
         this.cargando.set(false);
