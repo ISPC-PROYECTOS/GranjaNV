@@ -70,14 +70,20 @@
                         </h3>
                     </header>
 
-                    <p class="metrica-valor">
-                        {{ metrica.valor }}
-                    </p>
+                    @if (cargando()) {
+                      <div class="my-auto py-2">
+                        <app-spinner tamanio="sm" />
+                      </div>
+                    } @else {
+                      <p class="metrica-valor">
+                          {{ metrica.valor }}
+                      </p>
 
-                    @if (metrica.subtexto) {
-                        <p class="metrica-subtexto">
-                            {{ metrica.subtexto }}
-                        </p>
+                      @if (metrica.subtexto) {
+                          <p class="metrica-subtexto">
+                              {{ metrica.subtexto }}
+                          </p>
+                      }
                     }
 
                     @if (metrica.ruta) {

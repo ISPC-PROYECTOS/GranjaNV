@@ -24,6 +24,7 @@ import { Buscador } from '../../../../shared/buscador/buscador';
 import { CrearClienteComponent } from '../../../../shared/clientes/crear-cliente';
 import { ClienteSugerenciasComponent } from '../../../../shared/clientes-sugerencias/clientes-sugerencias';
 import { ProduccionService } from '../../../../core/services/produccion.service';
+import { Spinner } from '../../../../shared/spinner/spinner';
 
 interface ItemStockDeficit {
   tipo: string;
@@ -39,7 +40,7 @@ interface AlertaStockFaltante {
 @Component({
   selector: 'app-ventas',
   imports: [CommonModule, FormsModule, RouterLink, SelectorFecha, Buscador, CrearClienteComponent,
-            ClienteSugerenciasComponent],
+            ClienteSugerenciasComponent, Spinner],
   templateUrl: './ventas.html',
   styleUrl: './ventas.css',
 })

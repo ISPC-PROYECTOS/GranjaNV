@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, ChangeDetectorRef, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
@@ -11,16 +11,18 @@ import {
   RangoFechaSeleccionado,
 } from '../../../../shared/selector-fecha/selector-fecha';
 import { Buscador } from '../../../../shared/buscador/buscador';
+import { Spinner } from '../../../../shared/spinner/spinner';
 
 @Component({
   selector: 'app-compras',
-  imports: [ReactiveFormsModule, RouterLink, SelectorFecha, Buscador],
+  imports: [ReactiveFormsModule, RouterLink, SelectorFecha, Buscador, Spinner],
   templateUrl: './compras.html',
   styleUrl: './compras.css',
 })
 export class Compras implements OnInit, OnDestroy {
   private gastosService = inject(Gastos);
   private cdr = inject(ChangeDetectorRef);
+  readonly cargando = signal(true);
 
   formularioGastos: FormGroup;
 
@@ -88,13 +90,16 @@ export class Compras implements OnInit, OnDestroy {
 
   cargarDatos(): void {
     const filtros = this.obtenerFiltrosActivos();
+    this.cargando.set(true);
 
     this.gastosService.obtenerGastos(filtros).subscribe({
       next: (gastos) => {
         this.gastos = gastos;
+        this.cargando.set(false);
         this.cdr.detectChanges();
       },
       error: (error) => {
+        this.cargando.set(false);
         console.error('Error al obtener los gastos:', error);
       },
     });

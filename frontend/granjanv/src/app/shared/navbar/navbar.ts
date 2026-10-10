@@ -6,10 +6,11 @@ import { WeatherService } from '../../core/services/weather-service';
 import { NotificacionesService } from '../../core/services/notificaciones.service';
 import { WeatherData, PronosticoDiario } from '../../core/models/weather';
 import { Notificacion } from '../../core/models/notificacion.model';
+import { Spinner } from '../spinner/spinner';
 
 @Component({
   selector: 'app-navbar',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, Spinner],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
   host: {
@@ -22,7 +23,7 @@ export class NavbarComponent implements OnInit {
   private readonly weatherService = inject(WeatherService);
   private readonly notificacionesService = inject(NotificacionesService);
   private readonly elementRef = inject(ElementRef);
-
+  readonly cargandoNotificaciones = this.notificacionesService.cargando;
   readonly isAdmin = this.authService.isAdmin;
   readonly notificaciones = this.notificacionesService.notificaciones;
   readonly noLeidasCount = this.notificacionesService.noLeidasCount;

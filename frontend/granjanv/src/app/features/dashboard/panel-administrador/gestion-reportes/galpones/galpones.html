@@ -19,10 +19,12 @@
 
   @if (error()) {
     <div class="alerta-error-modal" role="alert">
-      No se pudieron cargar los galpones. Verificá la conexión con Producción y volvé a intentar.
+      No se pudieron cargar los galpones.
     </div>
   } @else if (cargando() && galpones().length === 0) {
-    <p class="text-center text-muted py-4">Cargando galpones...</p>
+    <div class="py-4">
+      <app-spinner />
+    </div>
   } @else if (galpones().length === 0) {
     <p class="text-center text-muted py-4">No hay galpones para mostrar.</p>
   } @else {
