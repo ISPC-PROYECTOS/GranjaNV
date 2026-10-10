@@ -54,6 +54,22 @@ class RegistroUsuarioSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return Usuario.objects.create_user(**validated_data)
 
+class UsuarioAdminSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=False, min_length=8)
+
+    class Meta:
+        model = Usuario
+        fields = ['id_usuario', 'email', 'nombre', 'apellido', 'rol', 'password']
+        read_only_fields = ['id_usuario']
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop('password', None)
+        usuario = super().update(instance, validated_data)
+        if password:
+            usuario.set_password(password)
+            usuario.save(update_fields=['password'])
+        return usuario
+
 class RequestOTPSerializer(serializers.Serializer):
     email = serializers.EmailField()
 

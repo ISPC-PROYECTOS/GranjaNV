@@ -4,6 +4,7 @@ from smtplib import SMTPException
 from django.conf import settings
 from django.core.mail import send_mail
 from rest_framework import generics, status
+from rest_framework import generics, mixins, status, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -13,6 +14,7 @@ from .models import Usuario
 from .permissions import IsAdminRole
 from .serializers import (
     CustomTokenObtainPairSerializer,
+    UsuarioAdminSerializer,
     RegistroUsuarioSerializer,
     RequestOTPSerializer,
     ResetPasswordOTPSerializer,
@@ -36,6 +38,17 @@ class RegistroUsuarioView(generics.CreateAPIView):
 
     queryset = Usuario.objects.all()
     serializer_class = RegistroUsuarioSerializer
+    permission_classes = [IsAuthenticated, IsAdminRole]
+
+class UsuarioAdminViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet,
+):
+    queryset = Usuario.objects.order_by('id_usuario')
+    serializer_class = UsuarioAdminSerializer
     permission_classes = [IsAuthenticated, IsAdminRole]
 
 

@@ -1,0 +1,293 @@
+:host {
+  display: block;
+  font-family: var(--font-textos);
+}
+
+.registro-wrapper {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2.5rem 1rem;
+  box-sizing: border-box;
+}
+
+.registro-wrapper-modal {
+  min-height: 0;
+  padding: 0;
+}
+
+.registro-container {
+  width: 100%;
+  max-width: 560px;
+}
+
+.card-form {
+  background: var(--color-primario-oscuro);
+  border-radius: 33px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border: none;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.header h1 {
+  margin: 0;
+  color: var(--color-blanco);
+  font-size: 1.8rem;
+}
+
+.header p {
+  margin-top: 0.4rem;
+  color: var(--color-crema);
+  font-size: 0.95rem;
+}
+
+.button-group {
+  margin-top: 1.5rem;
+}
+
+/* MODO OSCURO */
+
+:host-context(body.dark-mode) .header h1,
+:host-context(body.dark-mode) .header p,
+:host-context(body.dark-mode) .form-group label {
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .form-group input,
+:host-context(body.dark-mode) .form-group select {
+  background-color: var(--color-negro);
+  color: var(--color-blanco);
+}
+
+:host-context(body.dark-mode) .form-group input::placeholder {
+  color: var(--color-gris-claro);
+}
+
+:host-context(body.dark-mode) .btn-formulario {
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .error-msg {
+  color: var(--color-negro);
+}
+
+.registro-wrapper-modal .contenedor-crear-cliente,
+.registro-wrapper-modal .card-form {
+  max-width: none;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.registro-wrapper-modal .card-form {
+  text-align: left;
+}
+
+.registro-wrapper-modal .registro-container {
+  max-width: none;
+}
+
+.registro-wrapper-modal,
+.registro-wrapper-modal .registro-container,
+.registro-wrapper-modal .card-form,
+.registro-wrapper-modal .registro-form {
+  width: 100%;
+  min-width: 0;
+}
+
+.registro-wrapper-modal .registro-form {
+  color: var(--color-negro);
+}
+
+.registro-wrapper-modal .header {
+  margin-bottom: 1.25rem;
+  text-align: left;
+}
+
+.registro-wrapper-modal .titulo-modal {
+  margin: 0;
+  color: var(--color-blanco);
+  font-family: var(--font-titulos);
+  font-size: 30px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+:host-context(body.dark-mode) .registro-wrapper-modal .titulo-modal {
+  color: var(--color-negro);
+}
+
+.registro-wrapper-modal .button-group {
+  justify-content: flex-end;
+}
+
+.registro-wrapper-modal .form-group label {
+  color: var(--color-negro);
+}
+
+.registro-wrapper-modal .form-group {
+  min-width: 0;
+}
+
+.registro-wrapper-modal .form-group .error-msg {
+  color: var(--color-error-oscuro);
+}
+
+.registro-wrapper-modal .btn-formulario {
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+}
+
+.registro-wrapper-modal .btn-formulario:hover:not(:disabled) {
+  background-color: var(--color-primario-oscuro);
+  border-color: var(--color-primario-oscuro);
+}
+
+:host-context(body.dark-mode) .registro-wrapper-modal .registro-form .form-group input.form-control,
+:host-context(body.dark-mode) .registro-wrapper-modal .registro-form .form-group select.form-select {
+  border: 1px solid var(--color-gris-medio);
+  background-color: var(--color-blanco);
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .registro-wrapper-modal .registro-form .form-group input.form-control::placeholder {
+  color: var(--color-gris-oscuro);
+}
+
+@media (max-width: 575px) {
+  .registro-wrapper:not(.registro-wrapper-modal) {
+    min-height: calc(100vh - 70px);
+    min-height: calc(100dvh - 70px);
+    align-items: flex-start;
+    padding: 1rem 0.75rem;
+  }
+
+  .registro-wrapper-modal {
+    min-height: 0;
+    padding: 0;
+  }
+
+  .registro-wrapper-modal .registro-form {
+    padding: 1rem !important;
+  }
+
+  .registro-wrapper-modal .registro-form .row {
+    --bs-gutter-x: 0.75rem;
+    --bs-gutter-y: 0.75rem;
+  }
+
+  .registro-wrapper-modal .registro-form .row > .form-group {
+    margin-bottom: 0;
+  }
+
+  .registro-wrapper-modal .registro-form > .form-group {
+    margin-bottom: 0.875rem;
+  }
+
+  .card-form {
+    padding: 1.25rem 1rem;
+    border-radius: 20px;
+  }
+
+  .header {
+    margin-bottom: 1rem;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+  }
+
+  .registro-wrapper-modal .titulo-modal {
+    font-size: 1.35rem;
+    padding-right: 2.5rem;
+  }
+
+  .registro-wrapper-modal .button-group .btn-guardar {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .registro-wrapper-modal .form-group .form-control,
+  .registro-wrapper-modal .form-group .form-select {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    font-size: 16px;
+  }
+
+  .form-group {
+    min-width: 0;
+    margin-bottom: 0.875rem;
+  }
+
+  .form-group input,
+  .form-group .custom-select {
+    min-width: 0;
+    padding: 0.7rem 0.8rem;
+    font-size: 16px;
+  }
+
+  .error-msg,
+  .alerta-error,
+  .alerta-exito {
+    overflow-wrap: anywhere;
+  }
+
+  .button-group {
+    margin-top: 1rem;
+  }
+
+  .btn-formulario {
+    min-height: 44px;
+  }
+
+  .registro-container .modal-confirmacion-caja {
+    max-height: calc(100vh - 2rem);
+    max-height: calc(100dvh - 2rem);
+    padding: 1rem;
+    overflow-y: auto;
+  }
+
+  .registro-container .modal-confirmacion-caja > .d-flex {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem !important;
+  }
+
+  .registro-container .modal-confirmacion-caja > .d-flex .btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 380px) {
+  .card-form {
+    padding: 1rem 0.75rem;
+    border-radius: 16px;
+  }
+
+  .header h1 {
+    font-size: 1.35rem;
+  }
+
+  .header p {
+    font-size: 0.875rem;
+  }
+
+  .registro-wrapper-modal .titulo-modal {
+    font-size: 1.2rem;
+  }
+
+  .registro-wrapper-modal .registro-form {
+    padding: 0.75rem !important;
+  }
+}

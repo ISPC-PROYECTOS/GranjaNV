@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import {
   Galpon,
@@ -40,6 +40,22 @@ export class ProduccionService {
       next: (data) => this.galpones.set(data),
       error: (err) => console.error('Error al cargar galpones:', err),
     });
+  }
+
+  obtenerGalpones(soloActivos = false): Observable<Galpon[]> {
+    let params = new HttpParams();
+    if (soloActivos) {
+      params = params.set('solo_activos', 'true');
+    }
+    return this.http.get<Galpon[]>(`${this.apiUrl}galpones/`, { params });
+  }
+
+  crearGalpon(payload: Partial<Galpon>): Observable<Galpon> {
+    return this.http.post<Galpon>(`${this.apiUrl}galpones/`, payload);
+  }
+
+  actualizarGalpon(id: number, payload: Partial<Galpon>): Observable<Galpon> {
+    return this.http.patch<Galpon>(`${this.apiUrl}galpones/${id}/`, payload);
   }
 
   cargarMetricasProduccion(): void {

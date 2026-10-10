@@ -107,6 +107,13 @@ export class Ventas implements OnInit {
     this.productos().reduce((acc, p) => acc + p.maples * p.precioMaple, 0),
   );
 
+  readonly totalRecaudadoCerrados = computed(() =>
+    this.pedidosCerrados().reduce(
+      (total, pedido) => total + (pedido.estado_pago ? Number(pedido.total) || 0 : 0),
+      0,
+    ),
+  );
+
   readonly cantidadTotalMaples = computed(() =>
     this.productos().reduce((acc, p) => acc + p.maples, 0),
   );
