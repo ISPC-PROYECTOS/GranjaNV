@@ -5,13 +5,15 @@ import { PedidosService } from '../../../../core/services/pedidos.service';
 import { ProduccionService } from '../../../../core/services/produccion.service';
 import { obtenerRangoMesActual } from '../../../../core/utils/date.utils';
 
-export interface MetricaDashboard {
+export interface MetricaItem {
   titulo: string;
   valor: string;
+  color: 'verde' | 'naranja';
   icono: string;
-  color: 'naranja' | 'verde';
-  ruta: string | null;
-  queryParams?: {[key: string]: string};
+  ruta?: string;
+  queryParams?: Record<string, string>;
+  subtexto?: string; // Opcional para Alternativa A
+  esCarrusel?: boolean; // Opcional para Alternativa B
 }
 
 @Component({
@@ -28,8 +30,10 @@ export class PanelDeControl implements OnInit {
   readonly totalCompras = signal<number>(0);
   readonly totalVentasCobradas = signal<number>(0);
   readonly pedidosPendientesCount = signal<number>(0);
+  readonly ventasMesActual = signal<number>(0);
+  readonly ventasMesAnterior = signal<number>(0);
 
-  readonly metricas = computed<MetricaDashboard[]>(() => [
+  readonly metricas = computed<MetricaItem[]>(() => [
     {
       titulo: 'PEDIDOS PENDIENTES',
       valor: this.pedidosPendientesCount().toString(),
@@ -39,12 +43,13 @@ export class PanelDeControl implements OnInit {
       queryParams: {seccion: 'pendientes'},
     },
     {
-      titulo: 'VENTAS',
-      valor: `$${this.formatearNumero(this.totalVentasCobradas())}`,
-      icono: 'hgi-money-receive-02',
+      titulo: 'Ventas',
+      valor: `$${this.formatearNumero(this.ventasMesActual())}`,
+      subtexto: `Mes anterior: $${this.formatearNumero(this.ventasMesAnterior())}`,
       color: 'verde',
+      icono: 'hgi-dollar-circle',
       ruta: '/dashboard/admin/ventas',
-      queryParams: {seccion: 'nuevo'},
+      queryParams: { seccion: 'pendientes' }
     },
     {
       titulo: 'COMPRAS',
@@ -78,14 +83,13 @@ export class PanelDeControl implements OnInit {
       },
     });
 
-    this.pedidosService.obtenerMetricas(rangoMesActual).subscribe({
+    this.pedidosService.obtenerMetricas().subscribe({
       next: (data) => {
         this.pedidosPendientesCount.set(data.pedidos_pendientes);
-        this.totalVentasCobradas.set(Number(data.total_ventas_cobradas) || 0);
+        this.ventasMesActual.set(Number(data.ventas_mes_actual ?? data.total_ventas_cobradas));
+        this.ventasMesAnterior.set(Number(data.ventas_mes_anterior ?? 0));
       },
-      error: (error: unknown) => {
-        console.error('Error al obtener las métricas de ventas y pedidos:', error);
-      },
+      error: (err) => console.error('Error al cargar métricas de pedidos:', err),
     });
 
     this.produccionService.cargarMetricasProduccion();

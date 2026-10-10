@@ -5,6 +5,8 @@ export type TipoHuevo = 'BLANCO_1' | 'BLANCO_2' | 'COLOR_1' | 'COLOR_2' | 'MIXTO
 export interface MetricasDashboardResponse {
   pedidos_pendientes: number;
   total_ventas_cobradas: string;
+  ventas_mes_actual?: string;
+  ventas_mes_anterior?: string;
 }
 
 export interface ItemPedidoRead {
