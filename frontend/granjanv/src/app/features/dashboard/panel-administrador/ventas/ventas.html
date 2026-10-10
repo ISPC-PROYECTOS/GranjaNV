@@ -100,6 +100,8 @@
             <footer class="pedido-card-footer animate-fade-in">
               <div class="acciones-pedido">
 
+                
+
                 <div class="acciones-estado">
                   <button type="button" class="btn btn-estado-toggle" [class.completado]="pedido.estado_entrega"
                     (click)="solicitarToggleEntrega(pedido)">
@@ -153,8 +155,11 @@
               <i class="hgi-stroke hgi-checkmark-circle-02" aria-hidden="true"></i>
               Pedidos cerrados ({{ pedidosCerrados().length }})
             </span>
-            <i class="hgi-stroke hgi-arrow-down-01 icono-chevron" [class.rotado]="mostrarCerrados()"
-              aria-hidden="true"></i>
+            <span class="total-ventas-toggle">
+              Total: ${{ formatearMoneda(totalVentas()) }}
+              <i class="hgi-stroke hgi-arrow-down-01 icono-chevron" [class.rotado]="mostrarCerrados()"
+                aria-hidden="true"></i>
+            </span>
           </button>
 
           @if (mostrarCerrados()) {
@@ -339,14 +344,15 @@
               </button>
               }
             </div>
-            <input id="fecha-entrega-manual" type="date" class="form-control" [min]="fechaMinima"
+            <input id="fecha-entrega-manual" type="date" class="form-control"
               [ngModel]="fechaEntregaSeleccionada()" (ngModelChange)="onCambioFechaManual($event)" required />
           </div>
 
           <!-- Acciones del Formulario -->
           <div class="gestion-formulario-acciones pt-2">
             <button type="button" class="btn btn-limpiar" (click)="limpiar()">Limpiar</button>
-            <button type="button" class="btn btn-guardar" (click)="guardarPedido()" [disabled]="isGuardando()">
+            <button type="button" class="btn btn-guardar" (click)="guardarPedido()"
+              [disabled]="isGuardando() || fechaPasadaAntesDeLas20()">
               {{ pedidoEditandoId() ? 'Actualizar' : 'Guardar' }}
             </button>
           </div>
@@ -397,7 +403,7 @@
   </div>
   }
 
-  @if (alertaStock(); as alerta) {
+    @if (alertaStock(); as alerta) {
   <div class="modal-confirmacion-backdrop">
     <div
       class="modal-confirmacion-caja animate-fade-in"
@@ -465,9 +471,8 @@
       </div>
     </div>
   </div>
-  }  
-
-  <!-- MODAL DE CONFIRMACIÓN DE CIERRE DE PEDIDO -->
+  }                 
+    <!-- MODAL DE CONFIRMACIÓN DE CIERRE DE PEDIDO -->
   @if (mostrarConfirmacionCierre() && pedidoACerrar(); as pedido) {
   <div class="modal-confirmacion-backdrop">
     <div
@@ -516,6 +521,7 @@
     </div>
   </div>
   }
+  
   <!-- MODAL REAPERTURA DE PEDIDO CERRADO -->
   @if (mostrarModalReabrir() && pedidoAReabrir(); as pedido) {
   <div class="modal-overlay-backdrop">

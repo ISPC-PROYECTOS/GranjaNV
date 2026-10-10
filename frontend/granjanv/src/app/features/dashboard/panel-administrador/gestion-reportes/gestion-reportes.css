@@ -31,3 +31,62 @@
 .btn-pestania.pestania-activa {
   border-color: var(--color-secundario);
 }
+
+@media (max-width: 575px) {
+  .gestion-pagina {
+    padding: 0.75rem;
+  }
+
+  .gestion-pagina > .btn-volver-panel {
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  .gestion-seccion {
+    padding: 0.75rem;
+    border-radius: 20px;
+  }
+
+  .barra-pestanias {
+    gap: 0.5rem;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    overscroll-behavior-x: contain;
+  }
+
+  .btn-pestania {
+    min-height: 44px;
+    padding: 0.65rem 0.875rem;
+    font-size: 0.8125rem;
+  }
+
+  .gestion-seccion > .mt-3 {
+    min-width: 0;
+    margin-top: 0.75rem !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .gestion-pagina {
+    padding: 0.5rem;
+  }
+
+  .gestion-seccion {
+    padding: 0.625rem;
+    border-radius: 16px;
+  }
+
+  .barra-pestanias {
+    gap: 0.375rem;
+    margin-right: -0.625rem;
+    margin-left: -0.625rem;
+    padding: 0.5rem 0.625rem;
+    border-radius: 0;
+  }
+
+  .btn-pestania {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+  }
+}

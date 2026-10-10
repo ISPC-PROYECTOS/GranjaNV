@@ -1,0 +1,268 @@
+:host-context(body.dark-mode) .list-group-item {
+  --bs-list-group-bg: var(--color-blanco);
+  --bs-list-group-color: var(--color-negro);
+  --bs-list-group-border-color: var(--color-gris-medio);
+}
+
+:host-context(body.dark-mode) .text-muted {
+  color: var(--color-gris-oscuro) !important;
+}
+
+:host-context(body.dark-mode) .bg-success-subtle.text-success-emphasis {
+  background-color: var(--color-primario-claro) !important;
+  color: var(--color-negro) !important;
+}
+
+:host-context(body.dark-mode) .bg-warning-subtle.text-warning-emphasis {
+  background-color: color-mix(in srgb, var(--color-secundario) 30%, var(--color-blanco)) !important;
+  color: var(--color-negro) !important;
+}
+
+:host-context(body.dark-mode) .gestion-formulario .form-control,
+:host-context(body.dark-mode) .gestion-formulario .form-select {
+  border: 1px solid var(--color-gris-medio);
+  background-color: var(--color-blanco);
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .gestion-formulario .form-control::placeholder {
+  color: var(--color-gris-oscuro);
+}
+
+.usuario-fila,
+.usuario-principal,
+.usuario-identidad,
+.usuarios-acciones {
+  min-width: 0;
+}
+
+.usuario-identidad {
+  flex: 1;
+}
+
+.usuario-email {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.usuario-alta-modal > .btn-close {
+  z-index: 2;
+}
+
+.usuario-alta-modal,
+.usuario-edicion-modal {
+  width: 100%;
+  height: auto;
+  max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
+  max-width: 800px;
+  min-width: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  color: var(--color-negro);
+}
+
+.titulo-usuario-form {
+  color: var(--color-blanco);
+  font-family: var(--font-titulos);
+  text-transform: uppercase;
+}
+
+.usuario-edicion-modal .gestion-formulario {
+  color: var(--color-negro);
+}
+
+.usuario-alta-modal .btn-close,
+.usuario-edicion-modal .btn-close {
+  filter: invert(1);
+  opacity: 1;
+}
+
+:host-context(body.dark-mode) .usuario-alta-modal,
+:host-context(body.dark-mode) .usuario-edicion-modal {
+  color: var(--color-negro);
+  background-color: var(--color-blanco);
+  border: 1px solid var(--color-gris-medio);
+}
+
+:host-context(body.dark-mode) .titulo-usuario-form {
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .usuario-alta-modal .btn-close,
+:host-context(body.dark-mode) .usuario-edicion-modal .btn-close {
+  filter: none;
+  opacity: 1;
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+  .usuario-fila {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .usuario-principal {
+    width: 100%;
+    min-width: 0;
+    gap: 0.75rem !important;
+  }
+
+  .usuario-identidad {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .usuarios-acciones {
+    width: auto !important;
+    min-width: max-content;
+    margin-left: 0 !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-end;
+    gap: 0.75rem !important;
+  }
+
+  .usuarios-acciones-botones {
+    flex-wrap: nowrap;
+  }
+}
+
+@media (max-width: 575px) {
+  .usuarios-nuevo {
+    align-self: stretch !important;
+    width: 100%;
+  }
+
+  .usuario-fila {
+    padding: 0.75rem;
+  }
+
+  .usuario-principal {
+    align-items: flex-start !important;
+    gap: 0.75rem !important;
+  }
+
+  .usuarios-acciones {
+    width: 100%;
+    margin-left: 0 !important;
+  }
+
+  .usuarios-acciones-botones {
+    gap: 0.5rem !important;
+  }
+
+  .usuarios-acciones-botones .btn {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    padding: 0;
+  }
+
+  .usuario-alta-modal,
+  .usuario-eliminar-modal,
+  .usuario-edicion-modal {
+    padding: 1rem;
+    border-radius: 20px;
+  }
+
+  .usuario-alta-modal {
+    width: min(800px, 100%);
+  }
+
+  .usuario-alta-modal app-registro-usuario {
+    display: block;
+    min-width: 0;
+  }
+
+  .usuario-alta-modal > .btn-close {
+    min-width: 44px;
+    min-height: 44px;
+    margin: 0.5rem !important;
+  }
+
+  .usuario-edicion-modal .gestion-formulario {
+    padding: clamp(0.75rem, 3vw, 1rem) !important;
+  }
+
+  .usuario-edicion-modal .form-label,
+  .usuario-edicion-modal .form-control,
+  .usuario-edicion-modal .form-select {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .usuario-edicion-modal .gestion-formulario-acciones {
+    gap: 0.75rem;
+  }
+
+  .usuario-edicion-modal .gestion-formulario-acciones .btn-limpiar,
+  .usuario-edicion-modal .gestion-formulario-acciones .btn-guardar,
+  .usuario-eliminar-modal > div:last-child .btn {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .titulo-usuario-form {
+    font-size: 1.35rem;
+    padding-right: 2.5rem;
+    overflow-wrap: anywhere;
+  }
+
+  .usuario-edicion-modal .btn-close {
+    min-width: 44px;
+    min-height: 44px;
+    margin: 0;
+  }
+
+  .usuario-eliminar-modal .text-muted {
+    overflow-wrap: anywhere;
+  }
+
+  .usuario-edicion-modal .gestion-formulario-acciones .btn-limpiar,
+  .usuario-edicion-modal .gestion-formulario-acciones .btn-guardar,
+  .usuario-eliminar-modal > div:last-child .btn {
+    width: 100%;
+    flex: initial;
+    min-height: 44px;
+  }
+
+  .usuario-edicion-modal .gestion-formulario-acciones {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .usuario-alta-modal,
+  .usuario-edicion-modal {
+    padding: 0.75rem;
+    border-radius: 16px;
+  }
+
+  .usuario-fila {
+    padding: 0.625rem;
+  }
+
+  .titulo-usuario-form {
+    font-size: 1.2rem;
+  }
+
+  .usuario-alta-modal,
+  .usuario-edicion-modal,
+  .usuario-eliminar-modal {
+    padding: 0.75rem;
+  }
+
+  .usuario-principal {
+    gap: 0.625rem !important;
+  }
+
+  .usuarios-acciones {
+    gap: 0.5rem !important;
+  }
+}

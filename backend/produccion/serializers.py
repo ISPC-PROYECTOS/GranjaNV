@@ -21,11 +21,20 @@ class GalponSerializer(serializers.ModelSerializer):
             "creado_en",
             "actualizado_en",
         ]
-        read_only_fields = ["creado_en", "actualizado_en"]
+        read_only_fields = ["cantidad_actual_gallinas", "creado_en", "actualizado_en"]
 
     def validate(self, attrs: dict[str, Any]) -> dict[str, Any]:
+        if "cantidad_actual_gallinas" in self.initial_data:
+            raise serializers.ValidationError(
+                {
+                    "cantidad_actual_gallinas": (
+                        "El stock se modifica registrando un movimiento de gallinas."
+                    )
+                }
+            )
+
         capacidad = attrs.get("capacidad_maxima", getattr(self.instance, "capacidad_maxima", 0))
-        actual = attrs.get("cantidad_actual_gallinas", getattr(self.instance, "cantidad_actual_gallinas", 0))
+        actual = getattr(self.instance, "cantidad_actual_gallinas", 0)
         if actual > capacidad:
             raise serializers.ValidationError(
                 {"cantidad_actual_gallinas": "La cantidad actual no puede superar la capacidad máxima."}

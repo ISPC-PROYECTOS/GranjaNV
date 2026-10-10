@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from pedidos.models import ItemPedido
+from users.permissions import IsAdminRole
 from .models import Galpon, MovimientoGallina, RegistroProduccion, ItemProduccionHuevo
 from .serializers import (
     GalponSerializer,
@@ -21,10 +22,18 @@ class GalponViewSet(viewsets.ModelViewSet):
     serializer_class = GalponSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_permissions(self):
+        if self.action in {"create", "update", "partial_update", "destroy"}:
+            return [IsAuthenticated(), IsAdminRole()]
+        return [permission() for permission in self.permission_classes]
+
     def get_queryset(self):
         qs = super().get_queryset()
         solo_activos = self.request.query_params.get("solo_activos", None)
+        incluir_inactivos = self.request.query_params.get("incluir_inactivos", None)
         if solo_activos and solo_activos.lower() == "true":
+            qs = qs.filter(activo=True)
+        elif incluir_inactivos and incluir_inactivos.lower() != "true":
             qs = qs.filter(activo=True)
         return qs
 

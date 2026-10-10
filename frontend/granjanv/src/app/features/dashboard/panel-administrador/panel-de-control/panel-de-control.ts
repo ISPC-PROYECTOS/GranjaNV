@@ -54,7 +54,7 @@ export class PanelDeControl implements OnInit {
       ruta: '/dashboard/admin/finanzas',
     },
     {
-      titulo: 'STOCK HUEVOS',
+      titulo: 'STOCK TOTAL MAPLES',
       valor: this.formatearNumero(this.produccionService.datosProduccion().total_maples),
       icono: 'hgi-eggs',
       color: 'verde',

@@ -1,0 +1,208 @@
+.galpon-card {
+  color: var(--color-negro);
+  background-color: var(--color-blanco);
+  border: 1px solid var(--color-gris-claro);
+  border-radius: 10px;
+}
+
+.galpon-cantidad {
+  font-family: var(--font-titulos);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.galpon-modal {
+  max-width: 800px;
+  color: var(--color-blanco);
+  background-color: var(--color-primario);
+  border: none;
+  border-radius: 27px;
+  padding: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  text-align: left;
+}
+
+.galpon-modal > header h4 {
+  color: var(--color-blanco);
+  font-family: var(--font-titulos);
+  font-size: 30px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.galpon-modal .btn-close {
+  filter: brightness(0) invert(1);
+  opacity: 1;
+}
+
+.galpon-modal .galpon-formulario {
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .galpon-modal {
+  color: var(--color-negro);
+  background-color: var(--color-blanco);
+  border: 1px solid var(--color-gris-medio);
+}
+
+:host-context(body.dark-mode) .galpon-modal > header h4 {
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .galpon-modal .btn-close {
+  filter: none;
+  opacity: 1;
+}
+
+@media (max-width: 380px) {
+  section[aria-labelledby="titulo-galpones"] > header {
+    gap: 0.75rem !important;
+  }
+
+  section[aria-labelledby="titulo-galpones"] > header > div:last-child {
+    align-self: stretch !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+  }
+
+  section[aria-labelledby="titulo-galpones"] > header > div:last-child > .btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    justify-content: center;
+    padding: 0.5rem;
+  }
+
+  .galpon-card .card-body {
+    gap: 0.75rem !important;
+    padding: 0.75rem;
+  }
+
+  .galpon-card .card-body > header {
+    flex-wrap: wrap;
+  }
+
+  .galpon-card .card-body > header > div:first-child {
+    flex: 1 1 100%;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .galpon-card .card-body > header > div:last-child {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .galpon-card .progress + .d-flex {
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+:host-context(body.dark-mode) .galpon-card {
+  border-color: var(--color-gris-medio);
+}
+
+:host-context(body.dark-mode) .text-muted {
+  color: var(--color-gris-oscuro) !important;
+}
+
+:host-context(body.dark-mode) .progress {
+  background-color: var(--color-gris-medio);
+}
+
+:host-context(body.dark-mode) .progress-bar {
+  background-color: var(--color-primario) !important;
+}
+
+:host-context(body.dark-mode) .btn-limpiar {
+  background-color: var(--color-primario-claro);
+  color: var(--color-negro);
+  border-color: var(--color-primario);
+}
+
+:host-context(body.dark-mode) .btn-limpiar:hover:not(:disabled) {
+  background-color: var(--color-primario);
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .bg-success-subtle.text-success-emphasis {
+  background-color: var(--color-primario-claro) !important;
+  color: var(--color-negro) !important;
+}
+
+:host-context(body.dark-mode) .bg-body-tertiary {
+  background-color: var(--color-primario-claro) !important;
+  color: var(--color-negro) !important;
+}
+
+:host-context(body.dark-mode) .galpon-formulario {
+  background-color: var(--color-secundario-claro);
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .galpon-formulario .form-control {
+  border: 1px solid var(--color-gris-medio);
+  background-color: var(--color-blanco);
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .galpon-formulario .form-control:focus {
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--color-primario) 30%, transparent);
+}
+
+@media (max-width: 575px) {
+  .galpon-modal {
+    max-height: calc(100vh - 2rem);
+    max-height: calc(100dvh - 2rem);
+    padding: 1rem;
+    border-radius: 20px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .galpon-modal > header {
+    align-items: flex-start !important;
+    gap: 0.5rem !important;
+  }
+
+  .galpon-modal > header h4 {
+    padding-right: 2rem;
+    font-size: 1.35rem;
+    overflow-wrap: anywhere;
+  }
+
+  .galpon-modal .galpon-formulario {
+    padding: 0.75rem !important;
+  }
+
+  .galpon-modal .gestion-formulario-acciones {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .galpon-modal .gestion-formulario-acciones .btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 380px) {
+  .galpon-modal {
+    padding: 0.75rem;
+    border-radius: 16px;
+  }
+
+  .galpon-modal .galpon-formulario {
+    padding: 0.625rem !important;
+  }
+
+  .galpon-modal > header h4 {
+    font-size: 1.2rem;
+  }
+}
