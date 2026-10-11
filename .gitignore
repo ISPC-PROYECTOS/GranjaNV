@@ -42,3 +42,10 @@ npm-debug.log*
 Thumbs.db
 FETCH_HEAD
 repomix-output.xml
+
+# ==========================================
+# Variables de entorno y secretos
+# ==========================================
+.env
+.env.*
+!.env.example

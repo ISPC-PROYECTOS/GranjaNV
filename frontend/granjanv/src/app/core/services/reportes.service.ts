@@ -7,7 +7,7 @@ import { ReporteFinanzas, ReporteProduccion, ReporteCompleto } from '../models/r
 })
 export class ReportesService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8000/api/reportes/';
+  private apiUrl = '/api/reportes/';
 
   obtenerReporteProduccion(fechaDesde: string, fechaHasta: string) {
     const params = new HttpParams().set('fecha_desde', fechaDesde).set('fecha_hasta', fechaHasta);

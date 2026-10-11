@@ -10,7 +10,7 @@ import { Notificacion } from '../models/notificacion.model';
 export class NotificacionesService {
   private readonly http = inject(HttpClient);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly apiUrl = 'http://localhost:8000/api/notificaciones/';
+  private readonly apiUrl = '/api/notificaciones/';
 
   private pollingSub: Subscription | null = null;
   private readonly INTERVALO_POLLING_MS = 15000; // 15 segundos
