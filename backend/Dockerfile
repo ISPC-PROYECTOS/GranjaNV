@@ -16,6 +16,5 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 COPY . /app/
 
-EXPOSE 8000
-
-CMD sh -c "python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn core.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 120"
+# Render asigna $PORT en ejecución; si no existe, usa 8000 por defecto
+CMD sh -c "python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn core.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 2 --timeout 120"
