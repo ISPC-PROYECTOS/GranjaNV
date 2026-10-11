@@ -66,6 +66,27 @@ export const routes: Routes = [
             (m) => m.Metricas,
           ),
       },
+      {
+        path: 'usuarios',
+        loadComponent: () =>
+          import('./features/dashboard/panel-administrador/gestion-reportes/usuarios/usuarios').then(
+            (m) => m.Usuarios,
+          ),
+      },
+      {
+        path: 'clientes',
+        loadComponent: () =>
+          import('./features/dashboard/panel-administrador/gestion-reportes/clientes/clientes').then(
+            (m) => m.Clientes,
+          ),
+      },
+      {
+        path: 'galpones',
+        loadComponent: () =>
+          import('./features/dashboard/panel-administrador/gestion-reportes/galpones/galpones').then(
+            (m) => m.Galpones,
+          ),
+      },
     ],
   },
   {

@@ -29,9 +29,20 @@ export class CrearClienteComponent {
 
   @Input() set clienteEdicion(cliente: Cliente | null) {
     if (cliente) {
+      this.clienteId.set(cliente.id ?? null);
+      this.nombreEdicionOriginal.set(cliente.nombre.trim().toLowerCase());
+      this.formularioCliente.patchValue({
+        nombre: cliente.nombre,
+        apellido: cliente.apellido || '',
+        telefono: cliente.telefono,
+        direccion: cliente.direccion,
+        email: cliente.email || '',
+        tipo: cliente.tipo
+      });
       this.cargarClienteParaModificar(cliente);
     } else {
       this.clienteId.set(null);
+      this.nombreEdicionOriginal.set('');
     }
   }
 
@@ -39,6 +50,7 @@ export class CrearClienteComponent {
   @Output() cerrar = new EventEmitter<void>();
 
   readonly clienteId = signal<number | null>(null);
+  private readonly nombreEdicionOriginal = signal('');
   readonly errorBackend = signal<string | null>(null);
   readonly mensajeExito = signal<string | null>(null);
   readonly isLoading = signal<boolean>(false);
@@ -160,6 +172,17 @@ export class CrearClienteComponent {
 
     this.errorBackend.set(null);
   }
+  // Detección inmediata si el NOMBRE ya existe en la base de datos
+  esNombreIdentico = computed(() => {
+    const nom = (this.nombreValue() || '').trim().toLowerCase();
+
+    if (!nom || nom.length < 3) return false;
+    if (nom === this.nombreEdicionOriginal()) return false;
+
+    return this.clientesExistentes().some(c =>
+      c.id !== this.clienteId() && c.nombre.trim().toLowerCase() === nom
+    );
+  });
 
   solicitarConfirmacion(): void {
     if (this.formularioCliente.invalid || this.esHomonimoExacto()) {

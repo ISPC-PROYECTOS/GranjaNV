@@ -8,12 +8,17 @@ from .serializers import ClienteSerializer
 
 
 class ClienteViewSet(viewsets.ModelViewSet):
-    queryset = Cliente.objects.filter(activo=True)
+    queryset = Cliente.objects.all()
     serializer_class = ClienteSerializer
     permission_classes = [IsAuthenticated, IsAdminRole]
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        incluir_inactivos = self.request.query_params.get('incluir_inactivos', '').lower() == 'true'
+
+        if self.action == 'list' and not incluir_inactivos:
+            queryset = queryset.filter(activo=True)
+
         search = self.request.query_params.get('search', None)
 
         if search:

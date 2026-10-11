@@ -1,0 +1,163 @@
+<section aria-labelledby="titulo-galpones">
+  <header class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-sm-between gap-3 mb-3">
+    <div>
+      <h2 id="titulo-galpones" class="gestion-titulo mb-1">GALPONES</h2>
+      <p class="text-muted mb-0">{{ galpones().length }} instalaciones</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2 align-self-start">
+      <button type="button" class="btn btn-limpiar d-inline-flex align-items-center gap-2"
+        (click)="cargarGalpones()" [disabled]="cargando()" aria-label="Actualizar galpones">
+        <i class="hgi-stroke hgi-refresh" aria-hidden="true"></i>
+        <span>Actualizar</span>
+      </button>
+      <button type="button" class="btn btn-guardar" (click)="abrirAlta()">
+        <i class="hgi-stroke hgi-add-01" aria-hidden="true"></i>
+        Nuevo galpón
+      </button>
+    </div>
+  </header>
+
+  @if (error()) {
+    <div class="alerta-error-modal" role="alert">
+      No se pudieron cargar los galpones. Verificá la conexión con Producción y volvé a intentar.
+    </div>
+  } @else if (cargando() && galpones().length === 0) {
+    <p class="text-center text-muted py-4">Cargando galpones...</p>
+  } @else if (galpones().length === 0) {
+    <p class="text-center text-muted py-4">No hay galpones para mostrar.</p>
+  } @else {
+    <div class="row g-3">
+      @for (galpon of galpones(); track galpon.id) {
+        <div class="col-12 col-md-6 col-xl-4">
+          <article class="card h-100 galpon-card">
+            <div class="card-body d-flex flex-column gap-3">
+              <header class="d-flex align-items-start justify-content-between gap-2">
+                <div>
+                  <span class="small text-muted">GALPÓN {{ galpon.numero_galpon }}</span>
+                  <h3 class="h5 mb-0 mt-1">{{ galpon.nombre }}</h3>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge rounded-pill" [class.bg-success-subtle]="galpon.activo"
+                    [class.text-success-emphasis]="galpon.activo" [class.bg-secondary-subtle]="!galpon.activo"
+                    [class.text-secondary-emphasis]="!galpon.activo">
+                    {{ galpon.activo ? 'Activo' : 'Inactivo' }}
+                  </span>
+                  <button type="button" class="btn btn-limpiar btn-sm" (click)="abrirEdicion(galpon)"
+                    [attr.aria-label]="'Editar galpón ' + galpon.nombre" title="Editar galpón">
+                    <i class="hgi-stroke hgi-pencil-edit-01" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </header>
+
+              <div class="d-flex align-items-baseline gap-2">
+                <strong class="galpon-cantidad">{{ galpon.cantidad_actual_gallinas }}</strong>
+                <span class="text-muted">de {{ galpon.capacidad_maxima }} gallinas</span>
+              </div>
+
+              <div>
+                <div class="progress" role="progressbar" [attr.aria-valuenow]="porcentajeOcupacion(galpon)"
+                  aria-valuemin="0" aria-valuemax="100" [attr.aria-label]="'Ocupación de ' + galpon.nombre">
+                  <div class="progress-bar bg-success" [style.width.%]="porcentajeOcupacion(galpon)"></div>
+                </div>
+                <div class="d-flex justify-content-between mt-1 small text-muted">
+                  <span>{{ porcentajeOcupacion(galpon) }}% de capacidad</span>
+                  <span>{{ espaciosDisponibles(galpon) }} disponibles</span>
+                </div>
+              </div>
+
+              <div class="row g-2 mt-auto">
+                <div class="col-6">
+                  <div class="p-2 rounded bg-body-tertiary h-100">
+                    <span class="d-block small text-muted">Población inicial</span>
+                    <strong>{{ galpon.cantidad_inicial_gallinas }}</strong>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="p-2 rounded bg-body-tertiary h-100">
+                    <span class="d-block small text-muted">Capacidad máxima</span>
+                    <strong>{{ galpon.capacidad_maxima }}</strong>
+                  </div>
+                </div>
+              </div>
+
+              @if (galpon.descripcion_galpon) {
+                <p class="small text-muted mb-0">{{ galpon.descripcion_galpon }}</p>
+              }
+            </div>
+          </article>
+        </div>
+      }
+    </div>
+  }
+</section>
+
+@if (modalAbierto()) {
+  <div class="modal-confirmacion-backdrop" (click)="cerrarModal()">
+    <section class="modal-confirmacion-caja galpon-modal" role="dialog" aria-modal="true"
+      aria-labelledby="titulo-formulario-galpon" (click)="$event.stopPropagation()">
+      <header class="d-flex align-items-center justify-content-between gap-3 mb-3">
+        <h4 id="titulo-formulario-galpon" class="mb-0">
+          {{ galponEditando() ? 'Editar galpón' : 'Nuevo galpón' }}
+        </h4>
+        <button type="button" class="btn-close" aria-label="Cerrar formulario" [disabled]="guardando()"
+          (click)="cerrarModal()"></button>
+      </header>
+
+      <form class="gestion-formulario galpon-formulario mt-0 text-start" [formGroup]="formulario"
+        (ngSubmit)="guardarGalpon()">
+        <div class="row g-3">
+          <div class="col-12 col-sm-4">
+            <label for="galpon-numero" class="form-label">Número</label>
+            <input id="galpon-numero" class="form-control" type="number" min="1"
+              formControlName="numero_galpon" [readonly]="!!galponEditando()">
+            @if (formulario.controls.numero_galpon.touched && formulario.controls.numero_galpon.invalid) {
+              <small class="text-danger">Ingresá un número mayor a 0.</small>
+            }
+          </div>
+          <div class="col-12 col-sm-8">
+            <label for="galpon-nombre" class="form-label">Nombre</label>
+            <input id="galpon-nombre" class="form-control" type="text" maxlength="100" formControlName="nombre">
+            @if (formulario.controls.nombre.touched && formulario.controls.nombre.invalid) {
+              <small class="text-danger">El nombre es obligatorio.</small>
+            }
+          </div>
+          <div class="col-12 col-sm-6">
+            <label for="galpon-capacidad" class="form-label">Capacidad máxima</label>
+            <input id="galpon-capacidad" class="form-control" type="number" min="1"
+              formControlName="capacidad_maxima">
+          </div>
+          <div class="col-12 col-sm-6">
+            <label for="galpon-inicial" class="form-label">Población inicial</label>
+            <input id="galpon-inicial" class="form-control" type="number" min="0"
+              formControlName="cantidad_inicial_gallinas">
+            <small class="d-block text-muted mt-1">El stock actual se registra en Movimientos de gallinas.</small>
+          </div>
+          <div class="col-12">
+            <label for="galpon-descripcion" class="form-label">Descripción</label>
+            <textarea id="galpon-descripcion" class="form-control" rows="3"
+              formControlName="descripcion_galpon"></textarea>
+          </div>
+          <div class="col-12">
+            <div class="form-check form-switch">
+              <input id="galpon-activo" class="form-check-input" type="checkbox" formControlName="activo">
+              <label class="form-check-label" for="galpon-activo">Galpón activo</label>
+            </div>
+          </div>
+        </div>
+
+        @if (errorFormulario()) {
+          <div class="alerta-error-modal mt-3" role="alert">{{ errorFormulario() }}</div>
+        }
+
+        <footer class="gestion-formulario-acciones mt-3 flex-wrap">
+          <button type="button" class="btn btn-limpiar" [disabled]="guardando()" (click)="cerrarModal()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-guardar" [disabled]="guardando()">
+            {{ guardando() ? 'Guardando...' : 'Guardar galpón' }}
+          </button>
+        </footer>
+      </form>
+    </section>
+  </div>
+}

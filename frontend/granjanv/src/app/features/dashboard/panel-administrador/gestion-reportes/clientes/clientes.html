@@ -1,0 +1,84 @@
+<section aria-labelledby="titulo-clientes">
+  <header class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-sm-between gap-3 mb-3">
+    <div>
+      <h2 id="titulo-clientes" class="gestion-titulo mb-1">CLIENTES</h2>
+      <p class="text-muted mb-0">{{ clientes().length }} clientes registrados</p>
+    </div>
+    <button type="button" class="btn btn-guardar align-self-start" (click)="abrirAlta()">
+      <i class="hgi-stroke hgi-user-add-01" aria-hidden="true"></i>
+      Nuevo cliente
+    </button>
+  </header>
+
+  @if (error()) {
+    <div class="alerta-error-modal" role="alert">{{ error() }}</div>
+  }
+
+  <div class="clientes-controles">
+    <div class="btn-group clientes-filtros" role="group" aria-label="Filtrar clientes por estado">
+      <button type="button" class="btn btn-sm btn-limpiar" [class.active]="filtroEstado() === 'todos'"
+        (click)="filtroEstado.set('todos')">Todos</button>
+      <button type="button" class="btn btn-sm btn-limpiar" [class.active]="filtroEstado() === 'activos'"
+        (click)="filtroEstado.set('activos')">Activos</button>
+      <button type="button" class="btn btn-sm btn-limpiar" [class.active]="filtroEstado() === 'inactivos'"
+        (click)="filtroEstado.set('inactivos')">Inactivos</button>
+    </div>
+    <app-buscador (buscar)="busquedaCliente.set($event)"></app-buscador>
+  </div>
+
+  <div class="list-group" aria-live="polite" [attr.aria-busy]="cargando()">
+    @if (cargando()) {
+      <p class="list-group-item text-center text-muted py-4">Cargando clientes...</p>
+    } @else if (clientes().length === 0) {
+      <p class="list-group-item text-center text-muted py-4">Todavía no hay clientes registrados.</p>
+    } @else if (clientesVisibles().length === 0) {
+      <p class="list-group-item text-center text-muted py-4">No hay clientes que coincidan con la búsqueda o los filtros.</p>
+    } @else {
+      @for (cliente of clientesVisibles(); track cliente.id) {
+        <article class="list-group-item d-flex flex-column flex-sm-row align-items-sm-center gap-3 cliente-fila">
+          <div class="d-flex align-items-center gap-3 flex-grow-1 cliente-principal">
+            <span class="rounded-circle bg-success-subtle text-success-emphasis d-inline-flex align-items-center justify-content-center flex-shrink-0 fw-bold"
+              style="width: 2.75rem; height: 2.75rem" aria-hidden="true">{{ iniciales(cliente) }}</span>
+            <div class="cliente-identidad">
+              <strong class="d-block">{{ cliente.nombre }} {{ cliente.apellido }}</strong>
+              <div class="d-flex flex-wrap gap-1 mt-1">
+                <span class="badge rounded-pill bg-warning-subtle text-warning-emphasis">
+                  {{ cliente.tipo_display || (cliente.tipo === 'MAYORISTA' ? 'Mayorista' : 'Minorista') }}
+                </span>
+                <span class="badge rounded-pill" [class.bg-success-subtle]="cliente.activo"
+                  [class.text-success-emphasis]="cliente.activo" [class.bg-secondary-subtle]="!cliente.activo"
+                  [class.text-secondary-emphasis]="!cliente.activo">
+                  {{ cliente.activo ? 'Activo' : 'Inactivo' }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex flex-wrap justify-content-end gap-2 ms-sm-auto clientes-acciones">
+            <button type="button" class="btn btn-limpiar"
+              [attr.aria-label]="'Editar cliente ' + cliente.nombre + ' ' + cliente.apellido"
+              title="Editar cliente" (click)="abrirEdicion(cliente)">
+              <i class="hgi-stroke hgi-pencil-edit-01" aria-hidden="true"></i>
+              <span class="d-lg-none ms-1">Editar</span>
+            </button>
+            <button type="button" class="btn" [class.btn-guardar]="!cliente.activo"
+              [class.btn-modal-cancelar]="cliente.activo" [disabled]="actualizandoEstadoId() !== null"
+              (click)="cambiarEstado(cliente)">
+              {{ actualizandoEstadoId() === cliente.id ? 'Actualizando...' : (cliente.activo ? 'Desactivar' : 'Activar') }}
+            </button>
+          </div>
+        </article>
+      }
+    }
+  </div>
+</section>
+
+@if (modalAbierto()) {
+  <div class="modal-confirmacion-backdrop" (click)="cerrarModal()">
+    <section class="w-100 cliente-form-modal" style="max-width: 800px" role="dialog" aria-modal="true"
+      aria-label="Formulario de cliente" (click)="$event.stopPropagation()">
+      <app-crear-cliente [clienteEdicion]="clienteEdicion()"
+        (clienteGuardado)="actualizarLista($event)" (cerrar)="cerrarModal()" />
+    </section>
+  </div>
+}
