@@ -142,9 +142,12 @@
                 </div>
 
                 @if (cargandoVistaPrevia()) {
-                <p class="vista-previa-cargando">
-                    Cargando resumen...
-                </p>
+                <div class="py-2">
+                    <p class="vista-previa-cargando">
+                        Cargando resumen...
+                    </p>
+                    <app-spinner tamanio="sm" />
+                </div>
                 }
 
                 @if (!cargandoVistaPrevia() && vistaPreviaProduccion(); as produccion) {

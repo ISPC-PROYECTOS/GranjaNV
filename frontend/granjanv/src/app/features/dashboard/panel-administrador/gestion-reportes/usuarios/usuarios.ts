@@ -4,11 +4,12 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Usuario } from '../../../../../core/models/user.model';
 import { UsuariosService } from '../../../../../core/services/usuarios.service';
 import { RegistroUsuarioComponent } from '../../registro-usuario/registro-usuario';
+import { Spinner } from '../../../../../shared/spinner/spinner';
 
 @Component({
   selector: 'app-usuarios',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RegistroUsuarioComponent],
+  imports: [CommonModule, ReactiveFormsModule, RegistroUsuarioComponent, Spinner],
   templateUrl: './usuarios.html',
   styleUrl: './usuarios.css',
 })

@@ -178,7 +178,12 @@
                 </header>
 
                 <ul class="notificaciones-lista list-unstyled m-0" role="list">
-                  @for (item of notificaciones(); track item.id) {
+                  @if (cargandoNotificaciones()) {
+                    <li class="py-4 text-center">
+                      <app-spinner tamanio="sm" />
+                    </li>
+                  } @else {
+                    @for (item of notificaciones(); track item.id) {
                     <li
                       class="notificacion-item"
                       [class.no-leida]="!item.leida"
@@ -212,10 +217,11 @@
                       </button>
                     </li>
                   } @empty {
-                    <li class="notificaciones-vacio text-center py-4 text-muted">
-                      <i class="hgi-stroke hgi-notification-01 fs-3 d-block mb-1"></i>
-                      <p class="m-0 small">No tenés notificaciones pendientes</p>
-                    </li>
+                      <li class="notificaciones-vacio text-center py-4 text-muted">
+                        <i class="hgi-stroke hgi-notification-01 fs-3 d-block mb-1"></i>
+                        <p class="m-0 small">No tenés notificaciones pendientes</p>
+                      </li>
+                    }
                   }
                 </ul>
               </section>

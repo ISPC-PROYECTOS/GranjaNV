@@ -136,9 +136,9 @@
           </article>
           } @empty {
           @if (isLoading()) {
-          <p class="text-center text-muted py-4 m-0">
-            Cargando pedidos...
-          </p>
+          <div class="py-5 text-center">
+            <app-spinner />
+          </div>
           } @else {
           <p class="text-center text-muted py-4 m-0">
             No hay pedidos pendientes en este rango.

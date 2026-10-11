@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Galpon } from '../../../../../core/models/produccion.model';
 import { ProduccionService } from '../../../../../core/services/produccion.service';
+import { Spinner } from '../../../../../shared/spinner/spinner';
 
 @Component({
   selector: 'app-galpones',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, Spinner],
   templateUrl: './galpones.html',
   styleUrl: './galpones.css',
 })
