@@ -32,12 +32,12 @@
       <div class="d-flex flex-column gap-2">
         <div>
           <label class="form-label mb-1">Desde</label>
-          <input type="date" class="form-control form-control-sm" [(ngModel)]="fechaDesde" />
+          <input type="date" class="form-control form-control-sm" [(ngModel)]="fechaDesde" [max]="maxFecha || ''" />
         </div>
 
         <div>
           <label class="form-label mb-1">Hasta</label>
-          <input type="date" class="form-control form-control-sm" [(ngModel)]="fechaHasta" />
+          <input type="date" class="form-control form-control-sm" [(ngModel)]="fechaHasta" [max]="maxFecha || ''" />
         </div>
       </div>
     }
@@ -47,7 +47,11 @@
         Restablecer
       </button>
 
-      <button type="button" class="btn-restablecer-filtro" (click)="confirmarSeleccion()">
+      <button 
+        type="button" 
+        class="btn-restablecer-filtro bg-success text-white border-0" 
+        data-bs-dismiss="dropdown"
+        (click)="confirmarSeleccion()">
         Seleccionar
       </button>
     </div>
