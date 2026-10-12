@@ -141,6 +141,13 @@
   color: var(--color-secundario);
 }
 
+.advertencia-fecha-reporte {
+  font-size: 12px;
+  line-height: 1.4;
+  margin: 8px 0;
+  color: var(--color-secundario);
+}
+
 /* SELECTOR DE FORMATO */
 
 .formato-opcion input[type='radio'] {

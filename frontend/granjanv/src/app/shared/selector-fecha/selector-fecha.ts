@@ -30,6 +30,7 @@ export class SelectorFecha implements OnInit {
   mesSeleccionado: string = '';
   fechaDesde: string = '';
   fechaHasta: string = '';
+  errorFechas: string = '';
 
   ngOnInit(): void {
     const rango = obtenerRangoMesActual();
@@ -49,6 +50,8 @@ export class SelectorFecha implements OnInit {
   }
 
   onCambioTipo(): void {
+    this.errorFechas = '';
+
     if (this.tipoFiltro === 'mes' && !this.mesSeleccionado) {
       this.mesSeleccionado = obtenerRangoMesActual().fechaDesde.slice(0, 7);
     }
@@ -65,8 +68,17 @@ export class SelectorFecha implements OnInit {
       const [anio, mes] = this.mesSeleccionado.split('-').map(Number);
       rango = obtenerRangoMesActual(new Date(anio, mes - 1, 1));
     } else {
-      if (!this.fechaDesde || !this.fechaHasta) return;
-      if (this.fechaDesde > this.fechaHasta) return;
+      if (!this.fechaDesde || !this.fechaHasta) {
+        this.errorFechas = 'Seleccioná ambas fechas.';
+        return;
+      }
+
+      if (this.fechaDesde > this.fechaHasta) {
+        this.errorFechas = 'La fecha inicial no puede ser posterior a la fecha final.';
+        return;
+      }
+
+      this.errorFechas = '';
 
       rango = {
         fechaDesde: this.fechaDesde,
@@ -80,6 +92,8 @@ export class SelectorFecha implements OnInit {
   }
 
   restablecerFiltro(): void {
+    this.errorFechas = '';
+
     const rango = obtenerRangoMesActual();
 
     this.mesSeleccionado = rango.fechaDesde.slice(0, 7);
