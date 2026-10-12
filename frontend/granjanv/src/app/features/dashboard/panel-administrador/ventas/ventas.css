@@ -279,7 +279,9 @@
   border-radius: 12px;
   padding: 12px 16px;
   text-align: left;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .btn-toggle-cerrados:hover {
@@ -584,8 +586,6 @@
 /* =================================
    CLIENTES Y AUTOCOMPLETADO
 ================================= */
-
-
 
 .btn-nuevo-cliente,
 .btn-editar-cliente-inline {
@@ -953,4 +953,8 @@
 
 .dropdown-clientes-sugerencias li + li {
   border-top: 1px solid var(--color-gris-claro);
+}
+
+:host-context(body.dark-mode) .pedidos-lista app-spinner ::ng-deep .spinner-texto {
+  color: var(--color-blanco);
 }
