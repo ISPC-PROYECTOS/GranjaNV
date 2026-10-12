@@ -104,13 +104,13 @@ onCambioRango(rango: RangoFechaSeleccionado) {
       titulo: 'VENTAS DEL MES',
       valor: `$${this.formatearNumero(this.totalVentasMes())}`,
       subtexto: `+ ${this.porcentajeVentasVsMesAnterior()}% vs mes anterior`,
-      icono: 'hgi-ticket-02',
+      icono: 'hgi-file-dollar',
     },
     {
       titulo: 'PRODUCCIÓN PROMEDIO',
       valor: this.produccionDiariaPromedio().toString(),
       subtexto: `Maples por día`,
-      icono: 'hgi-analytics-01',
+      icono: 'hgi-chart-average',
     },
     {
       titulo: 'PORCENTAJE DE POSTURA',
