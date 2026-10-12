@@ -111,7 +111,7 @@
 }
 
 /* Adaptación para pantallas de celular */
-@media (max-width: 575px) {
+@media (max-width: 767px) {
   .tarjeta-kpi {
     padding: 16px;
     border-radius: 18px;
@@ -131,4 +131,19 @@
     padding: 16px;
     border-radius: 20px;
   }
+
+  /* Texto del aviso móvil */
+.aviso-movil-texto {
+  font-family: var(--font-textos);
+  color: var(--color-gris-oscuro);
+}
+
+/* Soporte de alto contraste en Modo Oscuro */
+:host-context(body.dark-mode) .aviso-movil-texto {
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .spinner-texto {
+  color: var(--color-negro) !important;
+}
 }
