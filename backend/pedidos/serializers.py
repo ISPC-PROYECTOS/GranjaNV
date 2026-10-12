@@ -20,6 +20,8 @@ PRECIOS_MAPLE_REFERENCIA: dict[str, Decimal] = {
 class MetricasDashboardSerializer(serializers.Serializer):
     pedidos_pendientes = serializers.IntegerField(min_value=0)
     total_ventas_cobradas = serializers.DecimalField(max_digits=12, decimal_places=2)
+    ventas_mes_actual = serializers.DecimalField(max_digits=12, decimal_places=2)
+    ventas_mes_anterior = serializers.DecimalField(max_digits=12, decimal_places=2)
 
 
 class ItemPedidoReadSerializer(serializers.ModelSerializer):

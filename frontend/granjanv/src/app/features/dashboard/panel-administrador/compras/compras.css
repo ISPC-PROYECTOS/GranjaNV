@@ -244,3 +244,9 @@
     font-size: 14px;
   }
 }
+
+/* MODO OSCURO */
+
+body.dark-mode .gastos-sin-resultados {
+  color: var(--color-blanco);
+}

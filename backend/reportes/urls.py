@@ -1,4 +1,5 @@
 from django.urls import path
+<<<<<<< HEAD
 from .views import (
     exportar_finanzas_excel,
     exportar_finanzas_pdf,
@@ -9,6 +10,21 @@ from .views import (
 
 )
 from .views import reporte_finanzas, exportar_finanzas_pdf, exportar_finanzas_excel, reporte_produccion, exportar_produccion_pdf, exportar_produccion_excel, reporte_completo, exportar_completo_pdf, exportar_completo_excel
+=======
+
+from .views import (
+    exportar_completo_excel,
+    exportar_completo_pdf,
+    exportar_finanzas_excel,
+    exportar_finanzas_pdf,
+    exportar_produccion_excel,
+    exportar_produccion_pdf,
+    obtener_metricas_comerciales,
+    reporte_completo,
+    reporte_finanzas,
+    reporte_produccion,
+)
+>>>>>>> 681263df89164dcb5b7839f2c4a9afe30d47f88d
 
 urlpatterns = [
     path("metricas-comerciales/", obtener_metricas_comerciales, name="metricas-comerciales"),
@@ -17,8 +33,15 @@ urlpatterns = [
     path("finanzas/excel/", exportar_finanzas_excel, name="exportar-finanzas-excel"),
     path("produccion/", reporte_produccion, name="reporte-produccion"),
     path("produccion/pdf/", exportar_produccion_pdf, name="exportar-produccion-pdf"),
-    path("produccion/excel/", exportar_produccion_excel, name="exportar-produccion-excel"),
+    path(
+        "produccion/excel/", exportar_produccion_excel, name="exportar-produccion-excel"
+    ),
     path("completo/", reporte_completo, name="reporte_completo"),
     path("completo/pdf/", exportar_completo_pdf, name="exportar-completo-pdf"),
     path("completo/excel/", exportar_completo_excel, name="exportar-completo-excel"),
+    path(
+        "metricas-comerciales/",
+        obtener_metricas_comerciales,
+        name="metricas-comerciales",
+    ),
 ]

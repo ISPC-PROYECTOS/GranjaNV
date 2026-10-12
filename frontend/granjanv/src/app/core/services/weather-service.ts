@@ -96,7 +96,7 @@ export class WeatherService {
         return { description: 'Despejado', iconClass: 'hgi-sun-02' };
       case 1:
       case 2:
-        return { description: 'Parcialmente nublado', iconClass: 'hgi-cloud-sun' };
+        return { description: 'Parc. nublado', iconClass: 'hgi-cloud-sun' };
       case 3:
         return { description: 'Nublado', iconClass: 'hgi-cloud-01' };
       case 45:

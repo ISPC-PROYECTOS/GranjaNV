@@ -32,13 +32,36 @@
       <div class="d-flex flex-column gap-2">
         <div>
           <label class="form-label mb-1">Desde</label>
+<<<<<<< HEAD
           <input type="date" class="form-control form-control-sm" [(ngModel)]="fechaDesde" [max]="maxFecha || ''" />
+=======
+          <input
+            type="date"
+            class="form-control form-control-sm"
+            [(ngModel)]="fechaDesde"
+            [max]="maxFecha || ''"
+          />
+>>>>>>> 681263df89164dcb5b7839f2c4a9afe30d47f88d
         </div>
 
         <div>
           <label class="form-label mb-1">Hasta</label>
+<<<<<<< HEAD
           <input type="date" class="form-control form-control-sm" [(ngModel)]="fechaHasta" [max]="maxFecha || ''" />
+=======
+          <input
+            type="date"
+            class="form-control form-control-sm"
+            [(ngModel)]="fechaHasta"
+            [max]="maxFecha || ''"
+          />
+>>>>>>> 681263df89164dcb5b7839f2c4a9afe30d47f88d
         </div>
+        @if (errorFechas) {
+          <div class="alerta-error-modal mt-2 mb-0" role="alert">
+            {{ errorFechas }}
+          </div>
+        }
       </div>
     }
 
@@ -47,11 +70,19 @@
         Restablecer
       </button>
 
+<<<<<<< HEAD
       <button 
         type="button" 
         class="btn-restablecer-filtro bg-success text-white border-0" 
         data-bs-dismiss="dropdown"
         (click)="confirmarSeleccion()">
+=======
+      <button
+        type="button"
+        class="btn-restablecer-filtro btn-seleccionar-filtro"
+        (click)="confirmarSeleccion()"
+      >
+>>>>>>> 681263df89164dcb5b7839f2c4a9afe30d47f88d
         Seleccionar
       </button>
     </div>

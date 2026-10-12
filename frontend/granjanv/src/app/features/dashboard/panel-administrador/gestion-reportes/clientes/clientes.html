@@ -28,7 +28,9 @@
 
   <div class="list-group" aria-live="polite" [attr.aria-busy]="cargando()">
     @if (cargando()) {
-      <p class="list-group-item text-center text-muted py-4">Cargando clientes...</p>
+      <div class="list-group-item border-0 bg-transparent py-4 text-center">
+        <app-spinner />
+      </div>
     } @else if (clientes().length === 0) {
       <p class="list-group-item text-center text-muted py-4">Todavía no hay clientes registrados.</p>
     } @else if (clientesVisibles().length === 0) {
