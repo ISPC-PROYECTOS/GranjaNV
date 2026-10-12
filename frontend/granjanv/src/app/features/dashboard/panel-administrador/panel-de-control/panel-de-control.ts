@@ -45,7 +45,7 @@ export class PanelDeControl implements OnInit {
       queryParams: {seccion: 'pendientes'},
     },
     {
-      titulo: 'Ventas',
+      titulo: 'VENTAS',
       valor: `$${this.formatearNumero(this.ventasMesActual())}`,
       subtexto: `Mes anterior: $${this.formatearNumero(this.ventasMesAnterior())}`,
       color: 'verde',
