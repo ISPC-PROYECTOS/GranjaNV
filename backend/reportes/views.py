@@ -188,6 +188,38 @@ from reportlab.lib.utils import ImageReader
 
 from openpyxl.drawing.image import Image as ExcelImage
 
+from django.utils import timezone as django_timezone
+
+
+def obtener_advertencia_fecha(fecha_hasta):
+    if not fecha_hasta:
+        return None
+
+    hoy = django_timezone.localdate()
+
+    if fecha_hasta > hoy.isoformat():
+        return (
+            f"Datos disponibles hasta el {hoy.strftime('%d/%m/%Y')}. "
+            "Las fechas posteriores aún no transcurrieron."
+        )
+
+    return None
+
+
+def agregar_advertencia_pdf(pdf, fecha_hasta):
+    advertencia = obtener_advertencia_fecha(fecha_hasta)
+
+    if advertencia:
+        pdf.setFont("Helvetica", 9)
+        pdf.drawString(50, 745, advertencia)
+
+
+def agregar_advertencia_excel(hoja, fecha_hasta):
+    advertencia = obtener_advertencia_fecha(fecha_hasta)
+
+    if advertencia:
+        hoja.append(["Aclaración", advertencia])
+
 def obtener_datos_finanzas(fecha_desde, fecha_hasta):
     ventas = Pedido.objects.filter(estado_pago=True)
     gastos = Gasto.objects.all()
@@ -417,7 +449,7 @@ def agregar_produccion_pdf(pdf, datos, y):
         y,
         f"Total producido: {datos['total_maples']} maples",
     )
-
+    
     y -= 20
     pdf.drawString(
         50,
@@ -688,6 +720,9 @@ def exportar_produccion_pdf(request):
         f"Período: {fecha_desde} al {fecha_hasta}",
     )
 
+    agregar_advertencia_pdf(pdf, fecha_hasta)
+
+
     agregar_produccion_pdf(pdf, datos, 720)
 
     pdf.save()
@@ -729,6 +764,7 @@ def exportar_produccion_excel(request):
 
     hoja.append(["Reporte de Producción"])
     hoja.append(["Período", f"{fecha_desde} al {fecha_hasta}"])
+    agregar_advertencia_excel(hoja, fecha_hasta)
     hoja.append([])
 
     agregar_produccion_excel(hoja, datos)
@@ -786,6 +822,8 @@ def exportar_finanzas_pdf(request):
         f"Período: {fecha_desde} al {fecha_hasta}",
     )
 
+    agregar_advertencia_pdf(pdf, fecha_hasta)
+
     agregar_finanzas_pdf(pdf, datos, 720)
 
     pdf.save()
@@ -828,6 +866,7 @@ def exportar_finanzas_excel(request):
 
     hoja.append(["Reporte de Finanzas"])
     hoja.append(["Período", f"{fecha_desde} al {fecha_hasta}"])
+    agregar_advertencia_excel(hoja, fecha_hasta)
     hoja.append([])
 
     agregar_finanzas_excel(hoja, datos)
@@ -889,7 +928,9 @@ def exportar_completo_pdf(request):
         f"Período: {fecha_desde} al {fecha_hasta}",
     )
 
-    y = agregar_finanzas_pdf(pdf, finanzas, 730)
+    agregar_advertencia_pdf(pdf, fecha_hasta)
+
+    y = agregar_finanzas_pdf(pdf, finanzas, 720)
     y = verificar_espacio_pdf(pdf, y, 180)
 
     pdf.line(50, y, 545, y)
@@ -945,6 +986,7 @@ def exportar_completo_excel(request):
     hoja_finanzas.append(
         ["Período", f"{fecha_desde} al {fecha_hasta}"]
     )
+    agregar_advertencia_excel(hoja_finanzas, fecha_hasta)
     hoja_finanzas.append([])
 
     agregar_finanzas_excel(hoja_finanzas, finanzas)
@@ -958,6 +1000,7 @@ def exportar_completo_excel(request):
     hoja_produccion.append(
         ["Período", f"{fecha_desde} al {fecha_hasta}"]
     )
+    agregar_advertencia_excel(hoja_produccion, fecha_hasta)
     hoja_produccion.append([])
 
     agregar_produccion_excel(hoja_produccion, produccion)

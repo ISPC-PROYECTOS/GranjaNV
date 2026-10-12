@@ -47,6 +47,21 @@ export class Reportes {
     this.mostrarModal.set(true);
   }
 
+  mostrarAdvertenciaFechaFutura(): boolean {
+    const fechaHasta = this.rangoSeleccionado().fechaHasta;
+
+    if (!fechaHasta) return false;
+
+    const hoy = new Date();
+    const fechaLocal = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
+
+    return fechaHasta > fechaLocal;
+  }
+
+  fechaActualFormateada(): string {
+    return new Date().toLocaleDateString('es-AR');
+  }
+
   cerrarModal(): void {
     if (this.exportando()) {
       return;

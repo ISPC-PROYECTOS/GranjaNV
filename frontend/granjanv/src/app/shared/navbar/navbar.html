@@ -107,7 +107,7 @@
 
               @if (pronosticoAbierto()) {
                 @if (cargandoPronostico()) {
-                  <p class="text-center my-2">Cargando pronóstico...</p>
+                  <p class="text-center my-2 small">Cargando pronóstico...</p>
                 } @else if (pronosticoSemanal().length > 0) {
                   <div class="pronostico-lista mt-2">
                     @for (dia of pronosticoSemanal(); track dia.fecha) {
