@@ -44,6 +44,7 @@ export class Metricas implements OnInit {
     
     this.metricasService.getMetricasComerciales(rangoMes.fechaDesde, rangoMes.fechaHasta).subscribe({
       next: (data) => {
+        console.log('Objeto completo recibido del backend:', data);
         this.ngZone.run(() => {
           this.totalVentasMes.set(Number(data.ventas_del_mes || 0));
           this.porcentajeVentasVsMesAnterior.set(Number(data.porcentaje_cambio_ventas || 0));
@@ -103,14 +104,14 @@ onCambioRango(rango: RangoFechaSeleccionado) {
     {
       titulo: 'VENTAS DEL MES',
       valor: `$${this.formatearNumero(this.totalVentasMes())}`,
-      subtexto: `+ ${this.porcentajeVentasVsMesAnterior()}% vs mes anterior`,
-      icono: 'hgi-ticket-02',
+      subtexto: `Total acumulado`,
+      icono: 'hgi-file-dollar',
     },
     {
       titulo: 'PRODUCCIÓN PROMEDIO',
       valor: this.produccionDiariaPromedio().toString(),
       subtexto: `Maples por día`,
-      icono: 'hgi-analytics-01',
+      icono: 'hgi-chart-average',
     },
     {
       titulo: 'PORCENTAJE DE POSTURA',
@@ -122,7 +123,7 @@ onCambioRango(rango: RangoFechaSeleccionado) {
       titulo: 'GANANCIA NETA',
       valor: `$${this.formatearNumero(this.gananciaNetaMes())}`,
       subtexto: 'Mensual',
-      icono: 'hgi-calculate',
+      icono: 'hgi-plus-minus',
     },
   ]);
 
