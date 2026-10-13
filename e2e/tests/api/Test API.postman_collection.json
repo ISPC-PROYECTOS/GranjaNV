@@ -1,0 +1,14 @@
+{
+  "info": {
+    "_postman_id": "a52a9b88-c1ac-4622-9815-6c0c54fb858f",
+    "name": "Test API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "48648994"
+  },
+  "item": [
+    {
+      "name": "Autenticación",
+      "item": []
+    }
+  ]
+}
