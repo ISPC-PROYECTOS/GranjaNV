@@ -355,9 +355,14 @@
   color: var(--color-primario-oscuro);
 }
 
-.pedidos-cerrados-lista {
-  max-height: 180px;
+.pedidos-cerrados-lista,
+.lista-pedidos-cerrados {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 440px;
   overflow-y: auto;
+  padding-right: 4px;
 }
 
 @media (max-width: 575px) {
@@ -385,6 +390,20 @@
     gap: 4px;
     font-size: 14px;
   }
+
+  .pedidos-cerrados-contenido,
+  .acordeon-cerrados-cuerpo,
+  .pedidos-cerrados-lista {
+    max-height: 420px !important;
+    min-height: 320px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .acordeon-pedidos-cerrados {
+    max-height: none !important;
+  }
+
 }
 
 .pedido-cerrado-info {

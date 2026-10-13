@@ -5,6 +5,7 @@ import { MetricasComerciales } from '../../../../../core/models/reporte.model';
 import { CarruselComponent } from '../../../../../shared/carrusel/carrusel';
 import { obtenerRangoMesActual, formatearFechaISO } from '../../../../../core/utils/date.utils';
 import { SelectorFecha, RangoFechaSeleccionado } from '../../../../../shared/selector-fecha/selector-fecha';
+import { Spinner } from '../../../../../shared/spinner/spinner';
 
 
 export interface IndicadorClave {
@@ -17,13 +18,16 @@ export interface IndicadorClave {
 @Component({
   selector: 'app-metricas',
   standalone: true,
-  imports: [CommonModule, CarruselComponent, SelectorFecha],
+  imports: [CommonModule, CarruselComponent, SelectorFecha, Spinner],
   templateUrl: './metricas.html',
   styleUrl: './metricas.css'
 })
 export class Metricas implements OnInit {
     private metricasService = inject(MetricasService);
     private ngZone = inject(NgZone);
+
+  readonly cargandoKpis = signal<boolean>(true);
+  readonly cargandoGrafico = signal<boolean>(true);
   readonly totalVentasMes = signal<number>(0);
   readonly porcentajeVentasVsMesAnterior = signal<number>(0);
   readonly produccionDiariaPromedio = signal<number>(0);
@@ -41,6 +45,7 @@ export class Metricas implements OnInit {
 
   private cargarKpisMesActualYGrafico(): void {
     const rangoMes = obtenerRangoMesActual();
+    this.cargandoKpis.set(true);
     
     this.metricasService.getMetricasComerciales(rangoMes.fechaDesde, rangoMes.fechaHasta).subscribe({
       next: (data) => {
@@ -50,6 +55,7 @@ export class Metricas implements OnInit {
           this.produccionDiariaPromedio.set(Number(data.produccion_diaria_promedio || 0));
           this.porcentajePosturaMes.set(Number(data.porcentaje_postura_mes || 0));
           this.gananciaNetaMes.set(Number(data.ganancia_neta_mensual || 0));
+          this.cargandoKpis.set(false);
         });
 
         // 2. Una vez listas las KPIs, llamamos al gráfico inicial (asegurate que se llame así en tu clase)
@@ -57,6 +63,7 @@ export class Metricas implements OnInit {
       },
       error: (err) => {
         console.error('Error al cargar KPIs:', err);
+        this.cargandoKpis.set(false);
         this.cargarTendenciaInicial();
       }
     });
@@ -73,14 +80,19 @@ export class Metricas implements OnInit {
 
   // Método específico para actualizar exclusivamente el gráfico al usar el selector
   private cargarTendenciaGrafico(fechaDesde: string, fechaHasta: string): void {
+    this.cargandoGrafico.set(true);
     this.metricasService.getMetricasComerciales(fechaDesde, fechaHasta).subscribe({
       next: (data) => {
         this.ngZone.run(() => {
           this.tendenciaProduccion.set(data.tendencia_produccion_meses || []);
           this.nivelDescripcion.set(data.nivel_descripcion || 'Vista mensual');
+          this.cargandoGrafico.set(false);
         });
       },
-      error: (err) => console.error('Error al cargar tendencia de producción:', err)
+      error: (err) => {
+        console.error('Error al cargar tendencia de producción:', err);
+        this.cargandoGrafico.set(false);
+      }
     });
   }
 
@@ -98,33 +110,33 @@ onCambioRango(rango: RangoFechaSeleccionado) {
     }
   }
 
-  // Lista armada para dibujar las 3 tarjetas superiores de forma limpia
-  readonly tarjetasKpi = computed<IndicadorClave[]>(() => [
-    {
-      titulo: 'VENTAS DEL MES',
-      valor: `$${this.formatearNumero(this.totalVentasMes())}`,
-      subtexto: `+ ${this.porcentajeVentasVsMesAnterior()}% vs mes anterior`,
-      icono: 'hgi-ticket-02',
-    },
-    {
-      titulo: 'PRODUCCIÓN PROMEDIO',
-      valor: this.produccionDiariaPromedio().toString(),
-      subtexto: `Maples por día`,
-      icono: 'hgi-analytics-01',
-    },
-    {
-      titulo: 'PORCENTAJE DE POSTURA',
-      valor: `${this.porcentajePosturaMes()}%`,
-      subtexto: 'Efectividad del mes',
-      icono: 'hgi-eggs', // Ícono específico de huevos
-    },
-    {
-      titulo: 'GANANCIA NETA',
-      valor: `$${this.formatearNumero(this.gananciaNetaMes())}`,
-      subtexto: 'Mensual',
-      icono: 'hgi-calculate',
-    },
-  ]);
+// Lista armada para dibujar las tarjetas superiores
+readonly tarjetasKpi = computed<IndicadorClave[]>(() => [
+  {
+    titulo: 'VENTAS DEL MES',
+    valor: `$${this.formatearNumero(this.totalVentasMes())}`,
+    subtexto: `+ ${this.porcentajeVentasVsMesAnterior()}% vs mes anterior`,
+    icono: 'hgi-file-dollar',
+  },
+  {
+    titulo: 'PRODUCCIÓN PROMEDIO',
+    valor: this.produccionDiariaPromedio().toString(),
+    subtexto: 'Maples por día',
+    icono: 'hgi-chart-average',
+  },
+  {
+    titulo: 'PORCENTAJE DE POSTURA',
+    valor: `${this.porcentajePosturaMes()}%`,
+    subtexto: 'Efectividad del mes',
+    icono: 'hgi-eggs',
+  },
+  {
+    titulo: 'GANANCIA NETA',
+    valor: `$${this.formatearNumero(this.gananciaNetaMes())}`,
+    subtexto: 'Mensual',
+    icono: 'hgi-plus-minus',
+  },
+]);
 
   // Función para dar formato con puntos de miles (ej: 137.000)
   formatearNumero(valor: number): string {
