@@ -110,33 +110,33 @@ onCambioRango(rango: RangoFechaSeleccionado) {
     }
   }
 
-  // Lista armada para dibujar las 3 tarjetas superiores de forma limpia
-  readonly tarjetasKpi = computed<IndicadorClave[]>(() => [
-    {
-      titulo: 'VENTAS DEL MES',
-      valor: `$${this.formatearNumero(this.totalVentasMes())}`,
-      subtexto: `+ ${this.porcentajeVentasVsMesAnterior()}% vs mes anterior`,
-      icono: 'hgi-file-dollar',
-    },
-    {
-      titulo: 'PRODUCCIÓN PROMEDIO',
-      valor: this.produccionDiariaPromedio().toString(),
-      subtexto: `Maples por día`,
-      icono: 'hgi-chart-average',
-    },
-    {
-      titulo: 'PORCENTAJE DE POSTURA',
-      valor: `${this.porcentajePosturaMes()}%`,
-      subtexto: 'Efectividad del mes',
-      icono: 'hgi-eggs', // Ícono específico de huevos
-    },
-    {
-      titulo: 'GANANCIA NETA',
-      valor: `$${this.formatearNumero(this.gananciaNetaMes())}`,
-      subtexto: 'Mensual',
-      icono: 'hgi-plus-minus',
-    },
-  ]);
+// Lista armada para dibujar las tarjetas superiores
+readonly tarjetasKpi = computed<IndicadorClave[]>(() => [
+  {
+    titulo: 'VENTAS DEL MES',
+    valor: `$${this.formatearNumero(this.totalVentasMes())}`,
+    subtexto: `+ ${this.porcentajeVentasVsMesAnterior()}% vs mes anterior`,
+    icono: 'hgi-file-dollar',
+  },
+  {
+    titulo: 'PRODUCCIÓN PROMEDIO',
+    valor: this.produccionDiariaPromedio().toString(),
+    subtexto: 'Maples por día',
+    icono: 'hgi-chart-average',
+  },
+  {
+    titulo: 'PORCENTAJE DE POSTURA',
+    valor: `${this.porcentajePosturaMes()}%`,
+    subtexto: 'Efectividad del mes',
+    icono: 'hgi-eggs',
+  },
+  {
+    titulo: 'GANANCIA NETA',
+    valor: `$${this.formatearNumero(this.gananciaNetaMes())}`,
+    subtexto: 'Mensual',
+    icono: 'hgi-plus-minus',
+  },
+]);
 
   // Función para dar formato con puntos de miles (ej: 137.000)
   formatearNumero(valor: number): string {

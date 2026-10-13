@@ -14,6 +14,7 @@ from .views import (
 )
 
 urlpatterns = [
+    path("metricas-comerciales/", obtener_metricas_comerciales, name="metricas-comerciales"),
     path("finanzas/", reporte_finanzas, name="reporte-finanzas"),
     path("finanzas/pdf/", exportar_finanzas_pdf, name="exportar-finanzas-pdf"),
     path("finanzas/excel/", exportar_finanzas_excel, name="exportar-finanzas-excel"),
