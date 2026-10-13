@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Granja NV - Ventas y Pedidos (VP-01 a VP-09)" tests="10" time="38.033">
+  <testsuite name="00 - Login Administrador" id="e0a2285f-89ec-46db-a795-cc58b5f37028" timestamp="2026-10-13T04:07:28.326Z" tests="1" failures="0" errors="0" time="2.933">
+    <testcase name="Status code es 200 OK" time="2.933" classname="00LoginAdministrador"/>
+  </testsuite>
+  <testsuite name="VP-01 Alta rápida de cliente" id="27da1785-eb64-4b23-a3e3-94f18729dc92" timestamp="2026-10-13T04:07:28.326Z" tests="2" failures="0" errors="0" time="3.096">
+    <testcase name="VP-01: Status code es 201 Created" time="3.096" classname="Vp01AltaRapidaDeCliente"/>
+    <testcase name="VP-01: Nombre normalizado en mayúsculas" time="3.096" classname="Vp01AltaRapidaDeCliente"/>
+  </testsuite>
+  <testsuite name="VP-02 Creación de pedido" id="10656f1a-db51-44e3-bd23-4f7dbc482cb8" timestamp="2026-10-13T04:07:28.326Z" tests="1" failures="0" errors="0" time="5.039">
+    <testcase name="VP-02: Status code es 201 Created" time="5.039" classname="Vp02CreacionDePedido"/>
+  </testsuite>
+  <testsuite name="VP-03 Actualización de estado Entregado" id="0c52104a-66be-4c92-9c90-0d8c0abe5fb0" timestamp="2026-10-13T04:07:28.326Z" tests="2" failures="0" errors="0" time="3.562">
+    <testcase name="VP-03: Status code es 200 OK" time="3.562" classname="Vp03ActualizacionDeEstadoEntregado"/>
+    <testcase name="VP-03: estado_entrega es true" time="3.562" classname="Vp03ActualizacionDeEstadoEntregado"/>
+  </testsuite>
+  <testsuite name="VP-04 Actualización de estado Cobrado" id="ff4f378f-f185-421d-822d-3e96c4fd515a" timestamp="2026-10-13T04:07:28.326Z" tests="2" failures="0" errors="0" time="3.871">
+    <testcase name="VP-04: Status code es 200 OK" time="3.871" classname="Vp04ActualizacionDeEstadoCobrado"/>
+    <testcase name="VP-04: estado_pago es true" time="3.871" classname="Vp04ActualizacionDeEstadoCobrado"/>
+  </testsuite>
+  <testsuite name="VP-05 Visualización de pedidos por rango de fechas" id="351c6461-1728-4816-850e-a066250c21c2" timestamp="2026-10-13T04:07:28.326Z" tests="2" failures="0" errors="0" time="3.164">
+    <testcase name="VP-05: Status code es 200 OK" time="3.164" classname="Vp05VisualizacionDePedidosPorRangoDeFechas"/>
+    <testcase name="VP-05: Devuelve listado de pedidos" time="3.164" classname="Vp05VisualizacionDePedidosPorRangoDeFechas"/>
+  </testsuite>
+  <testsuite name="VP-06 Editar un pedido creado" id="a4d30f1c-ffcb-4aa1-859a-69da76b9bd7d" timestamp="2026-10-13T04:07:28.326Z" tests="2" failures="0" errors="0" time="6.411">
+    <testcase name="VP-06: Status code es 200 OK" time="6.411" classname="Vp06EditarUnPedidoCreado"/>
+    <testcase name="VP-06: Fecha actualizada a 2026-10-22" time="6.411" classname="Vp06EditarUnPedidoCreado"/>
+  </testsuite>
+  <testsuite name="VP-07 Pedido sin cantidad (cero)" id="b8946583-25e0-4240-b903-d16ca556c78d" timestamp="2026-10-13T04:07:28.326Z" tests="2" failures="0" errors="0" time="3.358">
+    <testcase name="VP-07: Status code es 400 Bad Request" time="3.358" classname="Vp07PedidoSinCantidadCero"/>
+    <testcase name="VP-07: Error de items vacío retornado" time="3.358" classname="Vp07PedidoSinCantidadCero"/>
+  </testsuite>
+  <testsuite name="VP-08 Pedido con cliente inexistente" id="74b90538-5664-427b-b5e8-d2a4881a41b5" timestamp="2026-10-13T04:07:28.326Z" tests="2" failures="0" errors="0" time="3.154">
+    <testcase name="VP-08: Status code es 400 Bad Request" time="3.154" classname="Vp08PedidoConClienteInexistente"/>
+    <testcase name="VP-08: Error de clave foránea retornado" time="3.154" classname="Vp08PedidoConClienteInexistente"/>
+  </testsuite>
+  <testsuite name="VP-09 Validación de cantidades inválidas (Negativas)" id="0bacd48d-02c3-47c9-a6c6-449e70f865b6" timestamp="2026-10-13T04:07:28.326Z" tests="1" failures="0" errors="0" time="3.445">
+    <testcase name="VP-09: Status code es 400 Bad Request" time="3.445" classname="Vp09ValidacionDeCantidadesInvalidasNegativas"/>
+  </testsuite>
+</testsuites>
