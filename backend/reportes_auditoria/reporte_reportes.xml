@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Granja_NV_API_reportes" tests="1" time="1.233">
+  <testsuite name="PD-06 Obtener Recetas" id="087011b1-72ef-49b8-a203-4a4c326ce86e" timestamp="2026-10-13T20:57:11.498Z" tests="3" failures="0" errors="0" time="1.233">
+    <testcase name="Status code es HTTP 200 OK" time="1.233" classname="Pd06ObtenerRecetas"/>
+    <testcase name="Tiempo de respuesta aceptable (&lt; 2000ms)" time="1.233" classname="Pd06ObtenerRecetas"/>
+    <testcase name="Validacion de esquema JSON (titulo, descripcion, imagen)" time="1.233" classname="Pd06ObtenerRecetas"/>
+  </testsuite>
+</testsuites>

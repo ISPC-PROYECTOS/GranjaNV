@@ -1,0 +1,56 @@
+{
+  "info": {
+    "name": "Granja_NV_API_reportes",
+    "description": "Pruebas API - Recetas Landing (PD-06)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "PD-06 Obtener Recetas",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/landing/recetas/",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "landing", "recetas", ""]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code es HTTP 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Tiempo de respuesta aceptable (< 2000ms)', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+              "});",
+              "",
+              "pm.test('Validacion de esquema JSON (titulo, descripcion, imagen)', function () {",
+              "    var jsonData = pm.response.json();",
+              "    var lista = Array.isArray(jsonData) ? jsonData : (jsonData.recetas || [jsonData]);",
+              "    pm.expect(lista.length).to.be.above(0);",
+              "    lista.forEach(function(item) {",
+              "        pm.expect(item).to.have.property('titulo');",
+              "        pm.expect(item).to.have.property('descripcion');",
+              "        pm.expect(item).to.have.property('imagen');",
+              "    });",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
