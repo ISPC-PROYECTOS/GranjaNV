@@ -29,7 +29,6 @@ export class Metricas implements OnInit {
   readonly cargandoKpis = signal<boolean>(true);
   readonly cargandoGrafico = signal<boolean>(true);
   readonly totalVentasMes = signal<number>(0);
-  readonly porcentajeVentasVsMesAnterior = signal<number>(0);
   readonly produccionDiariaPromedio = signal<number>(0);
   readonly porcentajePosturaMes = signal<number>(0);
   readonly gananciaNetaMes = signal<number>(0);
@@ -51,7 +50,6 @@ export class Metricas implements OnInit {
       next: (data) => {
         this.ngZone.run(() => {
           this.totalVentasMes.set(Number(data.ventas_del_mes || 0));
-          this.porcentajeVentasVsMesAnterior.set(Number(data.porcentaje_cambio_ventas || 0));
           this.produccionDiariaPromedio.set(Number(data.produccion_diaria_promedio || 0));
           this.porcentajePosturaMes.set(Number(data.porcentaje_postura_mes || 0));
           this.gananciaNetaMes.set(Number(data.ganancia_neta_mensual || 0));
@@ -113,9 +111,9 @@ onCambioRango(rango: RangoFechaSeleccionado) {
 // Lista armada para dibujar las tarjetas superiores
 readonly tarjetasKpi = computed<IndicadorClave[]>(() => [
   {
-    titulo: 'VENTAS DEL MES',
+    titulo: 'VENTAS TOTALES',
     valor: `$${this.formatearNumero(this.totalVentasMes())}`,
-    subtexto: `+ ${this.porcentajeVentasVsMesAnterior()}% vs mes anterior`,
+    subtexto: `En el mes actual`,
     icono: 'hgi-file-dollar',
   },
   {

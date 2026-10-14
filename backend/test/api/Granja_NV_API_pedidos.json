@@ -1,0 +1,393 @@
+{
+  "info": {
+    "name": "Granja NV - Ventas y Pedidos (VP-01 a VP-09)",
+    "_postman_id": "b3c9b1f0-4567-4890-a1b2-c3d4e5f6a7b8",
+    "description": "Suite de pruebas automatizadas para el módulo de ventas y pedidos de Granja NV ejecutables vía Newman CLI.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000/api"
+    },
+    {
+      "key": "jwt_token",
+      "value": ""
+    },
+    {
+      "key": "cliente_id",
+      "value": ""
+    },
+    {
+      "key": "pedido_id",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "00 - Login Administrador",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code es 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "var data = pm.response.json();",
+              "pm.collectionVariables.set('jwt_token', data.access);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"email\": \"admin@granjanv.com.ar\",\n    \"password\": \"adminadmin\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/auth/login/",
+          "host": ["{{base_url}}"],
+          "path": ["auth", "login", ""]
+        }
+      }
+    },
+    {
+      "name": "VP-01 Alta rápida de cliente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('VP-01: Status code es 201 Created', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "var data = pm.response.json();",
+              "pm.test('VP-01: Nombre normalizado en mayúsculas', function () {",
+              "    pm.expect(data.nombre).to.eql('CLAUDIO N');",
+              "});",
+              "pm.collectionVariables.set('cliente_id', data.id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [{ "key": "token", "value": "{{jwt_token}}", "type": "string" }]
+        },
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nombre\": \"Claudio N\",\n    \"apellido\": \"Molina\",\n    \"telefono\": \"3514040404\",\n    \"direccion\": \"Moreno 123\",\n    \"tipo\": \"MINORISTA\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/clientes/clientes/",
+          "host": ["{{base_url}}"],
+          "path": ["clientes", "clientes", ""]
+        }
+      }
+    },
+    {
+      "name": "VP-02 Creación de pedido",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('VP-02: Status code es 201 Created', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "var data = pm.response.json();",
+              "pm.collectionVariables.set('pedido_id', data.id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [{ "key": "token", "value": "{{jwt_token}}", "type": "string" }]
+        },
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"cliente\": {{cliente_id}},\n    \"fecha_entrega\": \"2026-10-15\",\n    \"items\": [\n        {\n            \"tipo_huevo\": \"COLOR_2\",\n            \"cantidad_maples\": 2\n        }\n    ],\n    \"observaciones\": \"Entregar en horario comercial\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/pedidos/",
+          "host": ["{{base_url}}"],
+          "path": ["pedidos", ""]
+        }
+      }
+    },
+    {
+      "name": "VP-03 Actualización de estado Entregado",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('VP-03: Status code es 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "var data = pm.response.json();",
+              "pm.test('VP-03: estado_entrega es true', function () {",
+              "    pm.expect(data.estado_entrega).to.be.true;",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [{ "key": "token", "value": "{{jwt_token}}", "type": "string" }]
+        },
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/pedidos/{{pedido_id}}/toggle-entrega/",
+          "host": ["{{base_url}}"],
+          "path": ["pedidos", "{{pedido_id}}", "toggle-entrega", ""]
+        }
+      }
+    },
+    {
+      "name": "VP-04 Actualización de estado Cobrado",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('VP-04: Status code es 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "var data = pm.response.json();",
+              "pm.test('VP-04: estado_pago es true', function () {",
+              "    pm.expect(data.estado_pago).to.be.true;",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [{ "key": "token", "value": "{{jwt_token}}", "type": "string" }]
+        },
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/pedidos/{{pedido_id}}/toggle-pago/",
+          "host": ["{{base_url}}"],
+          "path": ["pedidos", "{{pedido_id}}", "toggle-pago", ""]
+        }
+      }
+    },
+    {
+      "name": "VP-05 Visualización de pedidos por rango de fechas",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('VP-05: Status code es 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "var data = pm.response.json();",
+              "pm.test('VP-05: Devuelve listado de pedidos', function () {",
+              "    pm.expect(Array.isArray(data)).to.be.true;",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [{ "key": "token", "value": "{{jwt_token}}", "type": "string" }]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/pedidos/?fecha_desde=2026-10-01&fecha_hasta=2026-10-31",
+          "host": ["{{base_url}}"],
+          "path": ["pedidos", ""],
+          "query": [
+            { "key": "fecha_desde", "value": "2026-10-01" },
+            { "key": "fecha_hasta", "value": "2026-10-31" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "VP-06 Editar un pedido creado",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('VP-06: Status code es 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "var data = pm.response.json();",
+              "pm.test('VP-06: Fecha actualizada a 2026-10-22', function () {",
+              "    pm.expect(data.fecha_entrega).to.eql('2026-10-22');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [{ "key": "token", "value": "{{jwt_token}}", "type": "string" }]
+        },
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"cliente\": {{cliente_id}},\n    \"fecha_entrega\": \"2026-10-22\",\n    \"items\": [\n        {\n            \"tipo_huevo\": \"BLANCO_1\",\n            \"cantidad_maples\": 1\n        },\n        {\n            \"tipo_huevo\": \"COLOR_1\",\n            \"cantidad_maples\": 1\n        }\n    ],\n    \"observaciones\": \"Pedido modificado\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/pedidos/{{pedido_id}}/",
+          "host": ["{{base_url}}"],
+          "path": ["pedidos", "{{pedido_id}}", ""]
+        }
+      }
+    },
+    {
+      "name": "VP-07 Pedido sin cantidad (cero)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('VP-07: Status code es 400 Bad Request', function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "var data = pm.response.json();",
+              "pm.test('VP-07: Error de items vacío retornado', function () {",
+              "    pm.expect(data).to.have.property('items');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [{ "key": "token", "value": "{{jwt_token}}", "type": "string" }]
+        },
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"cliente\": {{cliente_id}},\n    \"fecha_entrega\": \"2026-10-15\",\n    \"items\": []\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/pedidos/",
+          "host": ["{{base_url}}"],
+          "path": ["pedidos", ""]
+        }
+      }
+    },
+    {
+      "name": "VP-08 Pedido con cliente inexistente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('VP-08: Status code es 400 Bad Request', function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "var data = pm.response.json();",
+              "pm.test('VP-08: Error de clave foránea retornado', function () {",
+              "    pm.expect(data).to.have.property('cliente');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [{ "key": "token", "value": "{{jwt_token}}", "type": "string" }]
+        },
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"cliente\": 999999,\n    \"fecha_entrega\": \"2026-10-15\",\n    \"items\": [\n        {\n            \"tipo_huevo\": \"COLOR_2\",\n            \"cantidad_maples\": 1\n        }\n    ]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/pedidos/",
+          "host": ["{{base_url}}"],
+          "path": ["pedidos", ""]
+        }
+      }
+    },
+    {
+      "name": "VP-09 Validación de cantidades inválidas (Negativas)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('VP-09: Status code es 400 Bad Request', function () {",
+              "    pm.response.to.have.status(400);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [{ "key": "token", "value": "{{jwt_token}}", "type": "string" }]
+        },
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"cliente\": {{cliente_id}},\n    \"fecha_entrega\": \"2026-10-15\",\n    \"items\": [\n        {\n            \"tipo_huevo\": \"COLOR_2\",\n            \"cantidad_maples\": -1\n        }\n    ]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/pedidos/",
+          "host": ["{{base_url}}"],
+          "path": ["pedidos", ""]
+        }
+      }
+    }
+  ]
+}
