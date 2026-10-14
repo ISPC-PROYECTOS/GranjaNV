@@ -1,19 +1,4 @@
 from django.urls import path
-<<<<<<< HEAD
-<<<<<<< HEAD
-from .views import (
-    exportar_finanzas_excel,
-    exportar_finanzas_pdf,
-    obtener_metricas_comerciales,
-    reporte_finanzas,
-    reporte_produccion, exportar_produccion_pdf, exportar_produccion_excel, 
-    exportar_completo_pdf, exportar_completo_excel
-
-)
-from .views import reporte_finanzas, exportar_finanzas_pdf, exportar_finanzas_excel, reporte_produccion, exportar_produccion_pdf, exportar_produccion_excel, reporte_completo, exportar_completo_pdf, exportar_completo_excel
-=======
-=======
->>>>>>> dev
 
 from .views import (
     exportar_completo_excel,
@@ -27,10 +12,7 @@ from .views import (
     reporte_finanzas,
     reporte_produccion,
 )
-<<<<<<< HEAD
->>>>>>> 681263df89164dcb5b7839f2c4a9afe30d47f88d
-=======
->>>>>>> dev
+
 
 urlpatterns = [
     path("metricas-comerciales/", obtener_metricas_comerciales, name="metricas-comerciales"),
