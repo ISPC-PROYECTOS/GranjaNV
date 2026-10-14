@@ -4,6 +4,7 @@
 
   <!-- Carrusel de tarjetas superiores (KPIs) -->
   <div class="bloque-blanco p-4 p-md-5 mb-4">
+<<<<<<< HEAD
     <app-carrusel [items]="tarjetasKpi()" [visibleDesktop]="3" [visibleMobile]="1">
       <ng-template #itemTemplate let-tarjeta>
         <article class="tarjeta-kpi">
@@ -43,6 +44,8 @@
           </article>
         }
 
+=======
+>>>>>>> dev
     @if (cargandoKpis()) {
       <div class="py-4">
         <app-spinner texto="Cargando indicadores..." />
@@ -121,6 +124,7 @@
 
             <!-- Contenedor con proporción fluida para el gráfico -->
             <div class="ratio ratio-21x9 my-2 w-100" aria-label="Tendencia de recolección de producción">
+<<<<<<< HEAD
               @if (tendenciaProduccion().length > 0) {
               <svg viewBox="0 0 550 220" class="w-100 h-100 overflow-visible" aria-hidden="true">
                 <line x1="30" y1="30" x2="530" y2="30" stroke="currentColor" stroke-width="1" opacity="0.08" />
@@ -198,6 +202,8 @@
               } @else {
                 <div class="d-flex justify-content-center align-items-center" style="height: 180px;">
                   <span class="text-muted small">Cargando tendencia...</span>
+=======
+>>>>>>> dev
               @if (cargandoGrafico()) {
                 <div class="d-flex justify-content-center align-items-center h-100">
                   <app-spinner texto="Cargando tendencia de producción..." />
