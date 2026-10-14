@@ -13,6 +13,7 @@ from .views import (
     reporte_produccion,
 )
 
+
 urlpatterns = [
     path("metricas-comerciales/", obtener_metricas_comerciales, name="metricas-comerciales"),
     path("finanzas/", reporte_finanzas, name="reporte-finanzas"),
