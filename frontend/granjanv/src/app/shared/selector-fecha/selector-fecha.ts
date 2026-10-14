@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, output, input, ElementRef, inject } from '@angular/core';
+import { Component, OnInit, Input, output, input, ElementRef, inject, EventEmitter} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { obtenerRangoMesActual } from '../../core/utils/date.utils';
@@ -19,6 +19,8 @@ export class SelectorFecha implements OnInit {
   private elementRef = inject(ElementRef);
 
   @Input() permitirTodos: boolean = false;
+  @Input() emitirAlIniciar: boolean = true;
+  @Input() maxFecha?: string;
 
   cambioRango = output<RangoFechaSeleccionado>();
   modoSeleccion = input(false);
@@ -28,6 +30,7 @@ export class SelectorFecha implements OnInit {
   mesSeleccionado: string = '';
   fechaDesde: string = '';
   fechaHasta: string = '';
+  errorFechas: string = '';
 
   ngOnInit(): void {
     const rango = obtenerRangoMesActual();
@@ -36,15 +39,19 @@ export class SelectorFecha implements OnInit {
     this.fechaDesde = rango.fechaDesde;
     this.fechaHasta = rango.fechaHasta;
 
-    if (this.permitirTodos) {
-      this.tipoFiltro = 'todos';
-      this.cambioRango.emit({ fechaDesde: '', fechaHasta: '' });
-    } else {
-      this.cambioRango.emit(rango);
+    if (this.emitirAlIniciar) {
+      if (this.permitirTodos) {
+        this.tipoFiltro = 'todos';
+        this.cambioRango.emit({ fechaDesde: '', fechaHasta: '' });
+      } else {
+        this.cambioRango.emit(rango);
+      }
     }
   }
 
   onCambioTipo(): void {
+    this.errorFechas = '';
+
     if (this.tipoFiltro === 'mes' && !this.mesSeleccionado) {
       this.mesSeleccionado = obtenerRangoMesActual().fechaDesde.slice(0, 7);
     }
@@ -61,8 +68,17 @@ export class SelectorFecha implements OnInit {
       const [anio, mes] = this.mesSeleccionado.split('-').map(Number);
       rango = obtenerRangoMesActual(new Date(anio, mes - 1, 1));
     } else {
-      if (!this.fechaDesde || !this.fechaHasta) return;
-      if (this.fechaDesde > this.fechaHasta) return;
+      if (!this.fechaDesde || !this.fechaHasta) {
+        this.errorFechas = 'Seleccioná ambas fechas.';
+        return;
+      }
+
+      if (this.fechaDesde > this.fechaHasta) {
+        this.errorFechas = 'La fecha inicial no puede ser posterior a la fecha final.';
+        return;
+      }
+
+      this.errorFechas = '';
 
       rango = {
         fechaDesde: this.fechaDesde,
@@ -76,6 +92,8 @@ export class SelectorFecha implements OnInit {
   }
 
   restablecerFiltro(): void {
+    this.errorFechas = '';
+
     const rango = obtenerRangoMesActual();
 
     this.mesSeleccionado = rango.fechaDesde.slice(0, 7);

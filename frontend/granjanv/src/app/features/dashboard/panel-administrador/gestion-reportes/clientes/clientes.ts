@@ -4,11 +4,12 @@ import { Cliente } from '../../../../../core/models/cliente.model';
 import { ClientesService } from '../../../../../core/services/clientes.service';
 import { CrearClienteComponent } from '../../../../../shared/clientes/crear-cliente';
 import { Buscador } from '../../../../../shared/buscador/buscador';
+import { Spinner } from '../../../../../shared/spinner/spinner';
 
 @Component({
   selector: 'app-clientes',
   standalone: true,
-  imports: [CommonModule, CrearClienteComponent, Buscador],
+  imports: [CommonModule, CrearClienteComponent, Buscador, Spinner],
   templateUrl: './clientes.html',
   styleUrl: './clientes.css',
 })

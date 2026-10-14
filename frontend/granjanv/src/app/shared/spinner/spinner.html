@@ -1,0 +1,22 @@
+<div 
+  class="spinner-contenedor"
+  [class.spinner-overlay]="overlay()"
+  [class.alineacion-inicio]="alineacion() === 'inicio'"
+  role="status"
+  aria-live="polite"
+>
+  <div 
+    class="spinner-circulo"
+    [class.spinner-sm]="tamanio() === 'sm'"
+    [class.spinner-lg]="tamanio() === 'lg'"
+    [class.color-secundario]="color() === 'secundario'"
+    [class.color-blanco]="color() === 'blanco'"
+    aria-hidden="true"
+  ></div>
+
+  @if (texto()) {
+    <p class="spinner-texto" [class.color-blanco]="color() === 'blanco'">
+      {{ texto() }}
+    </p>
+  }
+</div>

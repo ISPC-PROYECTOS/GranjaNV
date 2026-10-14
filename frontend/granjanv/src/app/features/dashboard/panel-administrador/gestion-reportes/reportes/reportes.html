@@ -1,246 +1,298 @@
 <section class="reportes">
-    <p class="reportes-descripcion">
-        Generá y exportá reportes del sistema.
-    </p>
+  <p class="reportes-descripcion">Generá y exportá reportes del sistema.</p>
 
-    <div class="reportes-contenedor">
+  <div class="reportes-contenedor">
+    <!-- PRODUCCIÓN -->
 
-        <!-- PRODUCCIÓN -->
-        <article class="reporte-card">
-            <div class="reporte-icono">
-                <i class="hgi hgi-stroke hgi-eggs" aria-hidden="true"></i>
+    <article class="reporte-card">
+      <div class="reporte-icono">
+        <i class="hgi hgi-stroke hgi-eggs" aria-hidden="true"></i>
+      </div>
+
+      <div class="reporte-info">
+        <h2>Reporte de Producción</h2>
+
+        <p>Maples recolectados, mermas y mortalidad por período</p>
+      </div>
+
+      <button type="button" class="btn-exportar" (click)="abrirModal('produccion')">
+        <i class="hgi hgi-stroke hgi-arrow-down-03" aria-hidden="true"></i>
+
+        Exportar
+      </button>
+    </article>
+
+    <!-- FINANZAS -->
+
+    <article class="reporte-card">
+      <div class="reporte-icono">
+        <i class="hgi hgi-stroke hgi-dollar-circle" aria-hidden="true"></i>
+      </div>
+
+      <div class="reporte-info">
+        <h2>Reporte de Finanzas</h2>
+
+        <p>Balance de ingresos y egresos por período</p>
+      </div>
+
+      <button type="button" class="btn-exportar" (click)="abrirModal('finanzas')">
+        <i class="hgi hgi-stroke hgi-arrow-down-03" aria-hidden="true"></i>
+
+        Exportar
+      </button>
+    </article>
+
+    <!-- EXPORTAR TODO -->
+
+    <article class="reporte-card">
+      <div class="reporte-icono">
+        <i class="hgi hgi-stroke hgi-file-export" aria-hidden="true"></i>
+      </div>
+
+      <div class="reporte-info">
+        <h2>Exportar todo</h2>
+
+        <p>Descargue un informe completo del período seleccionado</p>
+      </div>
+
+      <button type="button" class="btn-exportar" (click)="abrirModal('completo')">
+        <i class="hgi hgi-stroke hgi-arrow-down-03" aria-hidden="true"></i>
+
+        Exportar
+      </button>
+    </article>
+
+    <!-- MODAL -->
+
+    @if (mostrarModal()) {
+      <div class="modal-confirmacion-backdrop">
+        <div
+          class="modal-confirmacion-caja animate-fade-in"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="titulo-exportar-reporte"
+          appCerrarConEscape
+          (cerrarEscape)="cerrarModal()"
+        >
+          <h4 id="titulo-exportar-reporte">
+            {{ obtenerTituloModal() }}
+          </h4>
+
+          @if (!confirmandoExportacion()) {
+            <!-- PERÍODO -->
+
+            <div class="opcion-exportacion">
+              <div>
+                <p class="opcion-titulo">Período</p>
+
+                <p class="text-muted small mb-0">Seleccioná el mes o rango de fechas</p>
+              </div>
+
+              <div class="selector-reporte">
+                <app-selector-fecha
+                  [modoSeleccion]="true"
+                  (cambioRango)="onCambioRango($event)"
+                  (seleccionar)="seleccionarRango()"
+                >
+                </app-selector-fecha>
+              </div>
             </div>
 
-            <div class="reporte-info">
-                <h2>Reporte de Producción</h2>
-                <p>Maples recolectados, mermas y mortalidad por período</p>
+            <!-- FORMATO -->
+
+            <div class="opcion-formato">
+              <p class="opcion-titulo">Formato</p>
+
+              <div class="d-flex gap-3">
+                <label class="formato-opcion">
+                  <input
+                    type="radio"
+                    name="formato"
+                    value="pdf"
+                    [checked]="formatoSeleccionado() === 'pdf'"
+                    (change)="onCambioFormato('pdf')"
+                  />
+
+                  PDF
+                </label>
+
+                <label class="formato-opcion">
+                  <input
+                    type="radio"
+                    name="formato"
+                    value="excel"
+                    [checked]="formatoSeleccionado() === 'excel'"
+                    (change)="onCambioFormato('excel')"
+                  />
+
+                  Excel
+                </label>
+              </div>
             </div>
 
-            <button type="button" class="btn-exportar" (click)="abrirModal('produccion')">
-                <i class="hgi hgi-stroke hgi-arrow-down-03" aria-hidden="true"></i>
+            <!-- ACCIONES -->
+
+            <div class="d-flex gap-2 justify-content-end mt-3">
+              <button type="button" class="btn btn-sm btn-limpiar" (click)="cerrarModal()">
+                Cancelar
+              </button>
+
+              <button type="button" class="btn btn-sm btn-guardar" (click)="solicitarExportacion()">
                 Exportar
-            </button>
-        </article>
-
-        <!-- FINANZAS -->
-        <article class="reporte-card">
-            <div class="reporte-icono">
-                <i class="hgi hgi-stroke hgi-dollar-circle" aria-hidden="true"></i>
+              </button>
             </div>
+          } @else {
+            <!-- CONFIRMACIÓN -->
 
-            <div class="reporte-info">
-                <h2>Reporte de Finanzas</h2>
-                <p>Balance de ingresos y egresos por período</p>
-            </div>
+            <div class="confirmacion-exportacion">
+              <p class="opcion-titulo">¿Exportar este reporte?</p>
 
-            <button type="button" class="btn-exportar" (click)="abrirModal('finanzas')">
-                <i class="hgi hgi-stroke hgi-arrow-down-03" aria-hidden="true"></i>
-                Exportar
-            </button>
-        </article>
+              <p class="confirmacion-descripcion">Revisá los datos antes de continuar.</p>
 
-        <!-- EXPORTAR TODO -->
-        <article class="reporte-card">
-            <div class="reporte-icono">
-                <i class="hgi hgi-stroke hgi-file-export" aria-hidden="true"></i>
-            </div>
+              <div class="resumen-exportacion">
+                <p>
+                  <strong>Período:</strong>
 
-            <div class="reporte-info">
-                <h2>Exportar todo</h2>
-                <p>Descargue un informe completo del período seleccionado</p>
-            </div>
+                  {{ formatearFecha(rangoSeleccionado().fechaDesde) }}
 
-            <button type="button" class="btn-exportar" (click)="abrirModal('completo')">
-                <i class="hgi hgi-stroke hgi-arrow-down-03" aria-hidden="true"></i>
-                Exportar
-            </button>
-        </article>
+                  al
 
-        <!-- MODAL -->
-        @if (mostrarModal()) {
-        <div class="modal-confirmacion-backdrop">
-            <div class="modal-confirmacion-caja animate-fade-in" role="dialog" aria-modal="true"
-                aria-labelledby="titulo-exportar-reporte" appCerrarConEscape (cerrarEscape)="cerrarModal()">
-
-                <h4 id="titulo-exportar-reporte">
-                    {{ obtenerTituloModal() }}
-                </h4>
-
-                @if (!confirmandoExportacion()) {
-
-                <!-- PERÍODO -->
-                <div class="opcion-exportacion">
-                    <div>
-                        <p class="opcion-titulo">Período</p>
-                        <p class="text-muted small mb-0">
-                            Seleccioná el mes o rango de fechas
-                        </p>
-                    </div>
-
-                    <div class="selector-reporte">
-                        <app-selector-fecha [modoSeleccion]="true" (cambioRango)="onCambioRango($event)"
-                            (seleccionar)="seleccionarRango()">
-                        </app-selector-fecha>
-                    </div>
-                </div>
-
-                <!-- FORMATO -->
-                <div class="opcion-formato">
-                    <p class="opcion-titulo">Formato</p>
-
-                    <div class="d-flex gap-3">
-                        <label class="formato-opcion">
-                            <input type="radio" name="formato" value="pdf" [checked]="formatoSeleccionado() === 'pdf'"
-                                (change)="onCambioFormato('pdf')" />
-                            PDF
-                        </label>
-
-                        <label class="formato-opcion">
-                            <input type="radio" name="formato" value="excel"
-                                [checked]="formatoSeleccionado() === 'excel'" (change)="onCambioFormato('excel')" />
-                            Excel
-                        </label>
-                    </div>
-                </div>
-
-                <!-- ACCIONES -->
-                <div class="d-flex gap-2 justify-content-end mt-3">
-                    <button type="button" class="btn btn-sm btn-limpiar" (click)="cerrarModal()">
-                        Cancelar
-                    </button>
-
-                    <button type="button" class="btn btn-sm btn-guardar" (click)="solicitarExportacion()">
-                        Exportar
-                    </button>
-                </div>
-
-                } @else {
-
-                <!-- CONFIRMACIÓN -->
-                <div class="confirmacion-exportacion">
-                    <p class="opcion-titulo">
-                        ¿Exportar este reporte?
-                    </p>
-
-                    <p class="confirmacion-descripcion">
-                        Revisá los datos antes de continuar.
-                    </p>
-
-                    <div class="resumen-exportacion">
-                        <p>
-                            <strong>Período:</strong>
-                            {{ formatearFecha(rangoSeleccionado().fechaDesde) }}
-                            al
-                            {{ formatearFecha(rangoSeleccionado().fechaHasta) }}
-                        </p>
-
-                        <p>
-                            <strong>Formato:</strong>
-                            {{ formatoSeleccionado() === 'pdf' ? 'PDF' : 'Excel' }}
-                        </p>
-                    </div>
-                </div>
-
-                @if (cargandoVistaPrevia()) {
-                <p class="vista-previa-cargando">
-                    Cargando resumen...
+                  {{ formatearFecha(rangoSeleccionado().fechaHasta) }}
                 </p>
+
+                @if (mostrarAdvertenciaFechaFutura()) {
+                  <p class="advertencia-fecha-reporte" role="status">
+                    <i class="hgi-stroke hgi-information-circle" aria-hidden="true"></i>
+                    Datos disponibles hasta el {{ fechaActualFormateada() }}. Las fechas posteriores
+                    aún no transcurrieron.
+                  </p>
                 }
 
-                @if (!cargandoVistaPrevia() && vistaPreviaProduccion(); as produccion) {
-                <div class="vista-previa">
-                    <p class="vista-previa-titulo">Resumen del reporte</p>
+                <p>
+                  <strong>Formato:</strong>
 
-                    <div class="vista-previa-fila">
-                        <span>Total producido</span>
-                        <strong>{{ produccion.total_maples }} maples</strong>
-                    </div>
-
-                    <div class="vista-previa-fila">
-                        <span>Mermas</span>
-                        <strong>{{ produccion.mermas }} huevos</strong>
-                    </div>
-                </div>
-                }
-
-                @if (!cargandoVistaPrevia() && vistaPreviaFinanzas(); as finanzas) {
-                <div class="vista-previa">
-                    <p class="vista-previa-titulo">Resumen del reporte</p>
-
-                    <div class="vista-previa-fila">
-                        <span>Ingresos</span>
-                        <strong>${{ finanzas.ingresos }}</strong>
-                    </div>
-
-                    <div class="vista-previa-fila">
-                        <span>Egresos</span>
-                        <strong>${{ finanzas.egresos }}</strong>
-                    </div>
-
-                    <div class="vista-previa-fila">
-                        <span>Balance neto</span>
-                        <strong>${{ finanzas.balance_neto }}</strong>
-                    </div>
-                </div>
-                }
-
-                @if (!cargandoVistaPrevia() && vistaPreviaCompleto(); as completo) {
-                <div class="vista-previa">
-                    <p class="vista-previa-titulo">Resumen del reporte</p>
-
-                    <p class="vista-previa-seccion">Finanzas</p>
-
-                    <div class="vista-previa-fila">
-                        <span>Ingresos</span>
-                        <strong>${{ completo.finanzas.ingresos }}</strong>
-                    </div>
-
-                    <div class="vista-previa-fila">
-                        <span>Egresos</span>
-                        <strong>${{ completo.finanzas.egresos }}</strong>
-                    </div>
-
-                    <div class="vista-previa-fila">
-                        <span>Balance neto</span>
-                        <strong>${{ completo.finanzas.balance_neto }}</strong>
-                    </div>
-
-                    <p class="vista-previa-seccion">Producción</p>
-
-                    <div class="vista-previa-fila">
-                        <span>Total producido</span>
-                        <strong>{{ completo.produccion.total_maples }} maples</strong>
-                    </div>
-
-                    <div class="vista-previa-fila">
-                        <span>Mermas</span>
-                        <strong>{{ completo.produccion.mermas }} huevos</strong>
-                    </div>
-                </div>
-                }
-                <!-- ACCIONES -->
-                <div class="d-flex gap-2 justify-content-end mt-3">
-                    <button type="button" class="btn btn-sm btn-limpiar" (click)="volverAConfiguracion()"
-                        [disabled]="exportando()">
-                        Volver
-                    </button>
-
-                    <button type="button" class="btn btn-sm btn-guardar" (click)="exportarReporte()"
-                        [disabled]="exportando()">
-
-                        @if (exportando()) {
-                        Exportando...
-                        } @else {
-                        Confirmar exportación
-                        }
-                    </button>
-                </div>
-
-                }
-
+                  {{ formatoSeleccionado() === 'pdf' ? 'PDF' : 'Excel' }}
+                </p>
+              </div>
             </div>
-        </div>
-        }
 
-    </div>
+            @if (cargandoVistaPrevia()) {
+              <div class="py-2">
+                <p class="vista-previa-cargando">Cargando resumen...</p>
+
+                <app-spinner tamanio="sm" />
+              </div>
+            }
+            @if (!cargandoVistaPrevia() && vistaPreviaProduccion(); as produccion) {
+              <div class="vista-previa">
+                <p class="vista-previa-titulo">Resumen del reporte</p>
+
+                <div class="vista-previa-fila">
+                  <span>Total producido</span>
+
+                  <strong>{{ produccion.total_maples }} maples</strong>
+                </div>
+
+                <div class="vista-previa-fila">
+                  <span>Mermas</span>
+
+                  <strong>{{ produccion.mermas }} huevos</strong>
+                </div>
+              </div>
+            }
+
+            @if (!cargandoVistaPrevia() && vistaPreviaFinanzas(); as finanzas) {
+              <div class="vista-previa">
+                <p class="vista-previa-titulo">Resumen del reporte</p>
+
+                <div class="vista-previa-fila">
+                  <span>Ingresos</span>
+
+                  <strong>${{ finanzas.ingresos }}</strong>
+                </div>
+
+                <div class="vista-previa-fila">
+                  <span>Egresos</span>
+
+                  <strong>${{ finanzas.egresos }}</strong>
+                </div>
+
+                <div class="vista-previa-fila">
+                  <span>Balance neto</span>
+
+                  <strong>${{ finanzas.balance_neto }}</strong>
+                </div>
+              </div>
+            }
+
+            @if (!cargandoVistaPrevia() && vistaPreviaCompleto(); as completo) {
+              <div class="vista-previa">
+                <p class="vista-previa-titulo">Resumen del reporte</p>
+
+                <p class="vista-previa-seccion">Finanzas</p>
+
+                <div class="vista-previa-fila">
+                  <span>Ingresos</span>
+
+                  <strong>${{ completo.finanzas.ingresos }}</strong>
+                </div>
+
+                <div class="vista-previa-fila">
+                  <span>Egresos</span>
+
+                  <strong>${{ completo.finanzas.egresos }}</strong>
+                </div>
+
+                <div class="vista-previa-fila">
+                  <span>Balance neto</span>
+
+                  <strong>${{ completo.finanzas.balance_neto }}</strong>
+                </div>
+
+                <p class="vista-previa-seccion">Producción</p>
+
+                <div class="vista-previa-fila">
+                  <span>Total producido</span>
+
+                  <strong>{{ completo.produccion.total_maples }} maples</strong>
+                </div>
+
+                <div class="vista-previa-fila">
+                  <span>Mermas</span>
+
+                  <strong>{{ completo.produccion.mermas }} huevos</strong>
+                </div>
+              </div>
+            }
+
+            <!-- ACCIONES -->
+
+            <div class="d-flex gap-2 justify-content-end mt-3">
+              <button
+                type="button"
+                class="btn btn-sm btn-limpiar"
+                (click)="volverAConfiguracion()"
+                [disabled]="exportando()"
+              >
+                Volver
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-sm btn-guardar"
+                (click)="exportarReporte()"
+                [disabled]="exportando()"
+              >
+                @if (exportando()) {
+                  Exportando...
+                } @else {
+                  Confirmar exportación
+                }
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
 </section>

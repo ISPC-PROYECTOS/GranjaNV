@@ -269,6 +269,23 @@
     width: 280px;
     max-width: 85vw;
   }
+
+  .notificaciones-dropdown-card {
+    position: fixed !important;
+    top: 72px !important;
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    max-width: calc(100vw - 24px) !important;
+    margin: 0 auto;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  }
+
+  .notificaciones-lista {
+    max-height: 55vh; /* Previene desborde vertical en pantallas compactas */
+    -webkit-overflow-scrolling: touch;
+  }
+
 }
 
 /* MODO OSCURO */
