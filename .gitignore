@@ -49,3 +49,9 @@ repomix-output.xml
 .env
 .env.*
 !.env.example
+
+node_modules/
+**/node_modules/
+test-results/
+e2e/node_modules/
+
