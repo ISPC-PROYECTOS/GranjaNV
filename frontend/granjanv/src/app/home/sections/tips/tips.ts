@@ -18,7 +18,7 @@ export interface Receta {
 })
 export class Tips implements OnInit {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:8000/api/landing/recetas/';
+  private readonly apiUrl = '/api/landing/recetas/';
 
   readonly titulo = 'Tips';
   readonly recetas = signal<Receta[]>([]);

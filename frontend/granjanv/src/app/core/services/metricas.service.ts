@@ -8,7 +8,7 @@ import { MetricasComerciales } from '../models/reporte.model';
 })
 export class MetricasService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://127.0.0.1:8000/api/reportes/metricas-comerciales/';
+  private apiUrl = '/api/reportes/metricas-comerciales/';
 
   getMetricasComerciales(fechaDesde?: string, fechaHasta?: string): Observable<MetricasComerciales> {
     let params = new HttpParams();

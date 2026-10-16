@@ -13,7 +13,7 @@ import {
 })
 export class ProduccionService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:8000/api/produccion/';
+  private readonly apiUrl = '/api/produccion/';
 
   readonly galpones = signal<Galpon[]>([]);
   readonly galponesCargando = signal(false);

@@ -12,7 +12,7 @@ export interface FiltroGastos {
 })
 export class Gastos {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8000/api/compras/gastos/';
+  private apiUrl = '/api/compras/gastos/';
 
   private armarParams(filtros?: FiltroGastos): HttpParams {
     let params = new HttpParams();

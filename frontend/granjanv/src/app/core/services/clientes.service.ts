@@ -8,7 +8,7 @@ import { Cliente } from '../models/cliente.model';
 })
 export class ClientesService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8000/api/clientes/clientes/';
+  private apiUrl = '/api/clientes/clientes/';
 
   obtenerClientes(search?: string, incluirInactivos = false): Observable<Cliente[]> {
     let params = new HttpParams();

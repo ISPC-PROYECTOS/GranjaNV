@@ -13,7 +13,7 @@ import {
 })
 export class PedidosService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:8000/api/pedidos/';
+  private readonly apiUrl = '/api/pedidos/';
 
   private armarParams(filtros?: FiltroPedidos): HttpParams {
     let params = new HttpParams();
