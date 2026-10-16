@@ -1,0 +1,69 @@
+:host {
+  display: block;
+}
+
+/* En desktop mantenemos la altura fija con scroll */
+.panel-columna {
+  height: 735px;
+  max-height: 735px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.panel-columna::-webkit-scrollbar {
+  width: 6px;
+}
+
+.panel-columna::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.panel-columna::-webkit-scrollbar-thumb {
+  background-color: var(--color-gris-medio);
+  border-radius: 10px;
+}
+
+/* =================================
+   AJUSTES MOBILE (< 576px)
+================================= */
+@media (max-width: 575px) {
+  /* Quitamos el padding excesivo de la página general */
+  :host-context(.gestion-pagina),
+  :host .gestion-pagina {
+    padding: 8px 10px !important;
+  }
+
+  /* El contenedor beige principal no debe estrangular los lados */
+  .gestion-seccion {
+    padding: 12px 10px !important;
+    margin: 0 !important;
+    border-radius: 20px !important;
+  }
+
+  .panel-columna {
+    height: auto !important;
+    max-height: none !important;
+    overflow-y: visible !important;
+    padding: 0 !important;
+  }
+
+  /* La caja verde ocupa todo el ancho disponible */
+  .seccion-derecha,
+  .seccion-izquierda {
+    padding: 14px 10px !important;
+    border-radius: 20px !important;
+    width: 100% !important;
+  }
+
+  /* Ajuste de los botones de pestañas */
+  .tabs-mobile {
+    margin-bottom: 8px !important;
+    padding: 5px !important;
+  }
+
+  .tab-mobile {
+    padding: 10px 4px !important;
+    font-size: 14px !important;
+  }
+}

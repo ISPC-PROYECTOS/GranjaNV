@@ -8,12 +8,15 @@ import { Cliente } from '../models/cliente.model';
 })
 export class ClientesService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8000/api/clientes/clientes/';
+  private apiUrl = '/api/clientes/clientes/';
 
-  obtenerClientes(search?: string): Observable<Cliente[]> {
+  obtenerClientes(search?: string, incluirInactivos = false): Observable<Cliente[]> {
     let params = new HttpParams();
     if (search && search.trim()) {
       params = params.set('search', search.trim());
+    }
+    if (incluirInactivos) {
+      params = params.set('incluir_inactivos', 'true');
     }
     return this.http.get<Cliente[]>(this.apiUrl, { params });
   }

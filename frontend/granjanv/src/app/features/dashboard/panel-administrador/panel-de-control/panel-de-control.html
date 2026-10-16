@@ -8,6 +8,7 @@
                 <div 
                     class="card-acciones" 
                     routerLink="/dashboard/admin/ventas" 
+                    [queryParams]="{ seccion: 'nuevo' }"
                     role="link" 
                     tabindex="0"
                     aria-label="Registrar un nuevo pedido">
@@ -21,7 +22,8 @@
             <div class="col-4">
                 <div 
                     class="card-acciones" 
-                    routerLink="/dashboard/admin/ventas" 
+                    routerLink="/dashboard/admin/ventas"
+                    [queryParams]="{ seccion: 'pendientes' }"
                     role="link" 
                     tabindex="0"
                     aria-label="Ir a ventas y pedidos">
@@ -68,15 +70,28 @@
                         </h3>
                     </header>
 
-                    <p class="metrica-valor">
-                        {{ metrica.valor }}
-                    </p>
+                    @if (cargando()) {
+                      <div class="my-auto py-2">
+                        <app-spinner tamanio="sm" />
+                      </div>
+                    } @else {
+                      <p class="metrica-valor">
+                          {{ metrica.valor }}
+                      </p>
+
+                      @if (metrica.subtexto) {
+                          <p class="metrica-subtexto">
+                              {{ metrica.subtexto }}
+                          </p>
+                      }
+                    }
 
                     @if (metrica.ruta) {
                         <button 
                             class="btn metrica-btn" 
                             type="button" 
                             [routerLink]="metrica.ruta"
+                            [queryParams]="metrica.queryParams"
                             [attr.aria-label]="'Ir a la sección de ' + metrica.titulo">
                             <i class="hgi-stroke hgi-arrow-right-02" aria-hidden="true"></i>
                         </button>
@@ -146,6 +161,7 @@
                     <button 
                         class="btn acceso-btn" 
                         type="button"
+                        routerLink="/dashboard/produccion"
                         aria-label="Ingresar al módulo de producción avícola">
                         Ingresar →
                     </button>
@@ -166,7 +182,7 @@
                     <button 
                         class="btn acceso-btn" 
                         type="button" 
-                        routerLink="/dashboard/admin/registro-usuario"
+                        routerLink="/dashboard/admin/gestion-reportes"
                         aria-label="Ingresar al módulo de gestión y usuarios">
                         Ingresar →
                     </button>

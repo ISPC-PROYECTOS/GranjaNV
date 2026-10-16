@@ -1,8 +1,9 @@
-/* Tipografías */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans:wght@400;500;600&display=swap');
-
-/* Hugeicons */
-@import url('https://cdn.hugeicons.com/font/hgi-stroke-rounded.css');
+@import '@fontsource/montserrat/500.css';
+@import '@fontsource/montserrat/600.css';
+@import '@fontsource/montserrat/700.css';
+@import '@fontsource/open-sans/400.css';
+@import '@fontsource/open-sans/600.css';
+@import '@fontsource/open-sans/700.css';
 
 :root {
   --color-primario: #67875f;
@@ -91,6 +92,17 @@ body {
 .alerta-error {
   background-color: rgba(255, 107, 107, 0.15);
   color: var(--color-crema);
+  border: 1px solid var(--color-error);
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.alerta-error-modal {
+  background-color: rgba(255, 107, 107, 0.15);
+  color: var(--color-negro);
   border: 1px solid var(--color-error);
   padding: 0.75rem 1rem;
   border-radius: 12px;
@@ -294,6 +306,14 @@ body {
   color: var(--color-blanco);
 }
 
+.btn-guardar:disabled,
+.btn-guardar[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(40%);
+}
+
 /* CONTENEDOR IZQUIERDO */
 
 .seccion-izquierda {
@@ -312,7 +332,7 @@ body {
 .modal-confirmacion-backdrop {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.55);
+  background-color: color-mix(in srgb, var(--color-negro) 55%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -343,6 +363,43 @@ body {
   color: var(--color-negro);
 }
 
+/* .btn-eliminar {
+  background-color: var(--color-secundario);
+  color: var(--color-blanco);
+} */
+
+.btn-modal-cancelar,
+.btn-modal-eliminar {
+  min-width: 120px;
+  padding: 6px 14px;
+  border: 2px solid var(--color-secundario);
+  border-radius: 7px;
+  font-family: var(--font-titulos);
+  font-weight: 600;
+}
+
+.btn-modal-cancelar {
+  background-color: transparent;
+  color: var(--color-negro);
+  border-color: var(--color-gris-oscuro);
+}
+
+.btn-modal-cancelar:hover {
+  background-color: var(--color-negro);
+  border-color: var(--color-negro);
+  color: var(--color-blanco);
+}
+
+.btn-modal-eliminar {
+  background-color: var(--color-secundario);
+  color: var(--color-blanco);
+}
+
+.btn-modal-eliminar:hover {
+  background-color: var(--color-secundario-oscuro);
+  border-color: var(--color-secundario-oscuro);
+  color: #ffffff;
+}
 /* =================================
    ALERTA DE ERROR DESTACADA
 ================================= */
@@ -355,6 +412,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* =================================
+   BLOQUES BLANCOS REDONDEADOS
+================================= */
+.bloque-blanco {
+  background-color: var(--color-blanco) !important;
+  border-radius: 26px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
 }
 
 /* =================================
@@ -371,6 +437,28 @@ body.dark-mode {
   --color-gris-oscuro: #c4cdc5;
   --color-crema: #171c19;
 
+  color: var(--color-negro);
+}
+
+body.dark-mode .btn-volver-panel {
+  color: var(--color-negro);
+}
+
+body.dark-mode .btn-volver-panel:hover {
+  color: var(--color-negro);
+}
+
+body.dark-mode .tabs-mobile {
+  background-color: var(--color-blanco);
+}
+
+body.dark-mode .tab-mobile {
+  background-color: var(--color-gris-medio);
+  color: var(--color-negro);
+}
+
+body.dark-mode .tab-mobile-activo {
+  background-color: var(--color-primario);
   color: var(--color-negro);
 }
 
@@ -402,4 +490,25 @@ body.dark-mode .alerta-exito {
   background-color: var(--color-primario-claro);
   color: var(--color-negro);
   border-color: var(--color-exito);
+}
+
+body.dark-mode .modal-confirmacion-caja {
+  background-color: var(--color-crema);
+  color: var(--color-negro);
+}
+
+body.dark-mode .modal-confirmacion-caja h4 {
+  color: var(--color-primario);
+}
+
+body.dark-mode .modal-confirmacion-caja .text-muted {
+  color: var(--color-gris-oscuro) !important;
+}
+
+:root[data-theme='dark'] .btn-guardar:disabled,
+:root[data-theme='dark'] .btn-guardar[disabled],
+body.dark-mode .btn-guardar:disabled,
+body.dark-mode .btn-guardar[disabled] {
+  opacity: 0.4;
+  filter: grayscale(60%);
 }

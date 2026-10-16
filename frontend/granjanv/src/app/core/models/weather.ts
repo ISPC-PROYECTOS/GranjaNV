@@ -2,9 +2,9 @@ export interface WeatherData {
   temperature: number;
   humidity: number;
   windSpeed: number;
-  windDirection: number;         // Grados meteorológicos de origen (0° - 360°)
-  windFlowRotation: number;      // Grados de rotación visual para la flecha (hacia dónde va)
-  windDirectionText: string;     // Punto cardinal de origen (ej: "N", "SE")
+  windDirection: number; // Grados meteorológicos de origen (0° - 360°)
+  windFlowRotation: number; // Grados de rotación visual para la flecha (hacia dónde va)
+  windDirectionText: string; // Punto cardinal de origen (ej: "N", "SE")
   precipitationProbability: number;
   description: string;
   iconClass: string;
@@ -21,4 +21,13 @@ export interface OpenMeteoResponse {
   hourly: {
     precipitation_probability: number[];
   };
+}
+
+export interface PronosticoDiario {
+  fecha: string;
+  temperaturaMaxima: number;
+  temperaturaMinima: number;
+  probabilidadLluvia: number;
+  descripcion: string;
+  iconClass: string;
 }

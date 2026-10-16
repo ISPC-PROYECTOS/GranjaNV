@@ -29,7 +29,7 @@
             <h2 class="gestion-titulo mb-0">PENDIENTES</h2>
           </div>
           <div class="d-flex align-items-center gap-2">
-            <app-selector-fecha (cambioRango)="onCambioRangoPendientes($event)"></app-selector-fecha>
+            <app-selector-fecha [permitirTodos]="true" (cambioRango)="onCambioRangoPendientes($event)"></app-selector-fecha>
             <app-buscador (buscar)="onBuscarPendientes($event)"></app-buscador>
           </div>
         </header>
@@ -100,15 +100,17 @@
             <footer class="pedido-card-footer animate-fade-in">
               <div class="acciones-pedido">
 
+                
+
                 <div class="acciones-estado">
                   <button type="button" class="btn btn-estado-toggle" [class.completado]="pedido.estado_entrega"
-                    (click)="toggleEntrega(pedido)">
+                    (click)="solicitarToggleEntrega(pedido)">
                     <i class="hgi-stroke hgi-tick-02" aria-hidden="true"></i>
                     {{ pedido.estado_entrega ? 'Entregado' : 'Entregué' }}
                   </button>
 
                   <button type="button" class="btn btn-estado-toggle" [class.completado]="pedido.estado_pago"
-                    (click)="togglePago(pedido)">
+                    (click)="solicitarTogglePago(pedido)">
                     <i class="hgi-stroke hgi-dollar-circle" aria-hidden="true"></i>
                     {{ pedido.estado_pago ? 'Cobrado' : 'Cobré' }}
                   </button>
@@ -134,9 +136,9 @@
           </article>
           } @empty {
           @if (isLoading()) {
-          <p class="text-center text-muted py-4 m-0">
-            Cargando pedidos...
-          </p>
+          <div class="py-5 text-center">
+            <app-spinner />
+          </div>
           } @else {
           <p class="text-center text-muted py-4 m-0">
             No hay pedidos pendientes en este rango.
@@ -153,8 +155,11 @@
               <i class="hgi-stroke hgi-checkmark-circle-02" aria-hidden="true"></i>
               Pedidos cerrados ({{ pedidosCerrados().length }})
             </span>
-            <i class="hgi-stroke hgi-arrow-down-01 icono-chevron" [class.rotado]="mostrarCerrados()"
-              aria-hidden="true"></i>
+            <span class="total-ventas-toggle">
+              Total: ${{ formatearMoneda(totalVentas()) }}
+              <i class="hgi-stroke hgi-arrow-down-01 icono-chevron" [class.rotado]="mostrarCerrados()"
+                aria-hidden="true"></i>
+            </span>
           </button>
 
           @if (mostrarCerrados()) {
@@ -227,7 +232,7 @@
 
         <div class="gestion-formulario p-3 mt-1">
           <!-- Autocompletado de Clientes -->
-          <div class="mb-2 position-relative">
+          <div class="mb-2">
             <div class="d-flex justify-content-between align-items-center mb-1">
               <label for="buscar-cliente" class="form-label mb-0">Cliente *</label>
 
@@ -247,27 +252,27 @@
               </div>
             </div>
 
-            <input id="buscar-cliente" type="text" class="form-control" placeholder="Buscar cliente..."
-              [ngModel]="terminoBusquedaCliente()" (ngModelChange)="onEscribirCliente($event)" autocomplete="off" />
+            <div class="position-relative">
+              <input id="buscar-cliente" type="text" class="form-control" placeholder="Buscar cliente..."
+                [ngModel]="terminoBusquedaCliente()" (ngModelChange)="onEscribirCliente($event)" autocomplete="off" />
 
-            @if (clientesFiltrados().length > 0 && !clienteSeleccionado()) {
-            <ul class="dropdown-clientes-sugerencias shadow" role="listbox">
-              @for (c of clientesFiltrados(); track c.id) {
-              <li role="option" tabindex="0" (click)="seleccionarCliente(c)" (keydown.enter)="seleccionarCliente(c)">
-                <strong>{{ c.nombre }} {{ c.apellido }}</strong> — {{ c.direccion }} ({{ c.telefono }})
-              </li>
+              @if (clientesFiltrados().length > 0 && !clienteSeleccionado()) {
+                <app-cliente-sugerencias 
+                [clientes]="clientesFiltrados()" 
+                (seleccionar)="seleccionarCliente($any($event))" 
+                />
               }
-            </ul>
-            }
 
-            @if (terminoBusquedaCliente().trim() && clientesFiltrados().length === 0 && !clienteSeleccionado()) {
-            <ul class="dropdown-clientes-sugerencias shadow" role="listbox">
-              <li role="option" tabindex="0" (click)="abrirModalNuevoCliente()" class="item-sin-cliente">
-                <i class="hgi-stroke hgi-user-add-01 me-1"></i> No existe "{{ terminoBusquedaCliente() }}". Registrar
-                cliente
-              </li>
-            </ul>
-            }
+              @if (terminoBusquedaCliente().trim() && clientesFiltrados().length === 0 && !clienteSeleccionado()) {
+              <ul class="dropdown-clientes-sugerencias shadow" role="listbox">
+                <li role="option" tabindex="0" (click)="abrirModalNuevoCliente()" class="item-sin-cliente">
+                  <i class="hgi-stroke hgi-user-add-01 me-1"></i> No existe "{{ terminoBusquedaCliente() }}". Registrar
+                  cliente
+                </li>
+              </ul>
+              }
+            </div>
+
             <!-- Datos autocompletados del cliente -->
             <div class="row g-2 mb-2 mt-2">
               <div class="col-12 col-sm-6">
@@ -339,14 +344,15 @@
               </button>
               }
             </div>
-            <input id="fecha-entrega-manual" type="date" class="form-control" [min]="fechaMinima"
+            <input id="fecha-entrega-manual" type="date" class="form-control"
               [ngModel]="fechaEntregaSeleccionada()" (ngModelChange)="onCambioFechaManual($event)" required />
           </div>
 
           <!-- Acciones del Formulario -->
           <div class="gestion-formulario-acciones pt-2">
             <button type="button" class="btn btn-limpiar" (click)="limpiar()">Limpiar</button>
-            <button type="button" class="btn btn-guardar" (click)="guardarPedido()" [disabled]="isGuardando()">
+            <button type="button" class="btn btn-guardar" (click)="guardarPedido()"
+              [disabled]="isGuardando() || fechaPasadaAntesDeLas20()">
               {{ pedidoEditandoId() ? 'Actualizar' : 'Guardar' }}
             </button>
           </div>
@@ -397,6 +403,57 @@
   </div>
   }
 
+    @if (alertaStock(); as alerta) {
+  <div class="modal-confirmacion-backdrop">
+    <div
+      class="modal-confirmacion-caja animate-fade-in"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-alerta-stock"
+    >
+      <h4 id="titulo-alerta-stock">Stock Insuficiente</h4>
+      
+      <div class="alerta-error-modal text-start mb-3">
+        Uno o más productos del pedido superan el stock registrado actualmente en el sistema.
+      </div>
+
+      <p class="text-muted small mb-2 text-start">
+        Maples con faltante en galpón:
+      </p>
+
+      <ul class="list-unstyled text-start small mb-3 px-2">
+        @for (item of alerta.faltantes; track item.tipo) {
+          <li class="py-1">
+            <strong>{{ item.tipo }}:</strong> Solicitados: <strong>{{ item.solicitados }}</strong> | 
+            En stock: <span class="text-danger fw-bold">{{ item.disponibles }}</span>
+          </li>
+        }
+      </ul>
+
+      <p class="text-muted small text-start mb-3">
+        ¿Deseas marcar la entrega de todas formas? (Permitido por demoras en la carga de recolección diaria).
+      </p>
+
+      <div class="d-flex gap-2 justify-content-end">
+        <button
+          type="button"
+          class="btn btn-sm btn-limpiar"
+          (click)="cancelarAlertaStock()"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm btn-guardar"
+          (click)="confirmarEntregaSinStock()"
+        >
+          Confirmar de todos modos
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
   @if (mostrarConfirmacionEliminar() && pedidoAEliminar(); as pedido) {
   <div class="modal-overlay-backdrop">
     <div class="modal-confirmacion-caja animate-fade-in" role="dialog" aria-modal="true"
@@ -409,12 +466,62 @@
         <li><strong>Total:</strong> ${{ formatearMoneda(pedido.total) }}</li>
       </ul>
       <div class="d-flex gap-2 justify-content-end">
-        <button type="button" class="btn btn-sm btn-limpiar" (click)="cancelarEliminacion()">Cancelar</button>
-        <button type="button" class="btn btn-sm btn-eliminar" (click)="confirmarEliminacion()">Eliminar pedido</button>
+        <button type="button" class="btn btn-sm btn-modal-cancelar" (click)="cancelarEliminacion()">Cancelar</button>
+        <button type="button" class="btn btn-sm btn-modal-eliminar" (click)="confirmarEliminacion()">Eliminar pedido</button>
       </div>
     </div>
   </div>
-  }  
+  }                 
+    <!-- MODAL DE CONFIRMACIÓN DE CIERRE DE PEDIDO -->
+  @if (mostrarConfirmacionCierre() && pedidoACerrar(); as pedido) {
+  <div class="modal-confirmacion-backdrop">
+    <div
+      class="modal-confirmacion-caja animate-fade-in"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-confirmar-cierre"
+    >
+      <h4 id="titulo-confirmar-cierre">Confirmar cierre de pedido</h4>
+      <p class="text-muted small mb-3">
+        Estás por marcar el pedido como
+        <strong>{{ accionCierrePendiente() === 'pago' ? 'cobrado' : 'entregado' }}</strong>.
+        Al completar ambos requisitos (entrega y cobro), el pedido pasará automáticamente a
+        <strong>Cerrados</strong>:
+      </p>
+
+      <ul class="list-unstyled text-start small mb-3 px-2">
+        <li><strong>Cliente:</strong> {{ pedido.cliente.nombre }} {{ pedido.cliente.apellido }}</li>
+        <li><strong>Fecha de entrega:</strong> {{ formatearFechaDisplay(pedido.fecha_entrega) }}</li>
+        <li><strong>Productos:</strong> {{ pedido.resumen_productos }}</li>
+        <li><strong>Total:</strong> ${{ formatearMoneda(pedido.total) }}</li>
+      </ul>
+
+      <p class="text-muted small text-start px-2 mb-3">
+        ¿Deseas confirmar la operación y cerrar el pedido?
+      </p>
+
+      <div class="d-flex gap-2 justify-content-end">
+        <button
+          type="button"
+          class="btn btn-sm btn-limpiar"
+          (click)="cancelarConfirmacionCierre()"
+          [disabled]="isGuardando()"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm btn-guardar"
+          (click)="confirmarCierrePedido()"
+          [disabled]="isGuardando()"
+        >
+          {{ isGuardando() ? 'Cerrando...' : 'Confirmar y cerrar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+  
   <!-- MODAL REAPERTURA DE PEDIDO CERRADO -->
   @if (mostrarModalReabrir() && pedidoAReabrir(); as pedido) {
   <div class="modal-overlay-backdrop">

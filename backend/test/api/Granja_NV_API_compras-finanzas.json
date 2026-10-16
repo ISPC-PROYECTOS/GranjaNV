@@ -1,0 +1,316 @@
+{
+  "info": {
+    "_postman_id": "98370664-be58-4cb3-a07a-443fecccb560",
+    "name": "Granja NV - Sprint 4",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "28760327",
+    "_collection_link": "https://go.postman.co/collection/28760327-98370664-be58-4cb3-a07a-443fecccb560?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Finanzas y Compras",
+      "item": [
+        {
+          "name": "Crear gasto (201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Administrador crea gasto correctamente (201)\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"El gasto creado tiene un ID\", function () {\r\n    const gasto = pm.response.json();\r\n    pm.expect(gasto.id).to.exist;\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"monto\": \"15000.00\",\r\n  \"categoria\": \"ALIMENTO\",\r\n  \"descripcion\": \"PRUEBA POSTMAN AUT-API-04 - ELIMINAR\",\r\n  \"fecha\": \"2026-10-13\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/compras/gastos/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "compras",
+                "gastos",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar gastos (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Consultar gastos devuelve 200 OK\", function () {\r\n    pm.response.to.have.status(200);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/compras/gastos/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "compras",
+                "gastos",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Empleado sin permisos (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Empleado sin permisos devuelve 403\", function () {\r\n    pm.response.to.have.status(403);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{empleado_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"monto\": \"15000.00\",\r\n  \"categoria\": \"ALIMENTO\",\r\n  \"descripcion\": \"Prueba de acceso sin autenticación\",\r\n  \"fecha\": \"2026-10-13\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/compras/gastos/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "compras",
+                "gastos",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sin autenticación (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Crear gasto sin autenticación devuelve 401\", function () {\r\n    pm.response.to.have.status(401);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"monto\": \"15000.00\",\r\n  \"categoria\": \"ALIMENTO\",\r\n  \"descripcion\": \"Prueba sin autenticación\",\r\n  \"fecha\": \"2026-10-13\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/compras/gastos/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "compras",
+                "gastos",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Autenticación",
+      "item": [
+        {
+          "name": "POST - Login administrador",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"{{admin_email}}\",\r\n  \"password\": \"{{admin_password}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/auth/login/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "auth",
+                "login",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login empleado",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"{{empleado_email}}\",\r\n  \"password\": \"{{empleado_password}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/auth/login/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "auth",
+                "login",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "admin_token",
+      "secret": true
+    },
+    {
+      "key": "empleado_token",
+      "secret": true
+    },
+    {
+      "key": "admin_email",
+      "secret": true
+    },
+    {
+      "key": "admin_password",
+      "secret": true
+    },
+    {
+      "key": "empleado_email",
+      "secret": true
+    },
+    {
+      "key": "empleado_password",
+      "secret": true
+    }
+  ]
+}

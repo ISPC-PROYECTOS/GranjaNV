@@ -1,0 +1,15 @@
+@if (clientes.length > 0) {
+  <ul class="dropdown-clientes-sugerencias shadow" role="listbox">
+    @for (c of clientes; track c.id) {
+      <li 
+        role="option" 
+        tabindex="0" 
+        (mousedown)="onSeleccionar(c, $event)"
+        (click)="onSeleccionar(c, $event)" 
+        (keydown.enter)="onSeleccionar(c, $event)"
+      >
+        <strong>{{ c.nombre }} {{ c.apellido }}</strong> — {{ c.direccion }} ({{ c.telefono }})
+      </li>
+    }
+  </ul>
+}

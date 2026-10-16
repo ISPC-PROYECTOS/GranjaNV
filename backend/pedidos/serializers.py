@@ -13,12 +13,15 @@ PRECIOS_MAPLE_REFERENCIA: dict[str, Decimal] = {
     ItemPedido.TipoHuevo.BLANCO_2: Decimal("4200.00"),
     ItemPedido.TipoHuevo.COLOR_1: Decimal("4800.00"),
     ItemPedido.TipoHuevo.COLOR_2: Decimal("4500.00"),
+    ItemPedido.TipoHuevo.MIXTO: Decimal("4500.00"),
 }
 
 
 class MetricasDashboardSerializer(serializers.Serializer):
     pedidos_pendientes = serializers.IntegerField(min_value=0)
     total_ventas_cobradas = serializers.DecimalField(max_digits=12, decimal_places=2)
+    ventas_mes_actual = serializers.DecimalField(max_digits=12, decimal_places=2)
+    ventas_mes_anterior = serializers.DecimalField(max_digits=12, decimal_places=2)
 
 
 class ItemPedidoReadSerializer(serializers.ModelSerializer):

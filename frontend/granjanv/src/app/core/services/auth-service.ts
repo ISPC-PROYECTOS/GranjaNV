@@ -10,7 +10,7 @@ import { Usuario, LoginResponse, RegistroRequest } from '../models/user.model';
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private apiUrl = 'http://localhost:8000/api/auth';
+  private apiUrl = '/api/auth';
 
   currentUser = signal<Usuario | null>(this.getUserFromStorage());
   accessToken = signal<string | null>(localStorage.getItem('access_token'));

@@ -1,0 +1,358 @@
+@font-face {
+  font-family: 'hgi-stroke-rounded';
+  src: url("./hgi-stroke-rounded.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.hgi-stroke {
+  font-family: 'hgi-stroke-rounded' !important;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  display: inline-block;
+  font-variant: normal;
+  font-variant-ligatures: discretionary-ligatures;
+  font-feature-settings: "liga" 1;
+  line-height: 1;
+  text-rendering: auto;
+}
+
+.hgi-stroke:after {
+  opacity: 0.4;
+  position: absolute;
+  left: 0;
+}
+
+.hgi-stroke.hgi-arrow-right-02:before {
+  content: '㭺';
+}
+
+.hgi-stroke.hgi-text-check:before {
+  content: '䣎';
+}
+
+.hgi-stroke.hgi-pie-chart:before {
+  content: '䔛';
+}
+
+.hgi-stroke.hgi-barns:before {
+  content: '㯓';
+}
+
+.hgi-stroke.hgi-chart-line-data-01:before {
+  content: '㶎';
+}
+
+.hgi-stroke.hgi-pencil-edit-01:before {
+  content: '䓿';
+}
+
+.hgi-stroke.hgi-delete-02:before {
+  content: '㻺';
+}
+
+.hgi-stroke.hgi-arrow-up-01:before {
+  content: '㮆';
+}
+
+.hgi-stroke.hgi-arrow-up-02:before {
+  content: '㮇';
+}
+
+.hgi-stroke.hgi-arrow-down-03:before {
+  content: '㭜';
+}
+
+.hgi-stroke.hgi-file-export:before {
+  content: '䀇';
+}
+
+.hgi-stroke.hgi-chart-average:before {
+  content: '㶂';
+}
+
+.hgi-stroke.hgi-plus-minus:before {
+  content: '䕉';
+}
+
+.hgi-stroke.hgi-file-dollar:before {
+  content: '䀃';
+}
+
+.hgi-stroke.hgi-location-01:before {
+  content: '䊟';
+}
+
+.hgi-stroke.hgi-call-02:before {
+  content: '㴀';
+}
+
+.hgi-stroke.hgi-navigation-01:before {
+  content: '䑜';
+}
+
+.hgi-stroke.hgi-navigation-02:before {
+  content: '䑝';
+}
+
+.hgi-stroke.hgi-fast-wind:before {
+  content: '㿯';
+}
+
+.hgi-stroke.hgi-slow-winds:before {
+  content: '䝉';
+}
+
+.hgi-stroke.hgi-wind-power:before {
+  content: '䩮';
+}
+
+.hgi-stroke.hgi-work-alert:before {
+  content: '䩷';
+}
+
+.hgi-stroke.hgi-temperature:before {
+  content: '䢸';
+}
+
+.hgi-stroke.hgi-humidity:before {
+  content: '䆄';
+}
+
+.hgi-stroke.hgi-droplet:before {
+  content: '㾙';
+}
+
+.hgi-stroke.hgi-humidity:before {
+  content: '䆄';
+}
+
+.hgi-stroke.hgi-moon-02:before {
+  content: '䏤';
+}
+
+.hgi-stroke.hgi-sun-02:before {
+  content: '䠦';
+}
+
+.hgi-stroke.hgi-cloud-sun:before,
+.hgi-stroke.hgi-sun-cloud-01:before {
+  content: '䠨';
+}
+
+.hgi-stroke.hgi-cloud-01:before,
+.hgi-stroke.hgi-cloud:before {
+  content: '㸟';
+}
+
+.hgi-stroke.hgi-cloud-fog:before,
+.hgi-stroke.hgi-cloud-slow-wind:before {
+  content: '㸜';
+}
+
+.hgi-stroke.hgi-rain:before {
+  content: '䗗';
+}
+
+.hgi-stroke.hgi-snow:before {
+  content: '䝜';
+}
+
+.hgi-stroke.hgi-rain-cloud:before,
+.hgi-stroke.hgi-cloud-big-rain:before {
+  content: '㸐';
+}
+
+.hgi-stroke.hgi-thunderstorm:before,
+.hgi-stroke.hgi-cloud-angled-rain-zap:before {
+  content: '㸍';
+}
+
+/* ==========================================================================
+   3. DASHBOARD Y GESTIÓN DE PRODUCCIÓN
+   ========================================================================== */
+.hgi-stroke.hgi-task-01:before {
+  content: '䢠';
+}
+
+.hgi-stroke.hgi-task-02:before {
+  content: '䢡';
+}
+
+.hgi-stroke.hgi-task-done-01:before {
+  content: '䢦';
+}
+
+.hgi-stroke.hgi-task-add-01:before {
+  content: '䢢';
+}
+
+.hgi-stroke.hgi-money-receive-01:before {
+  content: '䏏';
+}
+
+.hgi-stroke.hgi-money-receive-02:before {
+  content: '䏐';
+}
+
+.hgi-stroke.hgi-money-send-01:before {
+  content: '䏚';
+}
+
+.hgi-stroke.hgi-shopping-cart-01:before {
+  content: '䜍';
+}
+
+.hgi-stroke.hgi-shopping-cart-add-01:before {
+  content: '䜏';
+}
+
+.hgi-stroke.hgi-shopping-bag-01:before {
+  content: '䛮';
+}
+
+.hgi-stroke.hgi-shopping-bag-add:before {
+  content: '䛱';
+}
+
+.hgi-stroke.hgi-eggs:before {
+  content: '㾷';
+}
+
+.hgi-stroke.hgi-dollar-circle:before {
+  content: '㽣';
+}
+
+.hgi-stroke.hgi-calendar-01:before {
+  content: '㳤';
+}
+
+.hgi-stroke.hgi-calendar-02:before {
+  content: '㳥';
+}
+
+.hgi-stroke.hgi-filter:before {
+  content: '䀱';
+}
+
+.hgi-stroke.hgi-filter-horizontal:before {
+  content: '䀫';
+}
+
+.hgi-stroke.hgi-edit-01:before {
+  content: '㾱';
+}
+
+.hgi-stroke.hgi-delete-01:before {
+  content: '㻹';
+}
+
+.hgi-stroke.hgi-tick-01:before {
+  content: '䤇';
+}
+
+.hgi-stroke.hgi-checkmark-circle-02:before {
+  content: '㶧';
+}
+
+.hgi-stroke.hgi-tick-02:before {
+  content: '䤈';
+}
+
+.hgi-stroke.hgi-cancel-01:before {
+  content: '㵂';
+}
+
+.hgi-stroke.hgi-cancel-circle:before {
+  content: '㵅';
+}
+
+.hgi-stroke.hgi-add-01:before {
+  content: '㪩';
+}
+
+.hgi-stroke.hgi-add-circle:before {
+  content: '㪬';
+}
+
+.hgi-stroke.hgi-delivery-truck-01:before {
+  content: '㼎';
+}
+
+.hgi-stroke.hgi-truck-delivery:before {
+  content: '䥸';
+}
+
+.hgi-stroke.hgi-tools:before {
+  content: '䤰';
+}
+
+.hgi-stroke.hgi-fuel-01:before {
+  content: '䂜';
+}
+
+/* ==========================================================================
+   5. BÚSQUEDA, SISTEMA, AUTH Y NAVEGACIÓN
+   ========================================================================== */
+.hgi-stroke.hgi-search-01:before {
+  content: '䚕';
+}
+
+.hgi-stroke.hgi-alert-circle:before {
+  content: '㬃';
+}
+
+.hgi-stroke.hgi-user:before {
+  content: '䧬';
+}
+
+.hgi-stroke.hgi-user-circle:before {
+  content: '䧊';
+}
+
+.hgi-stroke.hgi-user-add-01:before {
+  content: '䧂';
+}
+
+.hgi-stroke.hgi-eye:before {
+  content: '㿦';
+}
+
+.hgi-stroke.hgi-view:before {
+  content: '䨃';
+}
+
+.hgi-stroke.hgi-view-off-slash:before {
+  content: '䨁';
+}
+
+.hgi-stroke.hgi-notification-01:before {
+  content: '䒌';
+}
+
+.hgi-stroke.hgi-settings-02:before {
+  content: '䛂';
+}
+
+.hgi-stroke.hgi-logout-01:before {
+  content: '䋐';
+}
+
+.hgi-stroke.hgi-menu-01:before {
+  content: '䍚';
+}
+
+.hgi-stroke.hgi-arrow-right-01:before {
+  content: '㭹';
+}
+
+.hgi-stroke.hgi-arrow-left-01:before {
+  content: '㭪';
+}
+
+.hgi-stroke.hgi-arrow-down-01:before {
+  content: '㭚';
+}

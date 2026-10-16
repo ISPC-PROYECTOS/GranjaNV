@@ -41,4 +41,18 @@ npm-debug.log*
 .DS_Store
 Thumbs.db
 FETCH_HEAD
-repomix-output.xml
+repomix-*.xml
+repomix.*.json
+
+# ==========================================
+# Variables de entorno y secretos
+# ==========================================
+.env
+.env.*
+!.env.example
+
+node_modules/
+**/node_modules/
+test-results/
+e2e/node_modules/
+

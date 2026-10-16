@@ -2,44 +2,56 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Gastos } from '../../../../core/services/gastos';
 import { PedidosService } from '../../../../core/services/pedidos.service';
+import { ProduccionService } from '../../../../core/services/produccion.service';
 import { obtenerRangoMesActual } from '../../../../core/utils/date.utils';
+import { Spinner } from '../../../../shared/spinner/spinner';
 
-export interface MetricaDashboard {
+export interface MetricaItem {
   titulo: string;
   valor: string;
+  color: 'verde' | 'naranja';
   icono: string;
-  color: 'naranja' | 'verde';
-  ruta: string | null;
+  ruta?: string;
+  queryParams?: Record<string, string>;
+  subtexto?: string; // Opcional para Alternativa A
+  esCarrusel?: boolean; // Opcional para Alternativa B
 }
 
 @Component({
   selector: 'app-panel-de-control',
-  imports: [RouterLink],
+  imports: [RouterLink, Spinner],
   templateUrl: './panel-de-control.html',
   styleUrl: './panel-de-control.css',
 })
 export class PanelDeControl implements OnInit {
+  readonly cargando = signal(true);
   private readonly gastosService = inject(Gastos);
   private readonly pedidosService = inject(PedidosService);
+  private readonly produccionService = inject(ProduccionService);
 
   readonly totalCompras = signal<number>(0);
   readonly totalVentasCobradas = signal<number>(0);
   readonly pedidosPendientesCount = signal<number>(0);
+  readonly ventasMesActual = signal<number>(0);
+  readonly ventasMesAnterior = signal<number>(0);
 
-  readonly metricas = computed<MetricaDashboard[]>(() => [
+  readonly metricas = computed<MetricaItem[]>(() => [
     {
       titulo: 'PEDIDOS PENDIENTES',
       valor: this.pedidosPendientesCount().toString(),
       icono: 'hgi-task-01',
       color: 'naranja',
       ruta: '/dashboard/admin/ventas',
+      queryParams: {seccion: 'pendientes'},
     },
     {
       titulo: 'VENTAS',
-      valor: `$${this.formatearNumero(this.totalVentasCobradas())}`,
-      icono: 'hgi-money-receive-02',
+      valor: `$${this.formatearNumero(this.ventasMesActual())}`,
+      subtexto: `Mes anterior: $${this.formatearNumero(this.ventasMesAnterior())}`,
       color: 'verde',
+      icono: 'hgi-dollar-circle',
       ruta: '/dashboard/admin/ventas',
+      queryParams: { seccion: 'pendientes' }
     },
     {
       titulo: 'COMPRAS',
@@ -49,11 +61,11 @@ export class PanelDeControl implements OnInit {
       ruta: '/dashboard/admin/finanzas',
     },
     {
-      titulo: 'PRODUCCIÓN',
-      valor: '283',
+      titulo: 'STOCK TOTAL MAPLES',
+      valor: this.formatearNumero(this.produccionService.datosProduccion().total_maples),
       icono: 'hgi-eggs',
       color: 'verde',
-      ruta: null,
+      ruta: '/dashboard/produccion',
     },
   ]);
 
@@ -63,25 +75,33 @@ export class PanelDeControl implements OnInit {
 
   cargarMetricasDashboard(): void {
     const rangoMesActual = obtenerRangoMesActual();
+    this.cargando.set(true);
 
     this.gastosService.obtenerTotalGastos(rangoMesActual).subscribe({
       next: (respuesta) => {
         this.totalCompras.set(Number(respuesta.total) || 0);
+        this.cargando.set(false);
       },
       error: (error: unknown) => {
+        this.cargando.set(false);
         console.error('Error al obtener el total de compras:', error);
       },
     });
 
-    this.pedidosService.obtenerMetricas(rangoMesActual).subscribe({
+    this.pedidosService.obtenerMetricas().subscribe({
       next: (data) => {
         this.pedidosPendientesCount.set(data.pedidos_pendientes);
-        this.totalVentasCobradas.set(Number(data.total_ventas_cobradas) || 0);
+        this.ventasMesActual.set(Number(data.ventas_mes_actual ?? data.total_ventas_cobradas));
+        this.ventasMesAnterior.set(Number(data.ventas_mes_anterior ?? 0));
+        this.cargando.set(false);
       },
-      error: (error: unknown) => {
-        console.error('Error al obtener las métricas de ventas y pedidos:', error);
-      },
+      error: (err) => {
+        this.cargando.set(false);
+        console.error('Error al cargar pedidos:', err);
+      }
     });
+
+    this.produccionService.cargarMetricasProduccion();
   }
 
   formatearNumero(valor: number | string | null | undefined): string {

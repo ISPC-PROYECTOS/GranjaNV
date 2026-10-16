@@ -18,7 +18,7 @@ class Gasto(models.Model):
         default=Categoria.OTROS
     )
     descripcion = models.CharField(max_length=255)
-    fecha = models.DateField(default=timezone.now)
+    fecha = models.DateField(default=timezone.localdate)
     creado_en = models.DateTimeField(auto_now_add=True)
     actualizado_en = models.DateTimeField(auto_now=True)
 

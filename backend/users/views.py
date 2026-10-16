@@ -16,6 +16,7 @@ from .serializers import (
     RegistroUsuarioSerializer,
     RequestOTPSerializer,
     ResetPasswordOTPSerializer,
+    UsuarioAdminSerializer,
 )
 
 logger = logging.getLogger(__name__)
@@ -36,6 +37,18 @@ class RegistroUsuarioView(generics.CreateAPIView):
 
     queryset = Usuario.objects.all()
     serializer_class = RegistroUsuarioSerializer
+    permission_classes = [IsAuthenticated, IsAdminRole]
+
+
+class UsuariosAdminView(generics.ListAPIView):
+    queryset = Usuario.objects.all().order_by('nombre', 'apellido', 'id_usuario')
+    serializer_class = UsuarioAdminSerializer
+    permission_classes = [IsAuthenticated, IsAdminRole]
+
+
+class UsuarioAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Usuario.objects.all()
+    serializer_class = UsuarioAdminSerializer
     permission_classes = [IsAuthenticated, IsAdminRole]
 
 

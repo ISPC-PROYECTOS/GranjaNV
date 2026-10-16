@@ -131,11 +131,13 @@
   color: var(--color-secundario-oscuro);
   font-size: 12px;
   font-weight: 600;
+  text-align: center;
   padding: 4px 8px;
   border-radius: 12px;
   white-space: nowrap;
-  width: 100px;
+  width: 125px;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .chip-producto b {
@@ -267,14 +269,57 @@
 ================================= */
 
 .btn-toggle-cerrados {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
+  gap: 12px;
   background-color: var(--color-primario-claro);
   border: 1px solid var(--color-primario);
-  color: var(--color-primario-oscuro);
-  border-radius: 10px;
-  padding: 8px 14px;
+  color: var(--color-negro);
+  border-radius: 12px;
+  padding: 12px 16px;
+  text-align: left;
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.btn-toggle-cerrados:hover {
+  background-color: color-mix(in srgb, var(--color-primario-claro) 82%, var(--color-primario));
+}
+
+.btn-toggle-cerrados:focus-visible {
+  outline: 2px solid var(--color-primario);
+  outline-offset: 2px;
+}
+
+.cerrados-identidad {
+  display: grid;
+  gap: 3px;
+}
+
+.cerrados-icono {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+  font-size: 23px;
+}
+
+.cerrados-titulo {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-titulos);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.cerrados-cantidad {
+  color: var(--color-gris-oscuro);
+  font-size: 12px;
 }
 
 .contenedor-cerrados-expandido {
@@ -291,9 +336,74 @@
   margin-bottom: 8px;
 }
 
-.pedidos-cerrados-lista {
-  max-height: 180px;
+.total-ventas-toggle {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  color: var(--color-primario-oscuro);
+  font-family: var(--font-titulos);
+  font-size: 19px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.total-ventas-toggle strong {
+  font: inherit;
+}
+
+.cerrados-chevron {
+  color: var(--color-primario-oscuro);
+}
+
+.pedidos-cerrados-lista,
+.lista-pedidos-cerrados {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 440px;
   overflow-y: auto;
+  padding-right: 4px;
+}
+
+@media (max-width: 575px) {
+  .btn-toggle-cerrados {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .cerrados-icono {
+    width: 38px;
+    height: 38px;
+    font-size: 20px;
+  }
+
+  .cerrados-titulo {
+    font-size: 14px;
+  }
+
+  .cerrados-cantidad {
+    font-size: 10px;
+  }
+
+  .total-ventas-toggle {
+    gap: 4px;
+    font-size: 14px;
+  }
+
+  .pedidos-cerrados-contenido,
+  .acordeon-cerrados-cuerpo,
+  .pedidos-cerrados-lista {
+    max-height: 420px !important;
+    min-height: 320px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .acordeon-pedidos-cerrados {
+    max-height: none !important;
+  }
+
 }
 
 .pedido-cerrado-info {
@@ -477,33 +587,6 @@
    CLIENTES Y AUTOCOMPLETADO
 ================================= */
 
-.dropdown-clientes-sugerencias {
-  position: absolute;
-  /* top: 100%; */
-  left: 0;
-  right: 0;
-  background: var(--color-blanco);
-  border-radius: 10px;
-  list-style: none;
-  padding: 6px 0;
-  margin: 2px 0 0 0;
-  z-index: 100;
-  max-height: 160px;
-  overflow-y: auto;
-}
-
-.dropdown-clientes-sugerencias li {
-  padding: 6px 14px;
-  cursor: pointer;
-  font-size: 13px;
-}
-
-.dropdown-clientes-sugerencias li:hover,
-.dropdown-clientes-sugerencias li:focus {
-  background-color: var(--color-primario-claro);
-  outline: none;
-}
-
 .btn-nuevo-cliente,
 .btn-editar-cliente-inline {
   background: transparent;
@@ -525,6 +608,21 @@
   transform: translateY(-1px);
 }
 
+.dropdown-clientes-sugerencias {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--color-blanco);
+  border-radius: 10px;
+  list-style: none;
+  padding: 6px 0;
+  margin: 2px 0 0 0;
+  z-index: 1050;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
 .item-sin-cliente {
   color: var(--color-secundario-oscuro) !important;
   font-family: var(--font-titulos);
@@ -535,6 +633,8 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
 }
 
 .item-sin-cliente i {
@@ -574,14 +674,14 @@
   overflow-y: auto;
 }
 
-.modal-confirmacion-caja {
+/* .modal-confirmacion-caja {
   width: 100%;
   max-width: 460px;
   padding: 24px;
   border-radius: 8px;
   background: var(--color-blanco);
   box-shadow: 0 12px 36px color-mix(in srgb, var(--color-negro) 20%, transparent);
-}
+} */
 
 /* =================================
    ANIMACIONES
@@ -853,4 +953,8 @@
 
 .dropdown-clientes-sugerencias li + li {
   border-top: 1px solid var(--color-gris-claro);
+}
+
+:host-context(body.dark-mode) .pedidos-lista app-spinner ::ng-deep .spinner-texto {
+  color: var(--color-blanco);
 }

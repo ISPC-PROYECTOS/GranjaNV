@@ -6,12 +6,13 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   max-width: 800px;
   width: 100%;
+  min-width: 0;
   margin: 0 auto;
 }
 
 .titulo-cliente {
   color: var(--color-blanco);
-  margin-bottom: 37px;
+  margin-bottom: 20px;
 }
 
 .btn-cerrar-x {
@@ -32,30 +33,163 @@
 }
 
 .btn-cerrar-x:hover {
-  color: var(--color-error);
+  color: var(--color-secundario-claro);
   transform: scale(1.1);
 }
 
-/* .btn-limpiar {
-  background-color: var(--color-gris-claro);
+:host-context(body.dark-mode) .contenedor-crear-cliente {
+  background-color: var(--color-blanco);
   color: var(--color-negro);
-  border: none;
+  border: 1px solid var(--color-gris-medio);
 }
 
-.btn-limpiar:hover {
-  background-color: #d8d3d0;
+:host-context(body.dark-mode) .titulo-cliente,
+:host-context(body.dark-mode) .btn-cerrar-x {
   color: var(--color-negro);
-} */
+}
+
+:host-context(body.dark-mode) .gestion-formulario {
+  background-color: var(--color-secundario-claro);
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .gestion-formulario .form-control,
+:host-context(body.dark-mode) .gestion-formulario .form-select {
+  border: 1px solid var(--color-gris-medio);
+  background-color: var(--color-blanco);
+  color: var(--color-negro);
+}
+
+:host-context(body.dark-mode) .gestion-formulario .form-control::placeholder {
+  color: var(--color-gris-oscuro);
+}
+
+:host-context(body.dark-mode) .gestion-formulario .form-control:focus,
+:host-context(body.dark-mode) .gestion-formulario .form-select:focus {
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--color-primario) 30%, transparent);
+}
+
+:host-context(body.dark-mode) .gestion-formulario .error-msg {
+  color: #ff8a8a;
+}
+
+/* CONTENEDOR DE ALERTA CON BOTÓN */
+.alerta-homonimo-contenedor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.alerta-homonimo-mensaje {
+  width: 100%;
+  line-height: 1.4;
+}
+
+/* BOTÓN PARA MODIFICAR EXISTENTE */
+.btn-modificar-existente {
+  background-color: var(--color-blanco);
+  color: var(--color-negro);
+  border: 1px solid var(--color-secundario-claro);
+  font-family: var(--font-titulos);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-modificar-existente:hover {
+  background-color: var(--color-secundario-claro);
+  color: var(--color-negro);
+  transform: translateY(-1px);
+}
+
+/* AVISO PREVENTIVO EN ZONA VERDE */
+.alerta-aviso {
+  background-color: rgba(0, 0, 0, 0.22);
+  border: 1.5px solid var(--color-secundario);
+  color: var(--color-crema);
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-family: var(--font-textos);
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* SELECTOR DE ENTIDAD (PERSONA / NEGOCIO) */
+.tipo-entidad-selector {
+  display: flex;
+  gap: 10px;
+  background-color: var(--color-secundario-claro);
+  padding: 6px;
+  border-radius: 14px;
+}
+
+.btn-tipo-entidad {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: none;
+  background-color: transparent;
+  color: var(--color-negro);
+  font-family: var(--font-titulos);
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-tipo-entidad-activo {
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.texto-aclaracion {
+  font-size: 12px;
+  color: var(--color-gris-oscuro);
+  line-height: 1.3;
+}
+
+:host-context(body.dark-mode) .texto-aclaracion {
+  color: var(--color-gris-oscuro);
+}
 
 @media (max-width: 575px) {
   .contenedor-crear-cliente {
     padding: 16px;
     border-radius: 20px;
   }
+
+  .titulo-cliente {
+    margin-bottom: 1.25rem;
+    padding-right: 2.5rem;
+    font-size: 1.35rem;
+  }
   
   .btn-cerrar-x {
     top: 12px;
     right: 12px;
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  .btn-modificar-existente {
+    width: 100%;
+    justify-content: center;
   }
 
   .gestion-formulario-acciones {
@@ -68,5 +202,64 @@
     flex: 1;
     font-size: 15px;
     padding: 10px 0;
+  }
+
+  .gestion-formulario .row {
+    --bs-gutter-x: 0.75rem;
+    --bs-gutter-y: 0.5rem;
+  }
+
+  .gestion-formulario .form-control,
+  .gestion-formulario .form-select {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .error-msg,
+  .alerta-error {
+    overflow-wrap: anywhere;
+  }
+
+  .confirmacion-cliente {
+    max-height: calc(100vh - 2rem);
+    max-height: calc(100dvh - 2rem);
+    padding: 1rem;
+    overflow-y: auto;
+  }
+
+  .confirmacion-cliente-acciones {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem !important;
+  }
+
+  .confirmacion-cliente-acciones .btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 380px) {
+  .contenedor-crear-cliente {
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .titulo-cliente {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+  }
+
+  .gestion-formulario-acciones {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem !important;
+  }
+
+  .gestion-formulario-acciones .btn-limpiar,
+  .gestion-formulario-acciones .btn-guardar {
+    width: 100%;
+    min-height: 44px;
   }
 }
