@@ -38,3 +38,4 @@ tzdata==2026.2
 urllib3==2.7.0
 gunicorn==23.0.0
 whitenoise==6.8.2
+python-dotenv==1.2.4
