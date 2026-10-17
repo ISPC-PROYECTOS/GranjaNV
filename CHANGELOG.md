@@ -3,6 +3,20 @@
 Todos los cambios notables del proyecto **Granja NV** se documentarán en este archivo.  
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
+
+## [v1.0.0-beta.2] - 2026-10-17
+
+### Fixed
+- **Estabilidad y Consumo de Recursos en Render:**
+  - Reducción de la concurrencia de Gunicorn a 2 workers y 2 threads en `backend/Dockerfile` para garantizar un techo de memoria inferior a 512 MB en la capa gratuita de Render.
+  - Prevención de caídas por inactividad mediante la implementación del endpoint `/api/health/` sin carga a base de datos para monitoreo vía cron job.
+- **Carga de Entorno Local:**
+  - Adición condicional de `python-dotenv` en `core/settings.py` con soporte para gestor de entornos `uv` y búsqueda en jerarquía de carpetas (`backend/` y directorio raíz).
+  - Inclusión de `python-dotenv==1.2.4` en `backend/requirements.txt`.
+  - Corrección de cabeceras de proxy reverso (`SECURE_PROXY_SSL_HEADER`) y orígenes de confianza para mitigar errores 400 y 405 en peticiones cruzadas Vercel-Render.
+
+---
+
 ## [v1.0.0-beta.1] - 2026-10-16
 
 ### Added
