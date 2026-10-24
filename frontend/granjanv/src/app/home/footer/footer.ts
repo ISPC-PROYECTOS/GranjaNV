@@ -19,7 +19,7 @@ export class Footer {
   
   contacto = {
     telefono: '+54 9 385 516-9337',
-    email: 'info@granjaNV.com',
+    email: 'contacto@granjanv.com.ar',
     ubicacion: 'Forres, Santiago del Estero, Argentina'
   };
   
