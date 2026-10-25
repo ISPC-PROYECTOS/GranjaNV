@@ -73,6 +73,51 @@
   font-size: 0.95rem;
 }
 
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-wrapper input {
+  padding-right: 2.75rem; /* Evita que los caracteres queden debajo del icono */
+}
+
+.btn-toggle-password {
+  position: absolute;
+  right: 12px;
+  background: transparent;
+  border: none;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-gris-oscuro);
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.btn-toggle-password:hover {
+  color: var(--color-secundario);
+}
+
+.btn-toggle-password:focus-visible {
+  outline: 2px solid var(--color-crema);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+:host-context(body.dark-mode) .btn-toggle-password {
+  color: var(--color-gris-medio);
+}
+
+:host-context(body.dark-mode) .btn-toggle-password:hover {
+  color: var(--color-blanco);
+}
+
 /* Botones */
 .button-group {
   display: flex;

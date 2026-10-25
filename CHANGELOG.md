@@ -3,6 +3,13 @@
 Todos los cambios notables del proyecto **Granja NV** se documentarán en este archivo.  
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
+## [v1.0.0-beta.3] - 2026-10-24
+- **Envío de correo para OTP:**
+  - Utilización en producción del servicio de Resend para gestionar el envío de OTP para reestablecimiento de contraseña. Se hace a través de django-anymail.
+- **Landing Page:**
+ - Corrección de datos de contacto en footer de la web pública. Se agrega correo real con dominio propio.
+- **Contraseña en Login:**
+ - Implementación de botón toggle para mostrar u ocultar contraseña ingresada.
 
 ## [v1.0.0-beta.2] - 2026-10-17
 

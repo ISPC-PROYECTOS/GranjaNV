@@ -19,6 +19,11 @@ export class LoginComponent {
   isLoading = signal<boolean>(false);
   errorMessage = signal<string | null>(null);
   successMessage = signal<string | null>(null);
+  readonly mostrarPassword = signal<boolean>(false);
+
+  togglePassword(): void {
+    this.mostrarPassword.update((visible) => !visible);
+  }
 
   // Estado del flujo: 'login' | 'otp_reset'
   step = signal<'login' | 'otp_reset'>('login');
